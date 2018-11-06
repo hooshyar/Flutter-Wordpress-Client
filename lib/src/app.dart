@@ -66,19 +66,40 @@ class HawalnirHomeState extends State {
                           : posts[index]["_embedded"]["wp:featuredmedia"][0]["source_url"],
                     ),
                     new Padding(
-                      padding: EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(5.0),
                       child: new ListTile(
                         title: new Padding(
                             padding: EdgeInsets.symmetric(vertical: 10.0),
                             child: new Text(posts[index]["title"]["rendered"])),
-                        subtitle: new Text(
-                            posts[index]["excerpt"]["rendered"].replaceAll(new RegExp(r'<[^>]*>'), '')
-                        ),
+                       // subtitle: new Text(    // here i disabled subtitle
+                           // posts[index]["excerpt"]["rendered"].replaceAll(new RegExp(r'<[^>]*>'), '')
+                        //),
                       )
                     ),
                       new ButtonTheme.bar(
                         child: new ButtonBar(
                             children: <Widget>[
+
+
+                              IconButton(
+                                icon: Icon(Icons.favorite),
+                                splashColor: Colors.redAccent,
+                                
+                                color: Colors.blueGrey,
+                                tooltip: 'Increase volume by 10%',
+                                onPressed: () { setState(() {});  }, // add +1 to the database
+                              ),
+
+                              IconButton(
+                                icon: Icon(Icons.share),
+                                color: Colors.blueGrey,
+                                tooltip: 'share with your friends',
+                                onPressed: () {setState((){});}, // Standard share for whatsapp + google + faccebook + twitter 
+                                
+                                
+                                ),
+
+
                               new FlatButton(
                               child: const Text('زورتر'),
                               onPressed: () { Navigator.push(
@@ -87,6 +108,9 @@ class HawalnirHomeState extends State {
                                   ),
                                 ); },
                               ),
+                              
+
+                              
                             ],
                         ),
                       ),

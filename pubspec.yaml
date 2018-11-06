@@ -1,5 +1,5 @@
 name: hawalnir1
-description: A new Flutter project.
+description: A Kurdish News gathering.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -18,6 +18,7 @@ dependencies:
   flutter_html: ^0.8.2
   flutter:
     sdk: flutter
+    
   flutter_localizations:
     sdk: flutter
   intl:
@@ -59,17 +60,14 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+  fonts:
+    - family: NotoKufiArabic
+      fonts:
+        - asset: lib/src/fonts/NotoKufiArabic-Regular.ttf
+    - family: NotoSansArabic
+      fonts:
+        - asset: lib/src/fonts/NotoSansArabic-Regular.ttf
+          weight: 700
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.io/custom-fonts/#from-packages
