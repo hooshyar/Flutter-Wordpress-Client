@@ -68,13 +68,18 @@ class HawalnirHomeState extends State {
                     new Padding(
                       padding: EdgeInsets.all(5.0),
                       child: new ListTile(
+                        onTap: () { Navigator.push(
+                                  context, new MaterialPageRoute(
+                                  builder: (context) => new HawalnirPost(post: posts[index]),
+                        ),); },
                         title: new Padding(
+                          
                             padding: EdgeInsets.symmetric(vertical: 10.0),
                             child: new Text(posts[index]["title"]["rendered"])),
                        // subtitle: new Text(    // here i disabled subtitle
                            // posts[index]["excerpt"]["rendered"].replaceAll(new RegExp(r'<[^>]*>'), '')
                         //),
-                      )
+                      ),
                     ),
                       new ButtonTheme.bar(
                         child: new ButtonBar(
@@ -100,14 +105,7 @@ class HawalnirHomeState extends State {
                                 ),
 
 
-                              new FlatButton(
-                              child: const Text('زورتر'),
-                              onPressed: () { Navigator.push(
-                                  context, new MaterialPageRoute(
-                                  builder: (context) => new HawalnirPost(post: posts[index]),
-                                  ),
-                                ); },
-                              ),
+                          
                               
 
                               
