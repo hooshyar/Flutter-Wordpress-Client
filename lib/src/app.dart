@@ -40,10 +40,9 @@ class HawalnirHomeState extends State {
 
   @override
   Widget build(BuildContext context) {
-
-
-
-    return Scaffold(
+  return new Directionality( //where i add Dictio for rtl  entire home page , i wraped every thing into this 
+    textDirection: TextDirection.rtl, // RTL
+    child: new  Scaffold( // Scaffold az a Child, it takes only one child
       appBar: AppBar(
           title: 
           
@@ -98,6 +97,6 @@ class HawalnirHomeState extends State {
           );
         },
       ),
-    );
-  }
+    ));
+}
 }

@@ -11,7 +11,9 @@ class HawalnirPost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return new Directionality(
+      textDirection: TextDirection.rtl,
+      child: new Scaffold(
       appBar: new AppBar(
         title: new Text(post['title']['rendered']),
       ),
@@ -28,13 +30,14 @@ class HawalnirPost extends StatelessWidget {
             ),
            //new  Directionality(
              // textDirection: TextDirection.rtl,
-              //new  Html(
-                //data: post['content']['rendered']),
+              new  Html(
+                data: post['content']['rendered'], defaultTextStyle: TextStyle(fontFamily: 'serif',fontSize: 20.0 , decoration:TextDecoration.none ))
+                 
            // )
-            new Text(
-              post['content']['rendered'].replaceAll(new RegExp(r'<[^>]*>'), ''))
-          ],
-        ),
+           // new Text(
+             // post['content']['rendered'].replaceAll(new RegExp(r'<[^>]*>'), '') , textDirection: TextDirection.rtl,)
+             ],
+        )),
       ),
     );
   }
