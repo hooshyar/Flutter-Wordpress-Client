@@ -4,8 +4,7 @@ import 'package:transparent_image/transparent_image.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-//import 'client.dart';
-import '../wordpress_client.dart';
+
 
 class HawalnirHome extends StatefulWidget {
   @override
@@ -15,38 +14,17 @@ class HawalnirHome extends StatefulWidget {
 class HawalnirHomeState extends State {
   // Base URL for our wordpress API
   final String apiUrl = "http://ehawal.com/wp-json/wp/v2/";
-  //final String catUrl = "http://ehawal.com/wp-json/wp/v2/categories"; //trying to fetch categories
-  // Empty list for our posts
   List posts;
-  List cats;                           
-   //f
-  
-  //List categories; // added for categories
+
   // Function to fetch list of posts
   Future<String> getPosts() async {
     var res = await http.get(Uri.encodeFull(apiUrl + "posts?_embed&per_page=100"),
         headers: {"Accept": "application/json"});
 
-   // var resCat = await http.get(Uri.encodeFull(apiUrl + "posts?_embed"), //getting categories 
-   //     headers: {"Accept": "application/json"});
 
-    // fill our posts list with results and update state
     setState(() {
       var resBody = json.decode(res.body);
-      
       posts = resBody;
-      //final wpc = WordpressClient("http://www.ehawal.com", new http.Client() , null  ).listPosts;
-      //Future <List<Post>> cats ;
-
-      
-      
-     // for (int i=0; i < 20 ; i ++){
-     //   print(wpc);
-      // }
-      
-
-     // var resCatBody = json.decode(res.body);
-     // categories = resCatBody;
     });
 
     return "Success!";
@@ -68,8 +46,6 @@ class HawalnirHomeState extends State {
           appBar: AppBar(
               title: Text("هه‌واڵنێر"), backgroundColor: Colors.blueAccent),
           body: ListView.builder(
-            //itemExtent: 10.0 ,
-            //addAutomaticKeepAlives: true,
             itemCount: posts == null ? 0 : posts.length,
             itemBuilder: (BuildContext context, int index) {
               return Column(
