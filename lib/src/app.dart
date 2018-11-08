@@ -19,7 +19,7 @@ class HawalnirHomeState extends State {
   // Empty list for our posts
   List posts;
   List cats;                           
-   //
+   //f
   
   //List categories; // added for categories
   // Function to fetch list of posts
@@ -35,14 +35,14 @@ class HawalnirHomeState extends State {
       var resBody = json.decode(res.body);
       
       posts = resBody;
-      final wpc = WordpressClient("http://www.ehawal.com", new http.Client() , null  ).listPosts;
+      //final wpc = WordpressClient("http://www.ehawal.com", new http.Client() , null  ).listPosts;
       //Future <List<Post>> cats ;
 
       
       
-      for (int i=0; i < 20 ; i ++){
-        print(wpc);
-      }
+     // for (int i=0; i < 20 ; i ++){
+     //   print(wpc);
+      // }
       
 
      // var resCatBody = json.decode(res.body);
