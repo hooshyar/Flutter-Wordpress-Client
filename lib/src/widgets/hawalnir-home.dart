@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart'; //transparent image used when trying to lazy load
-//import 'package:flutter_html_view/flutter_html_view.dart'; //html view pub but i think flutter_html.dart is better
 import 'package:flutter_html/flutter_html.dart'; // pub to load html tags from json api
 
 
 class HawalnirPost extends StatelessWidget { // i dont know what is the nag 
 
-  var post; //the variable
+  final post; //the variable
   HawalnirPost({Key key, @required var this.post}) : super(key: key); //we refer post as required 
 
   @override
