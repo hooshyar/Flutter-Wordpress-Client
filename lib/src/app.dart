@@ -47,7 +47,13 @@ class HawalnirHomeState extends State {
           // Scaffold az a Child, it takes only one child
           appBar: AppBar(
               title: Text("هه‌واڵنێر"), backgroundColor: Colors.blueAccent),
-          body: ListView.builder(
+         
+         //where we have to wrap for pull to refresh
+          body: 
+           RefreshIndicator(
+            
+            onRefresh: getPosts, //there was an error when i used getPosts(); so i removed prantisice 
+            child:  ListView.builder(
             
             itemCount: posts == null ? 0 : posts.length,
             itemBuilder: (BuildContext context, int index) {
@@ -155,6 +161,9 @@ class HawalnirHomeState extends State {
               );
             },
           ),
+
+          ),
+          
         ));
   }
 }
