@@ -15,7 +15,7 @@ class HawalnirHomeState extends State {
   // Base URL for our wordpress API
   final String apiUrl = "http://ehawal.com/wp-json/wp/v2/";
   List posts;
-
+  
   // Function to fetch list of posts
   Future<String> getPosts() async {
     var res = await http.get(Uri.encodeFull(apiUrl + "posts?_embed&per_page=100"),
@@ -24,6 +24,7 @@ class HawalnirHomeState extends State {
 
     setState(() {
       var resBody = json.decode(res.body);
+
       posts = resBody;
     });
 
@@ -38,6 +39,7 @@ class HawalnirHomeState extends State {
 
   @override
   Widget build(BuildContext context) {
+    
     return new Directionality(
         //where i add Dictio for rtl  entire home page , i wraped every thing into this
         textDirection: TextDirection.rtl, // RTL
@@ -46,6 +48,7 @@ class HawalnirHomeState extends State {
           appBar: AppBar(
               title: Text("هه‌واڵنێر"), backgroundColor: Colors.blueAccent),
           body: ListView.builder(
+            
             itemCount: posts == null ? 0 : posts.length,
             itemBuilder: (BuildContext context, int index) {
               return Column(
@@ -63,11 +66,9 @@ class HawalnirHomeState extends State {
                                   ["source_url"],
                         ),
 
-                        new ListTile(
-                          title:Text(posts[index]["author"].toString()) , //trying to fetch authors name
-                        ),
-
-
+                        //new ListTile(
+                        //  title:Text(posts[index]["author"]["rendered"].toString()) , //trying to fetch authors name
+                        //),
 
                         new Padding(
                           padding: EdgeInsets.all(5.0),
@@ -88,22 +89,30 @@ class HawalnirHomeState extends State {
                                     posts[index]["title"]["rendered"]),
                                     
                                     ),
-                         
+
+                            subtitle:  new Text( "نووسه‌ر: "+
+                                 posts[index]["_embedded"]["author"][0]["name"]),
                              
-                             subtitle: new Text(    // here i disabled subtitle
-                             posts[index]["excerpt"]["rendered"].replaceAll(new RegExp(r'<[^>]*>'), '') //contetn is a object so how to use a array or string 
-                            ),
+                             //subtitle: new Text(    // here i disabled subtitle
+                             //posts[index]["excerpt"]["rendered"].replaceAll(new RegExp(r'<[^>]*>'), '') //contetn is a object so how to use a array or string 
+                           // ),
                             
 
 
                           ),
+                          
                         ),
                         new ButtonTheme.bar(
                           child: new ButtonBar(
                             children: <Widget>[
-
-                            
-
+                               
+                               
+                                 new Text(
+                                   "نووسه‌ر: "+ posts[index]["_embedded"]["author"][0]["name"] ,
+                                     textAlign: TextAlign.right,
+                                    
+                                     ),
+                                    
 
                               IconButton(
                                 icon: Icon(Icons.save),

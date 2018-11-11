@@ -22,20 +22,38 @@ class HawalnirPost extends StatelessWidget { // i dont know what is the nag
         child: new ListView(
 
           children: <Widget>[
+
+            new Column(
+              children: <Widget>[
+
+                //new Text(
+                  //post["_embedded"]["author"][0]["name"]),
+               
+               // new Html(
+                 // data: post["_embedded"]["wp:featuredmedia"][0]["source_url"]),
+                 
+              ],
+
+            ),
+
             new FadeInImage.memoryNetwork(
               placeholder: kTransparentImage,
               image: post["featured_media"] == 0
                   ? 'src/images/placeholder.png'
                   : post["_embedded"]["wp:featuredmedia"][0]["source_url"],
             ),
+
+            
+                  
+
            //new  Directionality(
              // textDirection: TextDirection.rtl,
               new  Html(
-                data: post['content']['rendered'], defaultTextStyle: TextStyle(fontFamily: 'NotoKufiArabic',fontSize: 20.0 , decoration:TextDecoration.none ))
-                 
+                data: post['content']['rendered'], defaultTextStyle: TextStyle(fontFamily: 'NotoKufiArabic',fontSize: 20.0 , decoration:TextDecoration.none )),
+                 new Text( "نووسه‌ر: "+
+                  post["_embedded"]["author"][0]["name"]),
            // )
-           // new Text(
-             // post['content']['rendered'].replaceAll(new RegExp(r'<[^>]*>'), '') , textDirection: TextDirection.rtl,)
+            
              ],
         )),
       ),
