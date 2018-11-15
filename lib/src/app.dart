@@ -19,13 +19,7 @@ class DrawerItem {
 //end of class drawer
 
 class HawalnirHome extends StatefulWidget {
-  //drawer items
-  final drawerItems = [
-    new DrawerItem("Fragment 1", Icons.rss_feed),
-    new DrawerItem("Fragment 2", Icons.local_pizza),
-    new DrawerItem("Fragment 3", Icons.info)
-  ];
-  //drawer items
+  
 
   @override
   State<StatefulWidget> createState() => HawalnirHomeState();
