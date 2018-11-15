@@ -8,7 +8,7 @@ import 'widgets/hawalnir-date-convertor.dart';
 import '../src/UI/first_fragment.dart';
 import '../src/UI/second_fragment.dart';
 import '../src/UI/third_fragment.dart';
-
+import '../src/UI/drawerWidget.dart';
 //implementing the drawer
 
 class DrawerItem {
@@ -83,6 +83,7 @@ class HawalnirHomeState extends State {
 
   @override
   Widget build(BuildContext context) {
+    
     return new Directionality(
         //where i add Dictio for rtl  entire home page , i wraped every thing into this
         textDirection: TextDirection.rtl, // RTL
@@ -91,47 +92,7 @@ class HawalnirHomeState extends State {
           appBar: AppBar(
               title: Text("هه‌واڵنێر"), backgroundColor: Colors.blueAccent),
 
-          drawer: Drawer(
-            child: SafeArea(
-
-                // bottom: false,
-                // top: false,
-                child: Container(
-              child: Column(
-                children: <Widget>[
-                  DrawerHeader(
-                    child: Text('Drwer Hawalnir'),
-                    decoration: BoxDecoration(
-                      //color: Colors.amberAccent ,
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                  ),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      //direction: Axis.vertical,
-                      children: <Widget>[
-                        Text("item one"),
-                        AnimatedContainer(
-                          duration: Duration(milliseconds: 100),
-                          
-                          child:  Text("ddjakdja"),
-                          padding: EdgeInsets.all(20.0),
-                          decoration: BoxDecoration(
-                              
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.circular(2.0),
-                              color: Colors.amber),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 20.0),
-                        ),
-                        Text("Itme two"),
-                      ]),
-                ],
-              ),
-            )),
-          ),
+          drawer: mainDrawer(),
           //drawer
           // drawer: new Drawer(
           //  child: new Column(
@@ -145,7 +106,7 @@ class HawalnirHomeState extends State {
 
           //drawer
           //where we have to wrap for pull to refresh
-          body:
+          body: 
               //drawer
               //_getDrawerItemWidget(_selectedDrawerIndex),
               //drawer
