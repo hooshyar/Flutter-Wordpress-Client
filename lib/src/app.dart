@@ -5,13 +5,57 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'widgets/hawalnir-date-convertor.dart';
+import '../src/UI/first_fragment.dart';
+import '../src/UI/second_fragment.dart';
+import '../src/UI/third_fragment.dart';
+
+//implementing the drawer
+
+class DrawerItem {
+  String title;
+  IconData icon;
+  DrawerItem(this.title, this.icon);
+}
+//end of class drawer
 
 class HawalnirHome extends StatefulWidget {
+  //drawer items
+  final drawerItems = [
+    new DrawerItem("Fragment 1", Icons.rss_feed),
+    new DrawerItem("Fragment 2", Icons.local_pizza),
+    new DrawerItem("Fragment 3", Icons.info)
+  ];
+  //drawer items
+
   @override
   State<StatefulWidget> createState() => HawalnirHomeState();
 }
 
 class HawalnirHomeState extends State {
+  //drawer
+  int _selectedDrawerIndex = 0;
+
+  _getDrawerItemWidget(int pos) {
+    switch (pos) {
+      case 0:
+        return new FirstFragment();
+      case 1:
+        return new SecondFragment();
+      case 2:
+        return new ThirdFragment();
+
+      default:
+        return new Text("Error");
+    }
+  }
+
+  _onSelectItem(int index) {
+    setState(() => _selectedDrawerIndex = index);
+    Navigator.of(context).pop(); // close the drawer
+  }
+
+  //drawer
+
   // Base URL for our wordpress API
   final String apiUrl = "http://ehawal.com/wp-json/wp/v2/";
   List posts;
@@ -47,10 +91,67 @@ class HawalnirHomeState extends State {
           appBar: AppBar(
               title: Text("هه‌واڵنێر"), backgroundColor: Colors.blueAccent),
 
+          drawer: Drawer(
+            child: SafeArea(
+
+                // bottom: false,
+                // top: false,
+                child: Container(
+              child: Column(
+                children: <Widget>[
+                  DrawerHeader(
+                    child: Text('Drwer Hawalnir'),
+                    decoration: BoxDecoration(
+                      //color: Colors.amberAccent ,
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      //direction: Axis.vertical,
+                      children: <Widget>[
+                        Text("item one"),
+                        AnimatedContainer(
+                          duration: Duration(milliseconds: 100),
+                          
+                          child:  Text("ddjakdja"),
+                          padding: EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                              
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(2.0),
+                              color: Colors.amber),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 20.0),
+                        ),
+                        Text("Itme two"),
+                      ]),
+                ],
+              ),
+            )),
+          ),
+          //drawer
+          // drawer: new Drawer(
+          //  child: new Column(
+          //   children: <Widget>[
+          //    new UserAccountsDrawerHeader(
+          //        accountName: new Text("John Doe"), accountEmail: null),
+          //    new Column(children: drawerOptions)
+          //    ],
+          //  ),
+          //),
+
+          //drawer
           //where we have to wrap for pull to refresh
-          body: RefreshIndicator(
-            onRefresh:
-                getPosts, //there was an error when i used getPosts(); so i removed prantisice
+          body:
+              //drawer
+              //_getDrawerItemWidget(_selectedDrawerIndex),
+              //drawer
+              RefreshIndicator(
+            onRefresh: getPosts,
+            //there was an error when i used getPosts(); so i removed prantisice
             child: ListView.builder(
               itemCount: posts == null ? 0 : posts.length,
               itemBuilder: (BuildContext context, int index) {
@@ -100,12 +201,12 @@ class HawalnirHomeState extends State {
                                     ),
                                   ),
                                   Expanded(
-                                    child: Text( 
-                                        DateConvertor(posts[index]["date"].toString()),
-                                        textAlign: TextAlign.left,
-                                        ) ,
+                                    child: Text(
+                                      DateConvertor(
+                                          posts[index]["date"].toString()),
+                                      textAlign: TextAlign.left,
                                     ),
-                                   
+                                  ),
                                 ],
                               ),
 
