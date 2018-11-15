@@ -13,8 +13,9 @@ Widget mainDrawer() {
           color: Colors.amberAccent,
         ),
       ),
-      
-socialBtn("text", Icon(Icons.access_alarms), Colors.indigo[900]),
+socialBtn("فه‌یسبوك", Icons.closed_caption, Colors.indigo[900]), 
+drawerBtnPadding(),
+socialBtn("تویتته‌ر", Icons.access_alarms, Colors.indigo[900]),
      
      drawerBtnPadding(),
       ExpansionTile(
@@ -70,7 +71,7 @@ Widget drawerBtn(String text) {
 }
 
 //btn social
-Widget socialBtn(String text, Widget iconData, Color color) {
+Widget socialBtn(String text, IconData iconData, Color color) {
   return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -81,12 +82,12 @@ Widget socialBtn(String text, Widget iconData, Color color) {
           child: Row(
             children: <Widget>[
               Icon(
-                Icons.add_a_photo,
+               iconData,
                 color: Colors.cyan,
               ),
               Padding(padding: EdgeInsets.all(10.0)),
               Text(
-                'فه‌یسبوكی كوردی',
+                text,
                 style: TextStyle(color: Colors.white),
               )
             ],
