@@ -1,58 +1,27 @@
 import 'package:flutter/material.dart';
 import 'widgets/hawalnir-home.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http; // http requ
 import 'dart:async';
-import 'dart:convert';
+import 'dart:convert'; //COnvett Json
 import 'widgets/hawalnir-date-convertor.dart';
-import '../src/UI/first_fragment.dart';
-import '../src/UI/second_fragment.dart';
-import '../src/UI/third_fragment.dart';
-import '../src/UI/drawerWidget.dart';
+import '../src/UI/getCategories.dart'; //First Page
+import '../src/UI/second_fragment.dart'; //Second Page
+import '../src/UI/third_fragment.dart'; // Third Page
+//import '../src/UI/drawerWidget.dart'; //Drawer widget
 //implementing the drawer
 
-class DrawerItem {
-  String title;
-  IconData icon;
-  DrawerItem(this.title, this.icon);
-}
-//end of class drawer
-
 class HawalnirHome extends StatefulWidget {
-  
-
   @override
   State<StatefulWidget> createState() => HawalnirHomeState();
 }
 
 class HawalnirHomeState extends State {
-  //drawer
-  int _selectedDrawerIndex = 0;
-
-  _getDrawerItemWidget(int pos) {
-    switch (pos) {
-      case 0:
-        return new FirstFragment();
-      case 1:
-        return new SecondFragment();
-      case 2:
-        return new ThirdFragment();
-
-      default:
-        return new Text("Error");
-    }
-  }
-
-  _onSelectItem(int index) {
-    setState(() => _selectedDrawerIndex = index);
-    Navigator.of(context).pop(); // close the drawer
-  }
-
-  //drawer
-
   // Base URL for our wordpress API
   final String apiUrl = "http://ehawal.com/wp-json/wp/v2/";
+  final String kurdistanUrl = " ";
   List posts;
+  List  kurdistanCatPosts;
 
   // Function to fetch list of posts
   Future<String> getPosts() async {
@@ -69,15 +38,31 @@ class HawalnirHomeState extends State {
     return "Success!";
   }
 
+  //getting posts of Kurdistan Category 
+  Future<String> getKurdistanCatPosts() async {
+    var res = await http.get(
+        Uri.encodeFull(apiUrl + "posts?categories=7278&perpage=10"),
+        headers: {"Accept": "application/json"});
+
+    setState(() {
+      var resBody = json.decode(res.body);
+
+      kurdistanCatPosts = resBody;
+    });
+
+    return "Success!";
+  }
+  //end of getting kurdistanCatPosts
+
   @override
   void initState() {
     super.initState();
     this.getPosts();
+    this.getKurdistanCatPosts(); //have to go to its own page
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return new Directionality(
         //where i add Dictio for rtl  entire home page , i wraped every thing into this
         textDirection: TextDirection.rtl, // RTL
@@ -86,24 +71,61 @@ class HawalnirHomeState extends State {
           appBar: AppBar(
               title: Text("هه‌واڵنێر"), backgroundColor: Colors.blueAccent),
 
-          drawer: mainDrawer(),
-          //drawer
-          // drawer: new Drawer(
-          //  child: new Column(
-          //   children: <Widget>[
-          //    new UserAccountsDrawerHeader(
-          //        accountName: new Text("John Doe"), accountEmail: null),
-          //    new Column(children: drawerOptions)
-          //    ],
-          //  ),
-          //),
+          drawer: Drawer(
+      child: ListView(
+    //physics: BouncingScrollPhysics(),
 
-          //drawer
+    padding: EdgeInsets.zero,
+    children: <Widget>[
+      DrawerHeader(
+        child: Text("data"),
+        decoration: BoxDecoration(
+          color: Colors.amberAccent,
+        ),
+      ),
+socialBtn("فه‌یسبوك", Icons.closed_caption, Colors.indigo[900]), 
+drawerBtnPadding(),
+socialBtn("تویتته‌ر", Icons.access_alarms, Colors.indigo[900]),
+     
+     drawerBtnPadding(),
+      ExpansionTile(
+        initiallyExpanded: true,
+        title: Text("بابه‌ته‌كانی هه‌واڵ"),
+        children: <Widget>[
+             //temp has to be in app dart
+              FlatButton(
+                child: Text(
+                  "Next Screen"
+                ),
+                onPressed: (){
+                  Navigator.of(context).pushNamed('/screen2');
+                }
+              ),
+              // temp
+          
+          drawerBtn(" كوردستان"),
+          drawerBtnPadding(),
+          drawerBtn("hello"),
+          drawerBtnPadding(),
+          drawerBtn("hello"),
+          drawerBtnPadding(),
+          drawerBtn("hello"),
+          drawerBtnPadding(),
+          drawerBtn("hello"),
+          drawerBtnPadding(),
+          drawerBtn("hello"),
+          drawerBtnPadding(),
+        ],
+      ),
+
+      drawerBtn("text"),
+    ],
+  ),
+  ),
+
           //where we have to wrap for pull to refresh
-          body: 
-              //drawer
-              //_getDrawerItemWidget(_selectedDrawerIndex),
-              //drawer
+          body:
+             
               RefreshIndicator(
             onRefresh: getPosts,
             //there was an error when i used getPosts(); so i removed prantisice
@@ -115,6 +137,7 @@ class HawalnirHomeState extends State {
                     Card(
                       child: Column(
                         children: <Widget>[
+
                           new FadeInImage.memoryNetwork(
                             placeholder: kTransparentImage,
                             image: posts[index]["featured_media"] == 0
@@ -212,4 +235,176 @@ class HawalnirHomeState extends State {
           ),
         ));
   }
+}
+
+
+
+Widget kurdistanCatBtn() {
+//String text ;
+
+  return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        RaisedButton(
+          elevation: 2.0,
+          //textTheme: ButtonTextTheme.primary,
+          splashColor: Colors.cyan,
+          textColor: Colors.black,
+          colorBrightness: Brightness.dark,
+
+          child: Text("په‌ری كوردستان"),
+
+          padding: EdgeInsets.all(20.0),
+          animationDuration: Duration(microseconds: 200),
+          shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.only(bottomLeft: Radius.circular(10.0))),
+          color: Colors.amber,
+          onPressed: () {
+           
+              
+            
+           
+          },
+        ),
+      ]);
+}
+
+//kurdistanposts
+
+class KurdistanCatPosts extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text("هه‌واڵه‌كانی كوردستان"),
+
+      ),
+      body: new Center(
+        child: new Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            new RaisedButton(onPressed:(){
+              button2(context);
+            } ,child: new Text("Back to Screen 1"),)
+          ],
+        ),
+      ) ,
+    );
+
+  }
+}
+
+void button1(BuildContext context){
+  print("Button 1"); //1
+  Navigator.of(context).pushNamed('/screen2'); //2
+}
+
+void button2(BuildContext context){
+  print("Button 2"); //3
+  Navigator.of(context).pop(true);//4
+}
+
+class Screen2 extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text("هه‌واڵه‌كانی كوردستان"),
+
+      ),
+      body: new Center(
+        child: new Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            new RaisedButton(onPressed:(){
+              button2(context);
+            } ,child: new Text("Back to Screen 1"),)
+          ],
+        ),
+      ) ,
+    );
+
+  }
+}
+
+
+Widget drawerBtn(String text) {
+//String text ;
+
+  return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        RaisedButton(
+          elevation: 2.0,
+          //textTheme: ButtonTextTheme.primary,
+          splashColor: Colors.cyan,
+          textColor: Colors.black,
+          colorBrightness: Brightness.dark,
+
+          child: Text(text),
+
+          padding: EdgeInsets.all(20.0),
+          animationDuration: Duration(microseconds: 200),
+          shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.only(bottomLeft: Radius.circular(10.0))),
+          color: Colors.amber,
+          onPressed: () {
+           
+           
+          },
+        ),
+      ]);
+}
+
+//btn social
+Widget socialBtn(String text, IconData iconData, Color color) {
+  return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+       // Padding(
+         // padding: EdgeInsets.all(20.0),
+        //),
+        RaisedButton(
+          child: Row(
+            children: <Widget>[
+              Icon(
+               iconData,
+                color: Colors.cyan,
+              ),
+              Padding(padding: EdgeInsets.all(10.0)),
+              Text(
+                text,
+                style: TextStyle(color: Colors.white),
+              )
+            ],
+          ),
+          elevation: 2.0,
+          //textTheme: ButtonTextTheme.primary,
+          splashColor: Colors.cyan,
+          textColor: Colors.black,
+          colorBrightness: Brightness.dark,
+          padding: EdgeInsets.all(20.0),
+
+          animationDuration: Duration(microseconds: 200),
+          shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.only(bottomLeft: Radius.circular(10.0))),
+          color: color,
+          onPressed: () {},
+        ),
+      ]);
+}
+
+Widget drawerBtnPadding() {
+  return Padding(
+    padding: EdgeInsets.all(5.0),
+  );
 }
