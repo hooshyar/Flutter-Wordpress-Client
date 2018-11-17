@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'src/app.dart';
+import 'src/pages/getCategories.dart';
+import 'src/pages/kurdistan-cat.dart';
 
 void main() {
 

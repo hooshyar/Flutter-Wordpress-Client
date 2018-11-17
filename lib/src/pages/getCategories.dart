@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'widgets/hawalnir-home.dart';
+import '../widgets/hawalnir-home.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:http/http.dart' as http; // http requ
 import 'dart:async';
 import 'dart:convert'; //COnvett Json
-import 'widgets/hawalnir-date-convertor.dart';
-import 'pages/kurdistan-cat.dart';
+import '../widgets/hawalnir-date-convertor.dart';
+
 //import '../src/UI/drawerWidget.dart'; //Drawer widget
 //implementing the drawer
 
-class HawalnirHome extends StatefulWidget {
+class KurdistanCatPosts extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => HawalnirHomeState();
+  State<StatefulWidget> createState() => KurdistanCatPostsState();
 }
 
-class HawalnirHomeState extends State {
+class KurdistanCatPostsState extends State {
   // Base URL for our wordpress API
   final String apiUrl = "http://ehawal.com/wp-json/wp/v2/";
   final String kurdistanUrl = " ";
@@ -55,7 +55,7 @@ class HawalnirHomeState extends State {
 */
   @override
   void initState() {
-    super.initState();
+    initState();
     this.getPosts();
     //this.getKurdistanCatPosts(); //have to go to its own page
   }
@@ -68,7 +68,7 @@ class HawalnirHomeState extends State {
         child: new Scaffold(
           // Scaffold az a Child, it takes only one child
           appBar: AppBar(
-              title: Text("هه‌واڵنێر"), backgroundColor: Colors.blueAccent),
+              title: Text("هه‌واڵی كوردستان"), backgroundColor: Colors.blueAccent),
 
           drawer: Drawer(
             child: ListView(
@@ -94,19 +94,10 @@ class HawalnirHomeState extends State {
                     FlatButton(
                         child: Text("هه‌واڵه‌كانی كوردستان"),
                         onPressed: () {
-                          // we want to close the drawer
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  KurdistanCatPage(),
-                            ),
-                          );
-                          //TODO Navigator.of(context).pushNamed('/screen2'););
+                          Navigator.of(context).pushNamed('/screen2');
                         }),
-                    
                     // temp
+
                     drawerBtn(" كوردستان"),
                     drawerBtnPadding(),
                   ],
@@ -253,34 +244,7 @@ Widget kurdistanCatBtn() {
       ]);
 }
 
-//kurdistanposts
-/*
-class KurdistanCatPosts extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("هه‌واڵه‌كانی كوردستان"),
-      ),
-      body: new Center(
-        child: new Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            new RaisedButton(
-              onPressed: () {
-                button2(context);
-              },
-              child: new Text("Back to Screen 1"),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-//Kurdistan posts
-*/
+
 void button1(BuildContext context) {
   print("Button 1"); //1
   Navigator.of(context).pushNamed('/screen2'); //2
@@ -291,30 +255,6 @@ void button2(BuildContext context) {
   Navigator.of(context).pop(true); //4
 }
 
-class Screen2 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("هه‌واڵه‌كانی كوردستان"),
-      ),
-      body: new Center(
-        child: new Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            new RaisedButton(
-              onPressed: () {
-                button2(context);
-              },
-              child: new Text("Back to Screen 1"),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 Widget drawerBtn(String text) {
 //String text ;
