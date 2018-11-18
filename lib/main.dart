@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'src/app.dart';
 import 'src/pages/getCategories.dart';
 import 'src/pages/kurdistan-cat.dart';
+import 'src/pages/kurdistanCat.dart';
 
 void main() {
 
@@ -18,7 +19,7 @@ void main() {
       home: HawalnirHome(), // it will go and get app.dart then it will go to  HawalnirHome() from hawalnir-home.dart
       routes: <String , WidgetBuilder> {
         '/screen1': (BuildContext context) => new Screen2(), //6
-        '/screen2' : (BuildContext context) => new KurdistanCatPosts(), //7
+        '/KrdCat' : (BuildContext context) => new KrdCat(), //7
       },
       
     

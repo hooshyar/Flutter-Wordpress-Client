@@ -24,7 +24,7 @@ class HawalnirHomeState extends State {
   // Function to fetch list of posts
   Future<String> getPosts() async {
     var res = await http.get(
-        Uri.encodeFull(apiUrl + "posts?_embed&per_page=100"),
+        Uri.encodeFull(apiUrl + "posts?_embed&per_page=10"), //TODO +100
         headers: {"Accept": "application/json"});
 
     setState(() {
@@ -95,14 +95,9 @@ class HawalnirHomeState extends State {
                         child: Text("هه‌واڵه‌كانی كوردستان"),
                         onPressed: () {
                           // we want to close the drawer
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  KurdistanCatPage(),
-                            ),
-                          );
+                          Navigator.of(context).pop();
+                          Navigator.pushNamed(context, '/KrdCat');
+                         
                           //TODO Navigator.of(context).pushNamed('/screen2'););
                         }),
                     
@@ -128,10 +123,10 @@ class HawalnirHomeState extends State {
                     Card(
                       child: Column(
                         children: <Widget>[
-                          new FadeInImage.memoryNetwork(
-                            placeholder: kTransparentImage,
+                          new FadeInImage.assetNetwork(
+                            placeholder: 'assets/images/placeholder.png',
                             image: posts[index]["featured_media"] == 0
-                                ? 'images/placeholder.png'
+                                ? 'assets/images/placeholder.png'
                                 : posts[index]["_embedded"]["wp:featuredmedia"]
                                     [0]["source_url"],
                           ),
