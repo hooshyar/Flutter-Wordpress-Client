@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'widgets/hawalnir-home.dart';
-import 'package:transparent_image/transparent_image.dart';
+import 'widgets/eachPost.dart';
 import 'package:http/http.dart' as http; // http requ
 import 'dart:async';
 import 'dart:convert'; //COnvett Json
 import 'widgets/hawalnir-date-convertor.dart';
-import 'pages/kurdistan-cat.dart';
-//import '../src/UI/drawerWidget.dart'; //Drawer widget
-//implementing the drawer
 
 class HawalnirHome extends StatefulWidget {
   @override
@@ -23,9 +19,9 @@ class HawalnirHomeState extends State {
 
   // Function to fetch list of posts
   Future<String> getPosts() async {
-    var res = await http.get(
-        Uri.encodeFull(apiUrl + "posts?_embed&per_page=10"), //TODO +100
-        headers: {"Accept": "application/json"});
+    var res = await http
+        .get(Uri.encodeFull(apiUrl + "posts?_embed&per_page=10"), //TODO +100
+            headers: {"Accept": "application/json"});
 
     setState(() {
       var resBody = json.decode(res.body);
@@ -36,28 +32,10 @@ class HawalnirHomeState extends State {
     return "Success!";
   }
 
-/*
-  //getting posts of Kurdistan Category 
-  Future<String> getKurdistanCatPosts() async {
-    var res = await http.get(
-        Uri.encodeFull(apiUrl + "posts?categories=7278&perpage=10"),
-        headers: {"Accept": "application/json"});
-
-    setState(() {
-      var resBody = json.decode(res.body);
-
-      kurdistanCatPosts = resBody;
-    });
-
-    return "Success!";
-  }
-  //end of getting kurdistanCatPosts
-*/
   @override
   void initState() {
     super.initState();
     this.getPosts();
-    //this.getKurdistanCatPosts(); //have to go to its own page
   }
 
   @override
@@ -68,9 +46,9 @@ class HawalnirHomeState extends State {
         child: new Scaffold(
           // Scaffold az a Child, it takes only one child
           appBar: AppBar(
-              title: Text("هه‌واڵنێر")
-              
-              ),
+            title: Text("هه‌واڵنێر") ,
+            
+             ),
 
           drawer: Drawer(
             child: ListView(
@@ -92,27 +70,23 @@ class HawalnirHomeState extends State {
                   initiallyExpanded: true,
                   title: Text("بابه‌ته‌كانی هه‌واڵ"),
                   children: <Widget>[
-                    //temp has to be in app dart
-                    FlatButton(
-                        child: Text("هه‌واڵه‌كانی كوردستان"),
-                        onPressed: () {
-                          
-                         
-                          //TODO Navigator.of(context).pushNamed('/screen2'););
-                        }),
-                    
-                    // temp
-                    drawerBtn(" كوردستان", (){
+                    drawerBtn(" كوردستان", () {
                       // we want to close the drawer
-                          Navigator.of(context).pop();
-                          Navigator.pushNamed(context, '/KrdCat');
-                    } ),
+                      Navigator.of(context).pop(); //TODO Find a better way
+                      Navigator.pushNamed(
+                          context, '/KrdCat'); // => KurdistanCat.dart
+                    }),
+                    drawerBtnPadding(),
+                    drawerBtn("ئابوری", (){
+                      print("object") ;
+                    }),
                     drawerBtnPadding(),
                   ],
+                  
                 ),
-                drawerBtn("text", (){
+                drawerBtn("text", () {
                   print('object2');
-                } ),
+                }),
               ],
             ),
           ),
@@ -125,9 +99,13 @@ class HawalnirHomeState extends State {
               itemCount: posts == null ? 0 : posts.length,
               itemBuilder: (BuildContext context, int index) {
                 return Column(
+                  
                   children: <Widget>[
                     Card(
-                      child: Column(
+                      shape:RoundedRectangleBorder( borderRadius: BorderRadius.all(Radius.circular(20.0)) ),
+                      clipBehavior: Clip.hardEdge,
+                      child: Column( 
+                        
                         children: <Widget>[
                           new FadeInImage.assetNetwork(
                             placeholder: 'assets/images/placeholder.png',
@@ -136,11 +114,6 @@ class HawalnirHomeState extends State {
                                 : posts[index]["_embedded"]["wp:featuredmedia"]
                                     [0]["source_url"],
                           ),
-
-                          //new ListTile(
-                          //  title:Text(posts[index]["author"]["rendered"].toString()) , //trying to fetch authors name
-                          //),
-
                           new Padding(
                             padding: EdgeInsets.all(5.0),
                             child: new ListTile(
@@ -148,8 +121,8 @@ class HawalnirHomeState extends State {
                                 Navigator.push(
                                   context,
                                   new MaterialPageRoute(
-                                    builder: (context) =>
-                                        new HawalnirPost(post: posts[index]),
+                                    builder: (context) => new HawalnirPost(
+                                        post: posts[index]), //post by post
                                   ),
                                 );
                               },
@@ -158,7 +131,6 @@ class HawalnirHomeState extends State {
                                 child:
                                     new Text(posts[index]["title"]["rendered"]),
                               ),
-
                               subtitle: new Row(
                                 children: <Widget>[
                                   Expanded(
@@ -171,17 +143,13 @@ class HawalnirHomeState extends State {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      DateConvertor(
+                                      dateConvertor(
                                           posts[index]["date"].toString()),
                                       textAlign: TextAlign.left,
                                     ),
                                   ),
                                 ],
                               ),
-
-                              //subtitle: new Text(    // here i disabled subtitle
-                              //posts[index]["excerpt"]["rendered"].replaceAll(new RegExp(r'<[^>]*>'), '') //contetn is a object so how to use a array or string
-                              // ),
                             ),
                           ),
                           new ButtonTheme.bar(
@@ -254,70 +222,7 @@ Widget kurdistanCatBtn() {
       ]);
 }
 
-//kurdistanposts
-/*
-class KurdistanCatPosts extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("هه‌واڵه‌كانی كوردستان"),
-      ),
-      body: new Center(
-        child: new Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            new RaisedButton(
-              onPressed: () {
-                button2(context);
-              },
-              child: new Text("Back to Screen 1"),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-//Kurdistan posts
-*/
-void button1(BuildContext context) {
-  print("Button 1"); //1
-  Navigator.of(context).pushNamed('/screen2'); //2
-}
-
-void button2(BuildContext context) {
-  print("Button 2"); //3
-  Navigator.of(context).pop(true); //4
-}
-
-class Screen2 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("هه‌واڵه‌كانی كوردستان"),
-      ),
-      body: new Center(
-        child: new Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            new RaisedButton(
-              onPressed: () {
-                button2(context);
-              },
-              child: new Text("Back to Screen 1"),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-Widget drawerBtn(String text,Function function) {
+Widget drawerBtn(String text, Function function) {
 //String text ;
 
   return Column(
