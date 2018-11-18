@@ -94,19 +94,23 @@ class HawalnirHomeState extends State {
                     FlatButton(
                         child: Text("هه‌واڵه‌كانی كوردستان"),
                         onPressed: () {
-                          // we want to close the drawer
-                          Navigator.of(context).pop();
-                          Navigator.pushNamed(context, '/KrdCat');
+                          
                          
                           //TODO Navigator.of(context).pushNamed('/screen2'););
                         }),
                     
                     // temp
-                    drawerBtn(" كوردستان"),
+                    drawerBtn(" كوردستان", (){
+                      // we want to close the drawer
+                          Navigator.of(context).pop();
+                          Navigator.pushNamed(context, '/KrdCat');
+                    } ),
                     drawerBtnPadding(),
                   ],
                 ),
-                drawerBtn("text"),
+                drawerBtn("text", (){
+                  print('object2');
+                } ),
               ],
             ),
           ),
@@ -311,7 +315,7 @@ class Screen2 extends StatelessWidget {
   }
 }
 
-Widget drawerBtn(String text) {
+Widget drawerBtn(String text,Function function) {
 //String text ;
 
   return Column(
@@ -332,7 +336,7 @@ Widget drawerBtn(String text) {
               borderRadius:
                   BorderRadius.only(bottomLeft: Radius.circular(10.0))),
           color: Colors.amber,
-          onPressed: () {},
+          onPressed: function,
         ),
       ]);
 }
