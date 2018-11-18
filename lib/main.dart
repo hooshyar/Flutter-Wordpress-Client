@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'src/app.dart';
-import 'src/pages/getCategories.dart';
-import 'src/pages/kurdistan-cat.dart';
+//import 'src/pages/getCategories.dart';
+//import 'src/pages/kurdistan-cat.dart';
 import 'src/pages/kurdistanCat.dart';
 
 void main() {
@@ -10,7 +10,7 @@ void main() {
   runApp(MaterialApp(
     theme: ThemeData( // adding a theme 
         brightness: Brightness.dark, //changing the theme to dark
-        primaryColor: Colors.lightBlue[800], // color change for links 
+        primaryColor: Colors.lightBlue[900], // color change for links 
         accentColor: Colors.cyan[600], // i dont know 
         fontFamily: 'NotoSansArabic'
         

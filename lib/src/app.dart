@@ -68,7 +68,9 @@ class HawalnirHomeState extends State {
         child: new Scaffold(
           // Scaffold az a Child, it takes only one child
           appBar: AppBar(
-              title: Text("هه‌واڵنێر"), backgroundColor: Colors.blueAccent),
+              title: Text("هه‌واڵنێر")
+              
+              ),
 
           drawer: Drawer(
             child: ListView(
