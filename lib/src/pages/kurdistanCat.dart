@@ -11,7 +11,7 @@ class KrdCat extends StatefulWidget {
 }
 
 class _KrdCatState extends State<KrdCat> {
-  final String apiUrl = "http://ehawal.com/wp-json/wp/v2/";
+  final String apiUrl = mainApiUrl ;
   List posts;
   String categoryId = kurdistanId ;
  String hawalPerPage = perPage;

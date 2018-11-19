@@ -25,14 +25,14 @@ class HawalnirPost extends StatelessWidget {
               children: <Widget>[
                 new Column(
                   //rossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     
-                    Card(
-                        shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0) ) ,
-                        clipBehavior: Clip.hardEdge,
-                      child: mainImage(post),
-                      ),
+                    
+                    
+                      
+                      mainImage(post),
+                     
                      Row(
                       
                       children: <Widget>[
@@ -61,6 +61,7 @@ class HawalnirPost extends StatelessWidget {
 
 Widget mainImage(dynamic post) {
   return FadeInImage.assetNetwork(
+    
     placeholder: 'assets/images/placeholder.png',
     image: post["featured_media"] == 0
         ? 'src/images/placeholder.png'
