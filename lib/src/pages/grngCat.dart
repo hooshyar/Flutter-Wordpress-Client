@@ -3,39 +3,53 @@ import '../widgets/eachPost.dart';
 import 'package:http/http.dart' as http; // http requ
 import 'dart:async';
 import 'dart:convert'; //COnvett Json
-import '../widgets/hawalnir-date-convertor.dart';
+import '../widgets/catWidgets.dart';
+import '../config.dart';
+import 'dart:core';
+import 'dart:collection';
 
-class KrdCat extends StatefulWidget {
-  _KrdCatState createState() => _KrdCatState();
+List cachedPosts ; 
+
+class GrngCat extends StatefulWidget {
+  _GrngCatState createState() => _GrngCatState();
 }
 
-class _KrdCatState extends State<KrdCat> {
-  final String apiUrl = "http://ehawal.com/wp-json/wp/v2/";
-  final String kurdistanUrl = " ";
+class _GrngCatState extends State<GrngCat> {
+  final String apiUrl = mainApiUrl ;
   List posts;
+  String categoryId = kurdistanId ;
+ String hawalPerPage = perPage;
+
   //List kurdistanCatPosts;
 
   // Function to fetch list of posts
   Future<String> getPosts() async {
-    var res = await http.get(
-        Uri.encodeFull(apiUrl +
-            "posts?_embed&categories=7278&per_page=3"), // Works Uri.encodeFull(apiUrl + "posts?categories=7278"),
-        headers: {"Accept": "application/json"});
+    if (!cachedPosts.contains(posts)){
 
-    setState(() {
-      var resBody = json.decode(res.body);
-      posts = resBody;
-    });
-
+        var res = await http.get(
+                Uri.encodeFull(apiUrl +
+                 "posts?_embed&categories=$categoryId&per_page=$hawalPerPage"), 
+                headers: {"Accept": "application/json"});
+ setState(() {
+              var resBody = json.decode(res.body);
+              posts = resBody;
+              cachedPosts = posts ;
+              //posts = database resbody if listens and found new then reloads
+             },); //setstate
+            
+            
+    
+    }
     return "Success!";
   }
+    
+    void initState() {
+          super.initState();
+          this.getPosts();
+          //this.getKurdistanCatPosts(); //have to go to its own page
+        }
 
-  @override
-  void initState() {
-    super.initState();
-    this.getPosts();
-    //this.getKurdistanCatPosts(); //have to go to its own page
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -64,20 +78,11 @@ class _KrdCatState extends State<KrdCat> {
 
                            Container( 
                              
-                             child: FadeInImage.assetNetwork(
-                          placeholder: 'assets/images/placeholder.png',
-                              image:
-                               posts[index]["featured_media"] == 0
-                                  ? 'assets/images/placeholder.png'
-                                  : posts[index]["_embedded"]["wp:featuredmedia"]
-                                      [0]["source_url"],
-                          ),
+                             child: hawalImage(posts, index),
+                             
                            ), 
 
-                        //new ListTile(
-                        //  title:Text(posts[index]["author"]["rendered"].toString()) , //trying to fetch authors name
-                        //),
-
+                      
                         new Padding(
                           padding: EdgeInsets.all(5.0),
                           child: new ListTile(
@@ -90,68 +95,23 @@ class _KrdCatState extends State<KrdCat> {
                                 ),
                               );
                             },
-                            title: new Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10.0),
-                              child: // Text("data")
-                                  new Text(posts[index]["title"]["rendered"]),
-                            ),
+                            title: hawalTitle(posts, index),
 
                             subtitle: new Row(
                               children: <Widget>[
                                 Expanded(
-                                  child: Text(
-                                    "نووسه‌ر: " +
-                                        posts[index]["_embedded"]["author"][0]
-                                            ["name"],
-                                    textAlign: TextAlign.right,
-                                  ),
+                                  child: hawalAuthor(posts, index),
                                 ),
                                 Expanded(
-                                  child: Text(
-                                    dateConvertor(
-                                        posts[index]["date"].toString()),
-                                    textAlign: TextAlign.left,
-                                  ),
+                                  child: hawalDate(posts, index),
                                 ),
                               ],
                             ),
 
-                            //subtitle: new Text(    // here i disabled subtitle
-                            //posts[index]["excerpt"]["rendered"].replaceAll(new RegExp(r'<[^>]*>'), '') //contetn is a object so how to use a array or string
-                            // ),
                           ),
                         ),
                         new ButtonTheme.bar(
-                          child: new ButtonBar(
-                            children: <Widget>[
-                              IconButton(
-                                icon: Icon(Icons.save),
-                                splashColor: Colors.blueAccent[200],
-                                color: Colors.blueGrey,
-                                tooltip: 'پاشكه‌وت كردنی بابه‌ت',
-                                onPressed: () {
-                                  setState(() {});
-                                }, // add +1 to the database
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.favorite),
-                                splashColor: Colors.redAccent,
-                                color: Colors.blueGrey,
-                                tooltip: 'په‌سه‌ند كردن',
-                                onPressed: () {
-                                  setState(() {});
-                                }, // add +1 to the database
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.share),
-                                color: Colors.blueGrey,
-                                tooltip: 'بو هاورێكانت بنێره‌',
-                                onPressed: () {
-                                  setState(() {});
-                                }, // Standard share for whatsapp + google + faccebook + twitter
-                              ),
-                            ],
-                          ),
+                          child: hawalBtnBar(),
                         ),
                       ],
                     ),

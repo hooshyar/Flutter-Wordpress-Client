@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http; // http requ
 import 'dart:async';
 import 'dart:convert'; //COnvett Json
 import 'widgets/hawalnir-date-convertor.dart';
+//import 'dart:collection';
+//import 'dart:core';
 
 class HawalnirHome extends StatefulWidget {
   @override
@@ -77,6 +79,12 @@ class HawalnirHomeState extends State {
                           context, '/KrdCat'); // => KurdistanCat.dart
                     }),
                     drawerBtnPadding(),
+                    drawerBtn(" grng", () {
+                      // we want to close the drawer
+                      Navigator.of(context).pop(); //TODO Find a better way
+                      Navigator.pushNamed(
+                          context, '/GrngCat'); // => KurdistanCat.dart
+                    }),
                     drawerBtn("ئابوری", (){
                       print("object") ;
                     }),
@@ -122,9 +130,12 @@ class HawalnirHomeState extends State {
                                   context,
                                   new MaterialPageRoute(
                                     builder: (context) => new HawalnirPost(
-                                        post: posts[index]), //post by post
+                                        post: posts[index]),
+                                        
+                                         //post by post
                                   ),
                                 );
+                               
                               },
                               title: new Padding(
                                 padding: EdgeInsets.symmetric(vertical: 10.0),

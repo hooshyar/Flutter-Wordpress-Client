@@ -3,6 +3,8 @@ import 'src/app.dart';
 //import 'src/pages/getCategories.dart';
 //import 'src/pages/kurdistan-cat.dart';
 import 'src/pages/kurdistanCat.dart';
+import 'src/pages/grngCat.dart';
+
 
 void main() {
 
@@ -29,7 +31,7 @@ void main() {
       
       home: HawalnirHome(), // it will go and get app.dart then it will go to  HawalnirHome() from hawalnir-home.dart
       routes: <String , WidgetBuilder> {
-        //'/screen1': (BuildContext context) => new Screen2(), //6
+        '/GrngCat': (BuildContext context) => new GrngCat(), //6
         '/KrdCat' : (BuildContext context) => new KrdCat(), //7
       },
       
