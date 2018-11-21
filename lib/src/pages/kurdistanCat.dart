@@ -14,7 +14,7 @@ class _KrdCatState extends State<KrdCat> {
   final String apiUrl = mainApiUrl ;
   List posts;
   String categoryId = kurdistanId ;
- String hawalPerPage = perPage;
+  String hawalPerPage = perPage;
 
   //List kurdistanCatPosts;
 
