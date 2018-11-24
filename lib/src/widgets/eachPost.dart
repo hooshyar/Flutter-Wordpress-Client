@@ -27,29 +27,19 @@ class HawalnirPost extends StatelessWidget {
                   //rossAxisAlignment: CrossAxisAlignment.stretch,
                   //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    
-                    
-                    
-                      
-                      mainImage(post),
-                     
-                     Row(
-                      
+                    mainImage(post),
+                    Row(
                       children: <Widget>[
                         Expanded(
-                          child:authorEmbedded(post),
+                          child: authorEmbedded(post),
                         ),
                         Expanded(
-                          child:dateMain(post), 
+                          child: dateMain(post),
                         ),
-                         
                       ],
                     ),
-                     Divider(),
-
+                    Divider(),
                     contentRendered(post),
-                    
-                    
                   ],
                 ),
               ],
@@ -61,7 +51,6 @@ class HawalnirPost extends StatelessWidget {
 
 Widget mainImage(dynamic post) {
   return FadeInImage.assetNetwork(
-    
     placeholder: 'assets/images/placeholder.png',
     image: post["featured_media"] == 0
         ? 'src/images/placeholder.png'
@@ -79,8 +68,9 @@ Widget contentRendered(dynamic post) {
 }
 
 Widget authorEmbedded(dynamic post) {
-  return Text("نووسه‌ر: " + post["_embedded"]["author"][0]["name"],
-  textAlign: TextAlign.right,
+  return Text(
+    "نووسه‌ر: " + post["_embedded"]["author"][0]["name"],
+    textAlign: TextAlign.right,
   );
 }
 
