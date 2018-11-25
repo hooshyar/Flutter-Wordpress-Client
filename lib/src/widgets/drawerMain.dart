@@ -27,6 +27,12 @@ Widget drawerMain(context) {
               Navigator.pushNamed(
                   context, '/KrdCat'); // => KurdistanCat.dart
             }),
+            drawerBtn(" insta", () {
+              // we want to close the drawer
+              Navigator.of(context).pop(); //TODO Find a better way
+              Navigator.pushNamed(
+                  context, '/InstaPage'); // => KurdistanCat.dart
+            }),
             drawerBtnPadding(),
             drawerBtn(" grng", () {
               // we want to close the drawer

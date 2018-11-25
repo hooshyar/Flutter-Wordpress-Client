@@ -33,3 +33,5 @@ final String womanName = "9102";
 
 
 final String mainPageId = "";
+
+final String connectionProblemError = ' بو ناتوانم په‌یوه‌ندی ده‌گه‌ل هه‌واڵنێر بگرم? ئینته‌رنێت كێشه‌ی هه‌یه‌ ؟ تكایه‌ چاوه‌دێری ئینته‌رنێت بكه‌وه‌.';

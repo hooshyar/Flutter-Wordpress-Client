@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'hawalnir-date-convertor.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../config.dart';
 
 Widget hawalImage(List<dynamic> posts, int index) {
   return FadeInImage.assetNetwork(
@@ -76,4 +77,17 @@ Future<List<dynamic>> getPosts2(
   posts2 = resBody;
   //print(posts2);
   return posts2;
+}
+
+Widget connectionErrorBar (){
+  return Container(
+    alignment: Alignment.bottomCenter,
+
+    child: SnackBar(
+      duration: Duration(milliseconds: 200)  ,
+      animation: kAlwaysCompleteAnimation ,
+      content: Text(connectionProblemError),
+
+    ),
+  );
 }
