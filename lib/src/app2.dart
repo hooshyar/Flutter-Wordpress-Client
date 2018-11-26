@@ -6,13 +6,26 @@ import 'widgets/catWidgets.dart';
 import 'widgets/drawerMain.dart';
 import 'widgets/listViews2.dart';
 import 'config.dart';
+import 'blocs/item-model.dart';
+import 'blocs/database_helper.dart';
+import 'package:sqflite/sqflite.dart';
+
 
 class HawalnirHome2 extends StatefulWidget {
+
   @override
   State<StatefulWidget> createState() => HawalnirHome2State();
 }
 
 class HawalnirHome2State extends State {
+
+
+
+  DatabaseHelper databaseHelper = DatabaseHelper();
+  List<Post> postList ;
+  int count = 0 ;
+
+
   // Base URL for our wordpress API
   final String apiUrl = "http://ehawal.com/wp-json/wp/v2/";
   List posts;
@@ -67,5 +80,10 @@ class HawalnirHome2State extends State {
       ),
     );
   }
+
+  void _delete(BuildContext context, Post post) async {
+    int result = await databaseHelper.deletePost(post.id);
+  }
+
 }
 
