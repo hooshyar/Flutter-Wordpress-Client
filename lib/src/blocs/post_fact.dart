@@ -1,9 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
-part 'post.g.dart';
+
+
+
+part 'post_fact.g.dart';
 
 
 @JsonSerializable()
-class Post {
+class PostFact {
   int _id;
   String _title;
   String _content;
@@ -13,8 +16,8 @@ class Post {
 
   //final List<post> posts ;
 
-  Post(this._id, this._title, this._content, this._author, this._date,
+  PostFact(this._id, this._title, this._content, this._author, this._date,
       [this._imgUrl]);
 
-  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
+  factory PostFact.fromJson(Map<String, dynamic> json) => _$PostFactFromJson(json);
 }
