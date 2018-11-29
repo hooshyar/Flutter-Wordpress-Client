@@ -36,10 +36,8 @@ class Post {
   }
 
   set imgUrl(String newImgUrl) {
-    this._imgUrl = newImgUrl ;
+    this._imgUrl = newImgUrl;
   }
-
-
 
   //convert post to Map
   Map<String, dynamic> toMap() {
@@ -56,20 +54,13 @@ class Post {
     return map;
   }
 
-
-
-
-
   //Extract post from Map Object
- Post.fromMapObject(Map<String , dynamic>map ){
+  Post.fromMapObject(Map<String, dynamic> map) {
     this._id = map['id'];
     this._title = map['title'];
     this._content = map['content'];
     this._author = map['author'];
     this._date = map['date'];
     this._imgUrl = map['imgurl'];
-
- }
-
-
+  }
 }
