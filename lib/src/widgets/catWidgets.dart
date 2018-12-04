@@ -3,6 +3,7 @@ import 'hawalnir-date-convertor.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../config.dart';
+import '../../wordpress_client.dart';
 
 Widget hawalImage(List<dynamic> posts, int index) {
   return FadeInImage.assetNetwork(
@@ -28,9 +29,9 @@ Widget hawalAuthor(List<dynamic> posts, int index) {
   );
 }
 
-Widget hawalDate(List<dynamic> posts, int index) {
+Widget hawalDate(Post post) {
   return Text(
-    dateConvertor(posts[index]["date"].toString()),
+    dateConvertor(post.date.toString()),
     textAlign: TextAlign.left,
   );
 }

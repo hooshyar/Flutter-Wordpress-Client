@@ -6,21 +6,48 @@ import 'widgets/catWidgets.dart';
 import 'widgets/drawerMain.dart';
 import 'widgets/listViews2.dart';
 import 'config.dart';
-import 'blocs/item-model.dart';
+//import 'blocs/item-model.dart';
 import 'blocs/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
+//WPCLIENT_START
+import 'package:hawalnir1/wordpress_client.dart';
+
+WordpressClient client = new WordpressClient(_baseUrl, http.Client());
+final String _baseUrl = 'http://ehawal.com/index.php/wp-json';
+//WPCLIENT_END
+
+int perPageInt = int.parse(perPage) ;
 
 class HawalnirHome2 extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() => HawalnirHome2State();
 }
 
 class HawalnirHome2State extends State {
 
+  //WPCLIENT_START
+  var postsCount = 0;
 
+  List<Post> posts;
+  List<User> userNames;
+  List<Media> medias ;
 
+  Future<List<Post>> getPosts() async {
+    //int mediaPerPage = perPage
+    posts = await client.listPosts(perPage: perPageInt , injectObjects: true);
+    userNames = await client.listUser();
+
+      //dynamic attach =  client.getMedia(mediaID)
+      medias = await client.listMedia(perPage: perPageInt);
+     // debugPrint("Per Page is " + medias.toString());
+
+    return posts;
+  }
+  //WPCLIENT_END
+
+     /*
   DatabaseHelper databaseHelper = DatabaseHelper();
   List<Post> postList ;
   int count = 0 ;
@@ -51,6 +78,7 @@ class HawalnirHome2State extends State {
     super.initState();
     //this.getPosts();
   }
+*/
 
   @override
   Widget build(BuildContext context) {
@@ -61,29 +89,21 @@ class HawalnirHome2State extends State {
         appBar: AppBar(
             title: Text("app 2"), //TODO edit this
             backgroundColor: Colors.blueAccent),
-        body: FutureBuilder<List<dynamic>>(
-            future: getPosts(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                //TODO show cached posts
-                return connectionErrorBar();
+        body: FutureBuilder<List<Post>>(
+          future: getPosts(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) print(snapshot.error);
 
-              } else {
-                if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
-                } else {
-                  return ListViewPosts2(postsFrom: snapshot.data);
-                }
-              }
-
-            }),
+            return snapshot.hasData
+                ? ListViewPosts2(
+                    posts: snapshot.data,
+                    users: userNames,
+                    medias: medias,
+                  )
+                : Center(child: CircularProgressIndicator());
+          },
+        ),
       ),
     );
   }
-
-  void _delete(BuildContext context, Post post) async {
-    int result = await databaseHelper.deletePost(post.id);
-  }
-
 }
-
