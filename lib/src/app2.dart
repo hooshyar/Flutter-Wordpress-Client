@@ -25,15 +25,18 @@ class HawalnirHome2 extends StatefulWidget {
   State<StatefulWidget> createState() => HawalnirHome2State();
 }
 
+
+List<Post> posts;
+
+
+Future<List<Post>> getPosts() async {
+  posts = await client.listPosts(perPage: perPageInt, injectObjects: true);
+  return posts;
+}
+
 class HawalnirHome2State extends State {
 
-  List<Post> posts;
 
-
-  Future<List<Post>> getPosts() async {
-    posts = await client.listPosts(perPage: perPageInt, injectObjects: true);
-    return posts;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,15 +47,20 @@ class HawalnirHome2State extends State {
         appBar: AppBar(
             title: Text("app 2"), //TODO edit this
             backgroundColor: Colors.blueAccent),
-        body: FutureBuilder<List<Post>>(
-          future: getPosts(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) print(snapshot.error);
+        body:
 
-            return snapshot.hasData
-                ? ListViewPosts2(posts: snapshot.data)
-                : Center(child: CircularProgressIndicator());
-          },
+        RefreshIndicator(
+          onRefresh: getPosts ,
+          child: FutureBuilder<List<Post>>(
+            future: getPosts(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) print(snapshot.error);
+
+              return snapshot.hasData
+                  ? ListViewPosts2(posts: snapshot.data)
+                  : Center(child: CircularProgressIndicator());
+            },
+          ),
         ),
       ),
     );
