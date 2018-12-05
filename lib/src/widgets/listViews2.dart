@@ -55,11 +55,14 @@ class ListViewPosts2 extends StatelessWidget {
                                 ),
                               );
                             },
-                            title: Text('${posts[position].title}'),
+                            title:
+
+                            hawalTitle(posts[position]),
                             subtitle: new Row(
                               children: <Widget>[
                                 Expanded(
-                                    child: Text(authorName.toString())),
+                                    child: hawalAuthor( posts[position])
+                  )  ,
                                 Expanded(
                                   child: hawalDate(posts[position]),
                                 ),

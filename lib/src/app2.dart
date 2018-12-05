@@ -11,6 +11,8 @@ import 'blocs/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+
+
 //WPCLIENT_START
 import 'package:hawalnir1/wordpress_client.dart';
 
@@ -66,3 +68,14 @@ class HawalnirHome2State extends State {
     );
   }
 }
+
+
+Future<List<Post>> fetchPostsFromDatabase() async {
+  var dbHelper = DatabaseHelper() ;
+  Future<List<Post>> posts = dbHelper.getPostList();
+  debugPrint(posts.toString()) ;
+  return posts;
+
+}
+
+//DataBase

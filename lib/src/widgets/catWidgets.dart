@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../config.dart';
 import '../../wordpress_client.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 Widget hawalImage(List<dynamic> posts, int index) {
   return FadeInImage.assetNetwork(
@@ -14,17 +15,23 @@ Widget hawalImage(List<dynamic> posts, int index) {
   );
 }
 
-Widget hawalTitle(List<dynamic> posts, int index) {
+Widget hawalTitle(Post post) {
   return Padding(
     padding: EdgeInsets.symmetric(vertical: 10.0),
     child: // Text("data")
-        new Text(posts[index]["title"]["rendered"]),
+        Html(data: post.title ,
+          defaultTextStyle: TextStyle(
+        //fontFamily: 'NotoKufiArabic',
+          fontSize: 20.0,
+          decoration: TextDecoration.none)) ,
+
+
   );
 }
 
-Widget hawalAuthor(List<dynamic> posts, int index) {
+Widget hawalAuthor(Post post) {
   return Text(
-    "نووسه‌ر: " + posts[index]["_embedded"]["author"][0]["name"],
+    "نووسه‌ر: " + post.authorName,
     textAlign: TextAlign.right,
   );
 }

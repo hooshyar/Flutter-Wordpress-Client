@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'item-model.dart';
+import '../models/post.dart';
 
 class DatabaseHelper {
   static DatabaseHelper _databaseHelper; // Singleton DB helper
@@ -92,7 +92,7 @@ Future<int> insertPost(Post post) async {
 
     List<Post> postList = List<Post>() ;
     for(int i = 0; i < count; i++ ) {
-      postList.add(Post.fromMapObject(postMapList[i]));
+      postList.add(Post.fromMap(postMapList[i]));
     }
     return postList; //from here Code has been cloned to Projects
   }
