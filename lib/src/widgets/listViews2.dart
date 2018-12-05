@@ -10,14 +10,10 @@ import '../app2.dart';
 import '../client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-List posts;
-
 class ListViewPosts2 extends StatelessWidget {
   final List<Post> posts;
-  final List<User> users;
-  final List<Media> medias;
-  ListViewPosts2({Key key, this.posts, this.users, this.medias})
-      : super(key: key);
+
+  ListViewPosts2({Key key, this.posts}): super(key: key);
   @override
   Widget build(BuildContext context) {
     // return Text(postsFrom.toString(),
@@ -31,17 +27,11 @@ class ListViewPosts2 extends StatelessWidget {
                     itemCount: posts.length,
                     padding: const EdgeInsets.all(15.0),
                     itemBuilder: (context, position) {
-                      int usersCount = users.length;
-                      int mediasCount = medias.length;
+
                       String authorName = posts[position].authorName;
 
-                      debugPrint(authorName);
+                     // debugPrint(authorName);
                       dynamic imgUrl = posts[position].featuredMediaUrl;
-                      debugPrint(imgUrl.toString());
-
-                      int userId = posts[position].author;
-                      // int  imgLength ; imgUrl2.length ;
-                      //debugPrint(imgLength.toString()) ;
 
                       return Card(
                         child: Column(
@@ -59,16 +49,6 @@ class ListViewPosts2 extends StatelessWidget {
                                 errorWidget: new Icon(Icons.error),
                               ),
 
-                              /*
-                              child: FadeInImage.assetNetwork(
-
-                                placeholder: 'assets/images/placeholder.png',
-                                image: imgUrl == null
-                                    ? 'assets/images/placeholder.png'
-                                    : imgUrl,
-                              ),
-
-                              */
                             ),
                             new Padding(
                               padding: EdgeInsets.all(5.0),

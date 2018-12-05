@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'widgets/catWidgets.dart';
 import 'widgets/drawerMain.dart';
-import 'widgets/listViews2.dart';
+import 'widgets/listViews.dart';
 import 'config.dart';
 import 'blocs/item-model.dart';
 import 'blocs/database_helper.dart';
@@ -72,7 +72,7 @@ class HawalnirHomeState extends State {
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
                 } else {
-                  return ListViewPosts2(postsFrom: snapshot.data);
+                  return ListViewPosts(postsFrom: snapshot.data);
                 }
               }
 

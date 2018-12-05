@@ -58,7 +58,7 @@ class ListViewPosts extends StatelessWidget {
                                 child: hawalAuthor(postsFrom, index),
                               ),
                               Expanded(
-                                child: hawalDate(postsFrom, index),
+                                child: hawalDate(posts, index),
                               ),
                             ],
                           ),

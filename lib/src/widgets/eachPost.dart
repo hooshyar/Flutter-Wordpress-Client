@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart'; // pub to load html tags from json api
 import 'hawalnir-date-convertor.dart';
 import 'package:hawalnir1/wordpress_client.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class HawalnirPost extends StatelessWidget {
   // i dont know what is the nag
@@ -17,7 +18,8 @@ class HawalnirPost extends StatelessWidget {
       textDirection: TextDirection.rtl, // wrapped scaffold in the directionly
       child: new Scaffold(
         appBar: new AppBar(
-          title: new Text(post.title), // title gets  the title from post['title'] in api
+          title: Text(post.title)
+           // title gets  the title from post['title'] in api
         ),
         body: new Padding(
             padding: EdgeInsets.all(16.0),
@@ -38,6 +40,8 @@ class HawalnirPost extends StatelessWidget {
                         ),
                       ],
                     ),
+                    Divider(),
+                    titleRendered(post),
                     Divider(),
                     contentRendered(post),
                   ],
@@ -65,9 +69,19 @@ class HawalnirPost extends StatelessWidget {
     );
   }
 
+  Widget titleRendered(Post post) {
+    return Html(
+        data: post.title,
+        defaultTextStyle: TextStyle(
+            //fontFamily: 'NotoKufiArabic',
+            fontSize: 20.0,
+            decoration: TextDecoration.none));
+  }
+
+
   Widget contentRendered(Post post) {
     return Html(
-        data: post.content.toString(),
+        data: (post.content).toString(),
         defaultTextStyle: TextStyle(
             fontFamily: 'NotoKufiArabic',
             fontSize: 20.0,
