@@ -20,6 +20,7 @@ WordpressClient client = new WordpressClient(_baseUrl, http.Client());
 final String _baseUrl = 'http://ehawal.com/index.php/wp-json';
 //WPCLIENT_END
 
+var dbHelper = DatabaseHelper() ;
 int perPageInt = int.parse(perPage);
 
 class HawalnirHome2 extends StatefulWidget {
@@ -29,6 +30,16 @@ class HawalnirHome2 extends StatefulWidget {
 
 
 List<Post> posts;
+
+
+
+
+Future<List<Post>> getPostsFromDB() async {
+  posts = await dbHelper.getPostList();
+  //debugPrint(posts.toString());
+  return posts;
+
+}
 
 
 Future<List<Post>> getPosts() async {
@@ -54,7 +65,7 @@ class HawalnirHome2State extends State {
         RefreshIndicator(
           onRefresh: getPosts ,
           child: FutureBuilder<List<Post>>(
-            future: getPosts(),
+            future: getPostsFromDB(),
             builder: (context, snapshot) {
               if (snapshot.hasError) print(snapshot.error);
 
@@ -66,16 +77,13 @@ class HawalnirHome2State extends State {
         ),
       ),
     );
+
+
+
   }
-}
 
 
-Future<List<Post>> fetchPostsFromDatabase() async {
-  var dbHelper = DatabaseHelper() ;
-  Future<List<Post>> posts = dbHelper.getPostList();
-  debugPrint(posts.toString()) ;
-  return posts;
+
+
 
 }
-
-//DataBase

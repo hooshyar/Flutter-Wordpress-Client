@@ -9,24 +9,44 @@ import 'package:hawalnir1/wordpress_client.dart';
 import '../app2.dart';
 import '../client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../blocs/database_helper.dart';
+import 'package:sqflite/sqflite.dart';
+
+//DataBase
 
 
-class ListViewPosts2 extends StatelessWidget {
+
+class ListViewPosts2 extends StatefulWidget {
   final List<Post> posts;
 
   ListViewPosts2({Key key, this.posts}) : super(key: key);
+
+  @override
+  ListViewPosts2State createState() {
+    return new ListViewPosts2State();
+  }
+}
+
+class ListViewPosts2State extends State<ListViewPosts2> {
+  var dbHelper = DatabaseHelper() ;
+  List<Post> postList;
+  int count = 0;
+
   @override
   Widget build(BuildContext context) {
+    updateListView() ;
+    //debugPrint(postList.toString()) ;
     // return Text(postsFrom.toString(),
     return  ListView.builder(
-                itemCount: posts.length,
+
+                itemCount: posts.length , //posts.length,
                 padding: const EdgeInsets.all(15.0),
                 itemBuilder: (context, position) {
                   String authorName = posts[position].authorName;
 
                   // debugPrint(authorName);
                   dynamic imgUrl = posts[position].featuredMediaUrl;
-
+                  //dbHelper.insertPost(posts[position]) ;
                   return Card(
                     child: Column(
                       children: <Widget>[
@@ -77,6 +97,21 @@ class ListViewPosts2 extends StatelessWidget {
                     ),
                   );
                 });
+  }
+
+  void updateListView() {
+
+    final Future<Database> dbFuture = dbHelper.initDatabase();
+    dbFuture.then((database) {
+
+      Future<List<Post>> noteListFuture = dbHelper.getPostList();
+      noteListFuture.then((postList) {
+        setState(() {
+          this.postList = postList;
+          this.count = postList.length;
+        });
+      });
+    });
   }
 
 }

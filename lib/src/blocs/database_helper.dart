@@ -13,8 +13,9 @@ class DatabaseHelper {
   String colId = 'id';
   String colTitle = 'title';
   String colContent = 'content';
+  String colAuthor = 'author';
   String colDate = 'date';
-  String colImgUrl = 'img_url';
+  String colImgUrl = 'featured_media';
 
   DatabaseHelper._createInstance();
 
@@ -44,14 +45,17 @@ class DatabaseHelper {
 
   void _createDb(Database db, int newVersion) async {
     await db.execute(
-        'CREATE TABLE $postTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colTitle TEXT, $colContent TEXT, $colDate TEXT, $colImgUrl TEXT )');
+        'CREATE TABLE $postTable($colId INTEGER PRIMARY KEY, $colTitle TEXT, $colContent TEXT, $colAuthor TEXT, $colDate TEXT, $colImgUrl TEXT )');
   }
 
   //Fetch : Get all Posts from DB
 Future<List<Map<String , dynamic>>>getPostMapList() async {
     Database db = await this.database;
     
-    var result = await db.rawQuery('SELECT * FROM $postTable');
+   // var result = await db.rawQuery('SELECT * FROM $postTable');
+    var result = await db.query(postTable);
+
+    //print(result) ;
     return result;
 }
 
@@ -87,14 +91,17 @@ Future<int> insertPost(Post post) async {
 
 
   Future<List<Post>> getPostList() async {
-    var postMapList = await getPostMapList() ;
-    int count  = postMapList.length;
+    List<Map> postMaps = await getPostMapList() ;
+    int count  = postMaps.length;
 
-    List<Post> postList = List<Post>() ;
-    for(int i = 0; i < count; i++ ) {
-      postList.add(Post.fromMap(postMapList[i]));
+    List<Post> postsList = List<Post>();
+
+    //posts = postMaps.map((postMap) => new Post.fromMap(postMap)).toList();
+    for (int i = 0; i < count; i++) {
+      postsList.add(Post.fromMapObject(postMaps[i]));
     }
-    return postList; //from here Code has been cloned to Projects
+    //print(postsList.toString());
+    return postsList; //from here Code has been cloned to Projects
   }
 
 

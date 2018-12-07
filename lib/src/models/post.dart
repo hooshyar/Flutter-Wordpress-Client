@@ -170,4 +170,16 @@ class Post {
       };
 
   toString() => "Post => " + toMap().toString();
+
+  Post.fromMapObject(Map<String, dynamic> map) {
+    this.id = map['id'];
+    this.title = map['title'];
+    this.content = map['content'];
+    this.authorName = map['author'];
+    this.date = map["date"] != null
+        ? DateTime.parse(map["date"])
+        : null;
+    this.featuredMediaUrl = map['featured_media'];
+  }
 }
+

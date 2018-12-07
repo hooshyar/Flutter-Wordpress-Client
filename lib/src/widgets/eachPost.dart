@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart'; // pub to load html tags from json api
 import 'hawalnir-date-convertor.dart';
 import 'package:hawalnir1/wordpress_client.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'catWidgets.dart';
 
 class HawalnirPost extends StatelessWidget {
@@ -43,7 +42,7 @@ class HawalnirPost extends StatelessWidget {
                     ),
                     Divider(),
                     titleRendered(post),
-                    Divider(),
+
                     contentRendered(post),
                   ],
                 ),
