@@ -14,8 +14,6 @@ import 'package:sqflite/sqflite.dart';
 
 //DataBase
 
-
-
 class ListViewPosts2 extends StatefulWidget {
   final List<Post> posts;
 
@@ -28,82 +26,74 @@ class ListViewPosts2 extends StatefulWidget {
 }
 
 class ListViewPosts2State extends State<ListViewPosts2> {
-  var dbHelper = DatabaseHelper() ;
+  var dbHelper = DatabaseHelper();
   List<Post> postList;
   int count = 0;
 
   @override
   Widget build(BuildContext context) {
-    updateListView() ;
+    updateListView();
     //debugPrint(postList.toString()) ;
     // return Text(postsFrom.toString(),
-    return  ListView.builder(
+    return ListView.builder(
+        itemCount: posts.length, //posts.length,
+        padding: const EdgeInsets.all(15.0),
+        itemBuilder: (context, position) {
+          String authorName = posts[position].author;
 
-                itemCount: posts.length , //posts.length,
-                padding: const EdgeInsets.all(15.0),
-                itemBuilder: (context, position) {
-                  String authorName = posts[position].authorName;
-
-                  // debugPrint(authorName);
-                  dynamic imgUrl = posts[position].featuredMediaUrl;
-                  //dbHelper.insertPost(posts[position]) ;
-                  return Card(
-                    child: Column(
+          // debugPrint(authorName);
+          dynamic imgUrl = posts[position].featuredMediaUrl;
+          //dbHelper.insertPost(posts[position]) ;
+          return Card(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  child: CachedNetworkImage(
+                    fadeInCurve: Curves.decelerate,
+                    repeat: ImageRepeat.noRepeat,
+                    fadeInDuration: Duration(seconds: 5),
+                    imageUrl: imgUrl == null
+                        ? 'assets/images/placeholder.png'
+                        : imgUrl,
+                    placeholder: Image.asset('assets/images/placeholder.png'),
+                    errorWidget: new Icon(Icons.error),
+                  ),
+                ),
+                new Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: new ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                          builder: (context) =>
+                              HawalnirPost(post: posts[position]),
+                        ),
+                      );
+                    },
+                    title: hawalTitle(posts[position]),
+                    subtitle: new Row(
                       children: <Widget>[
-                        Container(
-                          child: CachedNetworkImage(
-                            fadeInCurve: Curves.decelerate,
-                            repeat: ImageRepeat.noRepeat,
-                            fadeInDuration: Duration(seconds: 5),
-                            imageUrl: imgUrl == null
-                                ? 'assets/images/placeholder.png'
-                                : imgUrl,
-                            placeholder: Image.asset(
-                                'assets/images/placeholder.png'),
-                            errorWidget: new Icon(Icons.error),
-                          ),
-                        ),
-                        new Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: new ListTile(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                new MaterialPageRoute(
-                                  builder: (context) =>
-                                      HawalnirPost(post: posts[position]),
-                                ),
-                              );
-                            },
-                            title:
-
-                            hawalTitle(posts[position]),
-                            subtitle: new Row(
-                              children: <Widget>[
-                                Expanded(
-                                    child: hawalAuthor( posts[position])
-                  )  ,
-                                Expanded(
-                                  child: hawalDate(posts[position]),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        new ButtonTheme.bar(
-                          child: hawalBtnBar(),
+                        Expanded(child: hawalAuthor(posts[position])),
+                        Expanded(
+                          child: hawalDate(posts[position]),
                         ),
                       ],
                     ),
-                  );
-                });
+                  ),
+                ),
+                new ButtonTheme.bar(
+                  child: hawalBtnBar(),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   void updateListView() {
-
     final Future<Database> dbFuture = dbHelper.initDatabase();
     dbFuture.then((database) {
-
       Future<List<Post>> noteListFuture = dbHelper.getPostList();
       noteListFuture.then((postList) {
         setState(() {
@@ -113,6 +103,4 @@ class ListViewPosts2State extends State<ListViewPosts2> {
       });
     });
   }
-
 }
-

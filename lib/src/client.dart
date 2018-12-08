@@ -93,13 +93,13 @@ class WordpressClient {
     posts = postMaps.map((postMap) => new Post.fromMap(postMap)).toList();
     //print(posts.toString()) ;
     // Inject objects if requested
-    if (injectObjects) {
-      for (Post p in posts) {
-        if (p.featuredMediaID != null && p.featuredMediaID > 0) {
-          p.featuredMedia = await getMedia(p.featuredMediaID);
-        }
-      }
-    }
+//    if (injectObjects) {
+//      for (Post p in posts) {
+//        if (p.featuredMediaID != null && p.featuredMediaID > 0) {
+//          p.featuredMedia = await getMedia(p.featuredMediaID);
+//        }
+//      }
+//    }
 
     return posts;
   }
@@ -209,11 +209,11 @@ Future<List<User>> listUser({List<int> includeIDs,
     Post p = new Post.fromMap(postMap);
 
     // Inject objects if requested
-    if (injectObjects) {
-      if (p.featuredMediaID != null && p.featuredMediaID > 0) {
-        p.featuredMedia = await getMedia(p.featuredMediaID);
-      }
-    }
+//    if (injectObjects) {
+//      if (p.featuredMediaID != null && p.featuredMediaID > 0) {
+//        p.featuredMedia = await getMedia(p.featuredMediaID);
+//      }
+//    }
 
     return p;
   }

@@ -104,5 +104,4 @@ Future<int> insertPost(Post post) async {
     return postsList; //from here Code has been cloned to Projects
   }
 
-
 }

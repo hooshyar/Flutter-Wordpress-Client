@@ -31,7 +31,7 @@ Widget hawalTitle(Post post) {
 
 Widget hawalAuthor(Post post) {
   return Text(
-    "نووسه‌ر: " + post.authorName,
+    "نووسه‌ر: " + post.author,
     textAlign: TextAlign.right,
   );
 }

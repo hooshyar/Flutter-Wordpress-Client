@@ -6,36 +6,36 @@ class Post {
   DateTime date;
 
   /// The date the object was published, as GMT.
-  DateTime dateGMT;
+  //DateTime dateGMT;
 
   /// The globally unique identifier for the object.
-  Map guid;
+  //Map guid;
 
   /// Unique identifier for the object.
   int id;
 
   /// URL to the object.
-  String link;
+  //String link;
 
   /// The date the object was last modified, in the site's timezone.
-  DateTime modified;
+ // DateTime modified;
 
   /// The date the object was last modified, as GMT.
-  DateTime modifiedGMT;
+  //DateTime modifiedGMT;
 
   /// An alphanumeric identifier for the object unique to its type.
-  String slug;
+  //String slug;
 
   /// A named status for the object.
   ///
   /// One of: publish, future, draft, pending, private
-  String status;
+ // String status;
 
   /// Type of Post for the object.
-  String type;
+  //String type;
 
   /// A password to protect access to the content and excerpt.
-  String password;
+  //String password;
 
   /// The title for the object.
   String title;
@@ -44,16 +44,16 @@ class Post {
   String content;
 
   /// The ID for the author of the object
-  int author;
+  //int author;
 
  /// The ID for the author of the object
-  String authorName;
+  String author;
 
   /// The excerpt for the object.
-  Map excerpt;
+//  Map excerpt;
 
   /// The ID of the featured media for the object.
-  int featuredMediaID;
+  //int featuredMediaID;
 
   /// The URL of the featured media for the object.
  dynamic featuredMediaUrl;
@@ -61,33 +61,33 @@ class Post {
   /// Whether or not comments are open on the object
   ///
   /// One of: open, closed
-  String commentStatus;
+  //String commentStatus;
 
   /// Whether or not the object can be pinged.
   ///
   /// One of: open, close
-  String pingStatus;
+  //String pingStatus;
 
   /// The format for the object.
-  String format;
+  //String format;
 
   /// Meta fields.
-  dynamic meta;
+  //dynamic meta;
 
   /// Whether or not the object should be treated as sticky.
-  bool sticky;
+  //bool sticky;
 
   /// The theme file to use to display the object.
-  String template;
+//  /String template;
 
   /// The terms assigned to the object in the category taxonomy.
-  List<int> categories;
+//  List<int> categories;
 
   /// The terms assigned to the object in the post_tag taxonomy.
-  List tags;
+//  List tags;
 
   // Injected objects
-  Media featuredMedia;
+//  Media featuredMedia;
   //User user;
   Post();
 
@@ -99,74 +99,74 @@ class Post {
     date = map["date"] != null
         ? DateTime.parse(map["date"])
         : null;
-    dateGMT = map["date_gmt"] != null
-        ? DateTime.parse(map["date_gmt"])
-        : null;
-    guid = map['guid'];
+    //dateGMT = map["date_gmt"] != null
+      //  ? DateTime.parse(map["date_gmt"])
+       // : null;
+    //guid = map['guid'];
     id = map['id'];
-    link = map['link'];
-    modified = map["modified"] != null
-        ? DateTime.parse(map["modified"])
-        : null;
-    modifiedGMT = map["modified_gmt"] != null
-        ? DateTime.parse(map["modified_gmt"])
-        : null;
-    slug = map['slug'];
-    status = map['status'];
-    type = map['type'];
-    password = map['password'];
+    //link = map['link'];
+    //modified = map["modified"] != null
+     //   ? DateTime.parse(map["modified"])
+      //  : null;
+    //modifiedGMT = map["modified_gmt"] != null
+     //   ? DateTime.parse(map["modified_gmt"])
+      //  : null;
+    //slug = map['slug'];
+    //status = map['status'];
+    //type = map['type'];
+    //password = map['password'];
     title = map['title']['rendered'];
     content = map['content']['rendered'];
-    author = map['author'];
-    authorName = map["_embedded"]["author"][0]["name"];
-    excerpt = map['excerpt'];
-    featuredMediaID = map['featured_media'];
+//    author = map['author'];
+    author = map["_embedded"]["author"][0]["name"];
+    //excerpt = map['excerpt'];
+    //featuredMediaID = map['featured_media'];
     //featuredMediaUrl = map ['_links']["self"][0]['href'] ;
     featuredMediaUrl = map ["_embedded"]["wp:featuredmedia"][0]["source_url"];
-    commentStatus = map['comment_status'];
-    pingStatus = map['ping_status'];
-    format = map['format'];
-    meta = map['meta'];
-    sticky = map['sticky'];
-    template = map['template'];
-    tags = map['tags'];
+    //commentStatus = map['comment_status'];
+    //pingStatus = map['ping_status'];
+    //format = map['format'];
+    //meta = map['meta'];
+    //sticky = map['sticky'];
+    //template = map['template'];
+    //tags = map['tags'];
 
     // Avoiding (odd) cast warnings
-    categories = new List();
-    for (dynamic item in map['categories']) {
-      if (item is int) {
-        categories.add(item);
-      }
-    }
+//    categories = new List();
+//    for (dynamic item in map['categories']) {
+//      if (item is int) {
+//        categories.add(item);
+//      }
+//    }
   }
 
   Map<String, dynamic> toMap() => {
         'date': date?.toIso8601String(),
-        'date_gmt': dateGMT?.toIso8601String(),
-        'guid': guid,
+//        'date_gmt': dateGMT?.toIso8601String(),
+//        'guid': guid,
         'id': id,
-        'link': link,
-        'modified': modified?.toIso8601String(),
-        'modified_gmt': modifiedGMT?.toIso8601String(),
-        'slug': slug,
-        'status': status,
-        'type': type,
-        'password': password,
+//        'link': link,
+//        'modified': modified?.toIso8601String(),
+//        'modified_gmt': modifiedGMT?.toIso8601String(),
+//        'slug': slug,
+//        'status': status,
+//        'type': type,
+//        'password': password,
         'title': title,
         'content': content,
-        'author': authorName,
+        'author': author,
         //'authorName':authorName,
-        'excerpt': excerpt,
+//        'excerpt': excerpt,
         'featured_media': featuredMediaUrl,
 
-        'comment_status': commentStatus,
-        'ping_status': pingStatus,
-        'format': format,
-        'meta': meta,
-        'sticky': sticky,
-        'template': template,
-        'categories': categories,
-        'tags': tags
+//        'comment_status': commentStatus,
+//        'ping_status': pingStatus,
+//        'format': format,
+//        'meta': meta,
+//        'sticky': sticky,
+//        'template': template,
+//        'categories': categories,
+//        'tags': tags
       };
 
   toString() => "Post => " + toMap().toString();
@@ -175,7 +175,7 @@ class Post {
     this.id = map['id'];
     this.title = map['title'];
     this.content = map['content'];
-    this.authorName = map['author'];
+    this.author = map['author'];
     this.date = map["date"] != null
         ? DateTime.parse(map["date"])
         : null;
