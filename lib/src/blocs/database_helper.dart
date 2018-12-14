@@ -81,6 +81,15 @@ Future<int> insertPost(Post post) async {
     return result ;
   }
 
+
+  //delete DB : Delete entire DB
+  Future<int> deleteDB() async {
+    print('database has been deleted') ;
+    Database db = await this.database ;
+     db.rawQuery('DELETE FROM $postTable');
+    return 1 ;
+  }
+
   //Get number of Posts in database
   Future<int> getCount() async {
     Database db = await this.database ;

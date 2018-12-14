@@ -3,6 +3,8 @@ import 'package:flutter_html/flutter_html.dart'; // pub to load html tags from j
 import 'hawalnir-date-convertor.dart';
 import 'package:hawalnir1/wordpress_client.dart';
 import 'catWidgets.dart';
+import '../app2.dart';
+import 'listViews2.dart';
 
 class HawalnirPost extends StatelessWidget {
   // i dont know what is the nag
@@ -13,6 +15,7 @@ class HawalnirPost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int postID = post.id ;
     return new Directionality(
       //fot the rtl on readmore page
       textDirection: TextDirection.rtl, // wrapped scaffold in the directionly
@@ -25,23 +28,27 @@ class HawalnirPost extends StatelessWidget {
             padding: EdgeInsets.all(16.0),
             child: new ListView(
               children: <Widget>[
-                new Column(
+
+                 Column(
                   //rossAxisAlignment: CrossAxisAlignment.stretch,
                   //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    mainImage(post),
+                    Hero(
+                        tag: 'hero$postID' ,
+                         child:  hawalImage(post)),
+
                     Row(
                       children: <Widget>[
                         Expanded(
-                          child: authorEmbedded(post),
+                          child: hawalAuthor(post),
                         ),
                         Expanded(
-                          child: dateMain(post),
+                          child: hawalDate(post),
                         ),
                       ],
                     ),
                     Divider(),
-                    titleRendered(post),
+                    hawalTitle(post),
 
                     contentRendered(post),
                   ],

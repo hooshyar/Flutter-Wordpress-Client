@@ -30,49 +30,48 @@ class ListViewPosts2State extends State<ListViewPosts2> {
   List<Post> postList;
   int count = 0;
 
+
+
+
+
   @override
   Widget build(BuildContext context) {
-    updateListView();
-    //debugPrint(postList.toString()) ;
+    getPostsIDs();
+   //debugPrint(postList.toString()) ;
     // return Text(postsFrom.toString(),
     return ListView.builder(
         itemCount: posts.length, //posts.length,
         padding: const EdgeInsets.all(15.0),
         itemBuilder: (context, position) {
           String authorName = posts[position].author;
-
+          int postID = posts[position].id ;
           // debugPrint(authorName);
           dynamic imgUrl = posts[position].featuredMediaUrl;
           //dbHelper.insertPost(posts[position]) ;
           return Card(
             child: Column(
               children: <Widget>[
-                Container(
-                  child: CachedNetworkImage(
-                    fadeInCurve: Curves.decelerate,
-                    repeat: ImageRepeat.noRepeat,
-                    fadeInDuration: Duration(seconds: 5),
-                    imageUrl: imgUrl == null
-                        ? 'assets/images/placeholder.png'
-                        : imgUrl,
-                    placeholder: Image.asset('assets/images/placeholder.png'),
-                    errorWidget: new Icon(Icons.error),
-                  ),
-                ),
+                Hero(
+
+                  tag: 'hero$postID',
+                    child: hawalImage(posts[position])) ,
+
                 new Padding(
                   padding: EdgeInsets.all(5.0),
                   child: new ListTile(
                     onTap: () {
                       Navigator.push(
                         context,
-                        new MaterialPageRoute(
+
+                       MaterialPageRoute(
+                         //fullscreenDialog: true,
                           builder: (context) =>
                               HawalnirPost(post: posts[position]),
                         ),
                       );
                     },
                     title: hawalTitle(posts[position]),
-                    subtitle: new Row(
+                    subtitle:  Row(
                       children: <Widget>[
                         Expanded(child: hawalAuthor(posts[position])),
                         Expanded(
@@ -89,18 +88,19 @@ class ListViewPosts2State extends State<ListViewPosts2> {
             ),
           );
         });
-  }
+  }}
 
-  void updateListView() {
-    final Future<Database> dbFuture = dbHelper.initDatabase();
-    dbFuture.then((database) {
-      Future<List<Post>> noteListFuture = dbHelper.getPostList();
-      noteListFuture.then((postList) {
-        setState(() {
-          this.postList = postList;
-          this.count = postList.length;
-        });
-      });
-    });
-  }
-}
+//  void updateListView() {
+//    final Future<Database> dbFuture = dbHelper.initDatabase();
+//    dbFuture.then((database) {
+//      Future<List<Post>> noteListFuture = dbHelper.getPostList();
+//      noteListFuture.then((postList) {
+//        setState(() {
+//          this.postList = postList;
+//          this.count = postList.length;
+//        });
+//      });
+//    });
+//  }
+//}
+

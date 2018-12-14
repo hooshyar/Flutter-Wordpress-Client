@@ -5,13 +5,20 @@ import 'dart:convert';
 import '../config.dart';
 import '../../wordpress_client.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
-Widget hawalImage(List<dynamic> posts, int index) {
-  return FadeInImage.assetNetwork(
-    placeholder: 'assets/images/placeholder.png',
-    image: posts[index]["featured_media"] == 0
+Widget hawalImage(Post post) {
+  return CachedNetworkImage(
+    fadeInCurve: Curves.decelerate,
+    repeat: ImageRepeat.noRepeat,
+    fadeInDuration: Duration(seconds: 5),
+    imageUrl: post.featuredMediaUrl == null
         ? 'assets/images/placeholder.png'
-        : posts[index]["_embedded"]["wp:featuredmedia"][0]["source_url"],
+        : post.featuredMediaUrl,
+    placeholder: Image.asset('assets/images/placeholder.png'),
+    errorWidget: Container(
+       child:  Image.asset('assets/images/placeholder.png'),
+    ),
   );
 }
 
@@ -89,6 +96,7 @@ Future<List<dynamic>> getPosts2(
 
 Widget connectionErrorBar (){
   return Container(
+
     alignment: Alignment.bottomCenter,
 
     child: SnackBar(
@@ -98,4 +106,14 @@ Widget connectionErrorBar (){
 
     ),
   );
+}
+
+Widget HeroText(){
+
+  Text('Hero Texxt jfsfkdjalkgjsfkljb jdlkfjlkdsjfglkdfjglkdsjfklgjdfklgjkldb lkdsj lkj lksdjfb lk jkldj lkdfsj lkdjl ' ,
+    style: TextStyle(
+      color: Colors.cyan ,
+          fontSize: 30.0 ,
+    ),
+  textScaleFactor: 2.0,);
 }

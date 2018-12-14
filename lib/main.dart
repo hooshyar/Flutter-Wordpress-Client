@@ -7,6 +7,7 @@ import 'src/pages/instagramPage.dart';
 //import 'src/pages/kurdistanCat.dart';
 //import 'src/pages/grngCat.dart';
 //import 'src/widgets/listViews.dart';
+import 'src/app.dart';
 
 void main() {
 
@@ -31,12 +32,16 @@ void main() {
       ) ,
       
       
-      home: HawalnirHome2(), // it will go and get app.dart then it will go to  HawalnirHome() from hawalnir-home.dart
+      home: HawalnirHome2(),
+    initialRoute: '/',
+    // it will go and get app.dart then it will go to  HawalnirHome() from hawalnir-home.dart
       routes: <String , WidgetBuilder> {
+//      '/': (BuildContext context) => HawalnirHome2(),
    //     '/GrngCat': (BuildContext context) => new GrngCat(),
        // '/KrdCat' : (BuildContext context) => new KrdCat(),
         '/InstaPage' : (BuildContext context) => new InstaPage(), //7
-        //'/Tmplist' : (BuildContext context) => new ListViewPosts(),
+//          '/HawalnirHome2' : (BuildContext context) => new HawalnirHome2() ,
+//        '/AlertPage' : (BuildContext context) => new AlertPage(),
       },
       
     
