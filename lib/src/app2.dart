@@ -122,28 +122,18 @@ doWeHaveNet() async {
 }
 
 
-checkConnection(){
-  if (doWeHaveNet() == true ){
-    return isExitst();
-  } else{
-    return showCachedPosts(); 
-  }
-}
-
-Future<List<Post>> showCachedPosts() async  {
-  posts = await dbHelper.getPostList() ; 
-  return posts ; 
-}
 
 
 Future<List<Post>> isExitst() async {
   cachedPosts = await dbHelper.getPostList();
 
   if(doWeHaveNet() != true){
+    debugPrint("doWeHaveNet() is != true ");
     posts = cachedPosts ;
     posts.sort((a, b) => b.id.compareTo(a.id));
 
   }else {
+    debugPrint("doWeHaveNet() is == true ");
     posts = await client.listPosts(perPage: perPageInt, injectObjects: true);
   }
 
@@ -180,7 +170,7 @@ Future<List<Post>> isExitst() async {
       } else {
         debugPrint('found post is NOT TRUE');
         posts = posts;
-//        await dbHelper.deleteDB();
+        await dbHelper.deleteDB();
         fillDB();
         debugPrint('DATABASE HAS BEEN DELETED');
       }
@@ -265,10 +255,23 @@ class HawalnirHome2State extends State {
                     : Center(child: CircularProgressIndicator());
               }
           ),
+          
         ),
+        floatingActionButton: FloatingActionButton(
+            child: Text('UP'),
+            onPressed:  _scrollToTop
+        ),
+
       ),
+      
     );
-  }
+    }
+}
+
+void _scrollToTop(){
+  scrollCont.animateTo(0.0, duration: Duration(seconds: 1), curve: Curves.elasticInOut );
+}
+
 //
 //
 //// user defined function
@@ -401,4 +404,4 @@ class HawalnirHome2State extends State {
 //    );
 //  }
 //}
-}
+//}

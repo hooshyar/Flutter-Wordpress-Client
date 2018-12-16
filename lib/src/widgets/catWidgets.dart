@@ -8,19 +8,48 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 Widget hawalImage(Post post) {
-  return CachedNetworkImage(
-    fadeInCurve: Curves.decelerate,
-    repeat: ImageRepeat.noRepeat,
-    fadeInDuration: Duration(seconds: 5),
-    imageUrl: post.featuredMediaUrl == null
-        ? 'assets/images/placeholder.png'
-        : post.featuredMediaUrl,
-    placeholder: Image.asset('assets/images/placeholder.png'),
-    errorWidget: Container(
-       child:  Image.asset('assets/images/placeholder.png'),
+  return Container(
+
+    foregroundDecoration: BoxDecoration(
+        backgroundBlendMode: BlendMode.overlay,
+//        borderRadius:
+//        BorderRadius.all(Radius.circular(20.0)),
+
+
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: [0.1, 0.5, 0.7, 0.9],
+
+          colors: [
+
+            // Colors are easy thanks to Flutter's Colors class.
+
+            Colors.transparent,
+            Colors.transparent,
+            Colors.black45,
+            Colors.black87 ,
+          ],
+
+        )),
+    child: CachedNetworkImage(
+      fadeInCurve: Curves.decelerate,
+      repeat: ImageRepeat.noRepeat,
+      fadeInDuration: Duration(seconds: 5),
+
+      imageUrl: post.featuredMediaUrl == null
+          ? 'assets/images/placeholder.png'
+          : post.featuredMediaUrl,
+      placeholder: Image.asset('assets/images/placeholder.png'),
+      errorWidget: Container(
+         child:  Image.asset('assets/images/placeholder.png'),
+      ),
     ),
   );
 }
+
+
+
 
 Widget hawalTitle(Post post) {
   return Padding(
