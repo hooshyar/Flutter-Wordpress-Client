@@ -8,43 +8,70 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 Widget hawalImage(Post post) {
-  return Container(
+  return Stack(
+    children: <Widget>[
+      Positioned(
 
-    foregroundDecoration: BoxDecoration(
-        backgroundBlendMode: BlendMode.overlay,
+    bottom: 5.0,
+    right: 0,
+    left: 0,
+    child: Container(
+
+      decoration: BoxDecoration(
+         boxShadow:[
+        BoxShadow(
+          spreadRadius: 10,
+          blurRadius: 20,
+        color: Colors.blue,
+        offset: new Offset(1.0, 1.0),
+      ) ,
+      ] ,
+    ),
+    ),
+  ),
+
+  Container(
+
+        foregroundDecoration: BoxDecoration(
+
+
+            backgroundBlendMode: BlendMode.overlay,
 //        borderRadius:
 //        BorderRadius.all(Radius.circular(20.0)),
 
 
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          stops: [0.1, 0.5, 0.7, 0.9],
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0.1, 0.5, 0.7, 0.9],
 
-          colors: [
+              colors: [
 
-            // Colors are easy thanks to Flutter's Colors class.
+                // Colors are easy thanks to Flutter's Colors class.
 
-            Colors.transparent,
-            Colors.transparent,
-            Colors.black45,
-            Colors.black87 ,
-          ],
+                Colors.transparent,
+                Colors.transparent,
+                Colors.black45,
+                Colors.black87 ,
+              ],
 
-        )),
-    child: CachedNetworkImage(
-      fadeInCurve: Curves.decelerate,
-      repeat: ImageRepeat.noRepeat,
-      fadeInDuration: Duration(seconds: 5),
+            )),
+        child: CachedNetworkImage(
+          fadeInCurve: Curves.decelerate,
+          repeat: ImageRepeat.noRepeat,
+          fadeInDuration: Duration(seconds: 5),
 
-      imageUrl: post.featuredMediaUrl == null
-          ? 'assets/images/placeholder.png'
-          : post.featuredMediaUrl,
-      placeholder: Image.asset('assets/images/placeholder.png'),
-      errorWidget: Container(
-         child:  Image.asset('assets/images/placeholder.png'),
-      ),
-    ),
+          imageUrl: post.featuredMediaUrl == null
+              ? 'assets/images/placeholder.png'
+              : post.featuredMediaUrl,
+          placeholder: Image.asset('assets/images/placeholder.png'),
+          errorWidget: Container(
+            child:  Image.asset('assets/images/placeholder.png'),
+          ),
+        ),
+      )
+    ],
+
   );
 }
 
