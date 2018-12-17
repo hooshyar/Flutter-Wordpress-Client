@@ -90,7 +90,10 @@ Future<List<Post>> isExitst() async {
 
   if (cachedPosts.length < 1) {
     debugPrint('No Cached Posts Has Been FOUND');
+    posts = await client.listPosts(perPage: perPageInt, injectObjects: true);
     fillDB();
+    return posts ;
+
   } else {
     for (int i = 0; i < cachedPostsIDs.length; i++) {
       for (int j = 0; j < postsIDs.length; j++) {

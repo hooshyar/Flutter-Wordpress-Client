@@ -11,84 +11,74 @@ Widget hawalImage(Post post) {
   return Stack(
     children: <Widget>[
       Positioned(
-
-    bottom: 5.0,
-    right: 0,
-    left: 0,
-    child: Container(
-
-      decoration: BoxDecoration(
-         boxShadow:[
-        BoxShadow(
-          spreadRadius: 10,
-          blurRadius: 20,
-        color: Colors.black,
-        offset: new Offset(1.0, 1.0),
-      ) ,
-      ] ,
-    ),
-    ),
-  ),
-
-  Container(
-
+        bottom: 5.0,
+        right: 0,
+        left: 0,
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                spreadRadius: 10,
+                blurRadius: 20,
+                color: Colors.black,
+                offset: new Offset(1.0, 1.0),
+              ),
+            ],
+          ),
+        ),
+      ),
+      Container(
         foregroundDecoration: BoxDecoration(
-
-
             backgroundBlendMode: BlendMode.overlay,
-//        borderRadius:
-//        BorderRadius.all(Radius.circular(20.0)),
-
-
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               stops: [0.1, 0.5, 0.7, 0.9],
-
               colors: [
-
                 // Colors are easy thanks to Flutter's Colors class.
 
                 Colors.transparent,
                 Colors.transparent,
                 Colors.black45,
-                Colors.black87 ,
+                Colors.black87,
               ],
-
             )),
         child: CachedNetworkImage(
+
+//          width: 200.0,
           fadeInCurve: Curves.decelerate,
           repeat: ImageRepeat.noRepeat,
-          fadeInDuration: Duration(seconds: 5),
-
+          fadeInDuration: Duration(seconds: 1),
           imageUrl: post.featuredMediaUrl == null
               ? 'assets/images/placeholder.png'
               : post.featuredMediaUrl,
           placeholder: Image.asset('assets/images/placeholder.png'),
           errorWidget: Container(
-            child:  Image.asset('assets/images/placeholder.png'),
+            child: Image.asset('assets/images/placeholder.png'),
           ),
+        ),
+      ),
+      Positioned(
+        bottom: 2.0,
+        left: 5.0,
+        child: new ButtonTheme.bar(
+          child: hawalBtnBar(),
         ),
       )
     ],
-
   );
 }
-
-
-
 
 Widget hawalTitle(Post post) {
   return Padding(
     padding: EdgeInsets.symmetric(vertical: 10.0),
     child: // Text("data")
-        Html(data: post.title ,
-          defaultTextStyle: TextStyle(
-        //fontFamily: 'NotoKufiArabic',
-          fontSize: 20.0,
-          decoration: TextDecoration.none)) ,
-
-
+        Html(
+            data: post.title,
+            defaultTextStyle: TextStyle(
+                //fontFamily: 'NotoKufiArabic',
+                fontSize: 20.0,
+                decoration: TextDecoration.none)),
   );
 }
 
@@ -150,16 +140,13 @@ Future<List<dynamic>> getPosts2(
   return posts2;
 }
 
-Widget connectionErrorBar (){
+Widget connectionErrorBar() {
   return Container(
-
     alignment: Alignment.bottomCenter,
-
     child: SnackBar(
-      duration: Duration(milliseconds: 200)  ,
-      animation: kAlwaysCompleteAnimation ,
+      duration: Duration(milliseconds: 200),
+      animation: kAlwaysCompleteAnimation,
       content: Text(connectionProblemError),
-
     ),
   );
 }

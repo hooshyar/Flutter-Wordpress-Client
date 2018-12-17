@@ -51,6 +51,7 @@ class ListViewPosts2State extends State<ListViewPosts2> {
                         borderRadius: BorderRadius.all(Radius.circular(10.0))),
                     clipBehavior: Clip.hardEdge,
                     child: Column(
+
                       children: <Widget>[
                         Stack(
                           children: <Widget>[
@@ -72,6 +73,7 @@ class ListViewPosts2State extends State<ListViewPosts2> {
                                 ),
                               );
                             },
+
                             title: hawalTitle(posts[position]),
                             subtitle: Row(
                               children: <Widget>[
@@ -83,9 +85,7 @@ class ListViewPosts2State extends State<ListViewPosts2> {
                             ),
                           ),
                         ),
-                        new ButtonTheme.bar(
-                          child: hawalBtnBar(),
-                        ),
+
                       ],
                     ),
                   );

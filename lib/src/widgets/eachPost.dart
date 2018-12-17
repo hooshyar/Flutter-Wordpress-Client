@@ -9,32 +9,27 @@ class HawalnirPost extends StatelessWidget {
 
   HawalnirPost({Key key, @required var this.post})
       : super(key: key); //we refer post as required
-    final Post post; //the variable
+  final Post post; //the variable
 
   @override
   Widget build(BuildContext context) {
-    int postID = post.id ;
+    int postID = post.id;
     return new Directionality(
       //fot the rtl on readmore page
       textDirection: TextDirection.rtl, // wrapped scaffold in the directionly
       child: new Scaffold(
-        appBar: new AppBar(
-          title: hawalTitle(post)
-           // title gets  the title from post['title'] in api
-        ),
+        appBar: new AppBar(title: hawalTitle(post)
+            // title gets  the title from post['title'] in api
+            ),
         body: new Padding(
             padding: EdgeInsets.all(16.0),
             child: new ListView(
               children: <Widget>[
-
-                 Column(
+                Column(
                   //rossAxisAlignment: CrossAxisAlignment.stretch,
                   //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Hero(
-                        tag: 'hero$postID' ,
-                         child:  hawalImage(post)),
-
+                    Hero(tag: 'hero$postID', child: hawalImage(post)),
                     Row(
                       children: <Widget>[
                         Expanded(
@@ -47,7 +42,6 @@ class HawalnirPost extends StatelessWidget {
                     ),
                     Divider(),
                     hawalTitle(post),
-
                     contentRendered(post),
                   ],
                 ),
@@ -55,20 +49,12 @@ class HawalnirPost extends StatelessWidget {
             )),
       ),
     );
-
-
-
-
-
   }
-
-
-
 
   Widget mainImage(Post post) {
     return FadeInImage.assetNetwork(
       placeholder: 'assets/images/placeholder.png',
-      image: post.featuredMediaUrl  == 0
+      image: post.featuredMediaUrl == 0
           ? 'src/images/placeholder.png'
           : post.featuredMediaUrl,
     );
@@ -83,7 +69,6 @@ class HawalnirPost extends StatelessWidget {
             decoration: TextDecoration.none));
   }
 
-
   Widget contentRendered(Post post) {
     return Html(
         data: (post.content).toString(),
@@ -95,7 +80,7 @@ class HawalnirPost extends StatelessWidget {
 
   Widget authorEmbedded(Post post) {
     return Text(
-      "نووسه‌ر: " + post.author ,
+      "نووسه‌ر: " + post.author,
       textAlign: TextAlign.right,
     );
   }
@@ -106,8 +91,4 @@ class HawalnirPost extends StatelessWidget {
       textAlign: TextAlign.left,
     );
   }
-
-
-
 }
-
