@@ -163,13 +163,3 @@ Widget connectionErrorBar (){
     ),
   );
 }
-
-Widget HeroText(){
-
-  Text('Hero Texxt jfsfkdjalkgjsfkljb jdlkfjlkdsjfglkdfjglkdsjfklgjdfklgjkldb lkdsj lkj lksdjfb lk jkldj lkdfsj lkdjl ' ,
-    style: TextStyle(
-      color: Colors.cyan ,
-          fontSize: 30.0 ,
-    ),
-  textScaleFactor: 2.0,);
-}

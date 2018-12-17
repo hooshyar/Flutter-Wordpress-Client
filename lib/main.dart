@@ -7,7 +7,6 @@ import 'src/pages/instagramPage.dart';
 //import 'src/pages/kurdistanCat.dart';
 //import 'src/pages/grngCat.dart';
 //import 'src/widgets/listViews.dart';
-import 'src/app.dart';
 
 void main() {
 
@@ -40,10 +39,9 @@ void main() {
    //     '/GrngCat': (BuildContext context) => new GrngCat(),
        // '/KrdCat' : (BuildContext context) => new KrdCat(),
         '/InstaPage' : (BuildContext context) => new InstaPage(), //7
-          '/MainPage' : (BuildContext context) => new MainPage() ,
-//        '/AlertPage' : (BuildContext context) => new AlertPage(),
+//          '/MainPage' : (BuildContext context) => new MainPage() ,
       },
-      
+
     
   ));
 }

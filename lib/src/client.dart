@@ -8,7 +8,6 @@ import 'models/category.dart';
 import 'models/media.dart';
 import 'models/post.dart';
 import 'models/users.dart';
-import 'config.dart';
 typedef void APIErrorHandler(String endpoint, int statusCode, String response);
 
 
@@ -18,14 +17,14 @@ class WordpressClient {
   Client _client;
   APIErrorHandler _errorHandler;
 
-  WordpressClient(this._baseURL, this._client, [this._errorHandler = null]);
+  WordpressClient(this._baseURL, this._client, [this._errorHandler]);
 
   /// Get all available categories.
   ///
   /// If [hideEmpty] is false then ALL categories will be returned, and
   /// [excludeIDs] can be used to ignore specific category IDs
   Future<List<Category>> listCategories(
-      {bool hideEmpty: true, List<int> excludeIDs: null}) async {
+      {bool hideEmpty: true, List<int> excludeIDs}) async {
     String _endpoint = '/wp/v2/categories';
 
     // Build query string
@@ -59,9 +58,9 @@ class WordpressClient {
   /// rather than just the object ID (i.e. a posts's featured media). The [page]
   /// and [perPage] parameters allow for pagination.
   Future<List<Post>> listPosts(
-      {List<int> categoryIDs: null,
+      {List<int> categoryIDs,
       bool injectObjects: false,
-      List<int> excludeIDs: null,
+      List<int> excludeIDs,
       int page: 1,
       int perPage: 10 }) async {
     String _endpoint = '/wp/v2/posts?_embed';

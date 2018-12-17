@@ -3,15 +3,13 @@ import 'package:flutter_html/flutter_html.dart'; // pub to load html tags from j
 import 'hawalnir-date-convertor.dart';
 import 'package:hawalnir1/wordpress_client.dart';
 import 'catWidgets.dart';
-import '../app2.dart';
-import 'listViews2.dart';
 
 class HawalnirPost extends StatelessWidget {
   // i dont know what is the nag
 
-  Post post; //the variable
   HawalnirPost({Key key, @required var this.post})
       : super(key: key); //we refer post as required
+    final Post post; //the variable
 
   @override
   Widget build(BuildContext context) {
