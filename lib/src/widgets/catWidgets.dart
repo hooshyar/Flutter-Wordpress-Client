@@ -22,7 +22,7 @@ Widget hawalImage(Post post) {
         BoxShadow(
           spreadRadius: 10,
           blurRadius: 20,
-        color: Colors.blue,
+        color: Colors.black,
         offset: new Offset(1.0, 1.0),
       ) ,
       ] ,

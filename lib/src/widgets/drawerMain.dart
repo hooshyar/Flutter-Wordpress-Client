@@ -21,11 +21,11 @@ Widget drawerMain(context) {
           initiallyExpanded: true,
           title: Text("بابه‌ته‌كانی هه‌واڵ"),
           children: <Widget>[
-            drawerBtn(" كوردستان", () {
+            drawerBtn(" CheckOFFLINE", () {
               // we want to close the drawer
               Navigator.of(context).pop(); //TODO Find a better way
               Navigator.pushNamed(
-                  context, '/KrdCat'); // => KurdistanCat.dart
+                  context, '/MainPage'); // => KurdistanCat.dart
             }),
             drawerBtn(" insta", () {
               // we want to close the drawer

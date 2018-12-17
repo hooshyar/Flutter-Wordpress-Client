@@ -40,7 +40,7 @@ void main() {
    //     '/GrngCat': (BuildContext context) => new GrngCat(),
        // '/KrdCat' : (BuildContext context) => new KrdCat(),
         '/InstaPage' : (BuildContext context) => new InstaPage(), //7
-//          '/HawalnirHome2' : (BuildContext context) => new HawalnirHome2() ,
+          '/MainPage' : (BuildContext context) => new MainPage() ,
 //        '/AlertPage' : (BuildContext context) => new AlertPage(),
       },
       

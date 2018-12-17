@@ -30,7 +30,7 @@ class HawalnirHome2 extends StatefulWidget {
 List<Post> cachedPosts;
 List<Post> posts;
 int dbCount;
-bool netConnection = true ;
+bool netConnection = false ;
 
 
 //Future<List<Post>> whichPosts() async {
@@ -104,10 +104,6 @@ doWeHaveNet() async {
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
       print('connected');
       netConnection = true ;
-//      return weHaveNet(HawalnirHome2State().context);
-  return true ;
-
-
 
     }
   } on SocketException catch (_) {
@@ -115,19 +111,16 @@ doWeHaveNet() async {
     if (count < 1) {
       debugPrint('we need intenet');
     netConnection = false ;
-      return false ;
+
     }
   }
   //TODO put a nice widget here for Connectivity problems
 }
-
-
-
-
 Future<List<Post>> isExitst() async {
+  doWeHaveNet();
   cachedPosts = await dbHelper.getPostList();
 
-  if(doWeHaveNet() != true){
+  if(netConnection != true){
     debugPrint("doWeHaveNet() is != true ");
     posts = cachedPosts ;
     posts.sort((a, b) => b.id.compareTo(a.id));
