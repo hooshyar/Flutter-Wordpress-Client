@@ -56,8 +56,16 @@ class ListViewPosts2State extends State<ListViewPosts2> {
                         Stack(
                           children: <Widget>[
                             Hero(
+
                                 tag: 'hero$postID',
                                 child: hawalImage(posts[position])),
+                            Positioned(
+                              bottom: 2.0,
+                              left: 5.0,
+                              child: new ButtonTheme.bar(
+                                child: hawalBtnBar(),
+                              ),
+                            ),
                           ],
                         ),
                         new Padding(

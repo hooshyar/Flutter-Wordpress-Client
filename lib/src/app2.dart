@@ -20,6 +20,7 @@ class HawalnirHome2 extends StatefulWidget {
 }
 
 class HawalnirHome2State extends State {
+  Duration get transitionDuration => const Duration(seconds: 6);
   @override
   Widget build(BuildContext context) {
     return Directionality(

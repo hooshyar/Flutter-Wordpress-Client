@@ -29,7 +29,16 @@ class HawalnirPost extends StatelessWidget {
                   //rossAxisAlignment: CrossAxisAlignment.stretch,
                   //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Hero(tag: 'hero$postID', child: hawalImage(post)),
+                    Stack(
+                      children: <Widget>[
+                        Hero(tag: 'hero$postID', child: hawalImage(post)),
+                        Positioned(bottom: 0.0,left: 0.0,child: hawalBtnBar(),
+                        ),
+                      ],
+                    ),
+
+                    hawalTitle(post),
+
                     Row(
                       children: <Widget>[
                         Expanded(
@@ -41,7 +50,6 @@ class HawalnirPost extends StatelessWidget {
                       ],
                     ),
                     Divider(),
-                    hawalTitle(post),
                     contentRendered(post),
                   ],
                 ),

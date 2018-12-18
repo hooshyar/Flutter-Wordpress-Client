@@ -10,6 +10,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 Widget hawalImage(Post post) {
   return Stack(
     children: <Widget>[
+
       Positioned(
         bottom: 5.0,
         right: 0,
@@ -58,13 +59,13 @@ Widget hawalImage(Post post) {
           ),
         ),
       ),
-      Positioned(
-        bottom: 2.0,
-        left: 5.0,
-        child: new ButtonTheme.bar(
-          child: hawalBtnBar(),
-        ),
-      )
+//      Positioned(
+//        bottom: 2.0,
+//        left: 5.0,
+//        child: new ButtonTheme.bar(
+//          child: hawalBtnBar(),
+//        ),
+//      )
     ],
   );
 }
@@ -104,21 +105,28 @@ Widget hawalBtnBar() {
         splashColor: Colors.blueAccent[200],
         color: Colors.blueGrey,
         tooltip: 'پاشكه‌وت كردنی بابه‌ت',
-        onPressed: () {}, // add +1 to the database
+        onPressed: () {
+
+          debugPrint("save button tapped");
+        }, // add +1 to the database
       ),
       IconButton(
         icon: Icon(Icons.favorite),
         splashColor: Colors.redAccent,
         color: Colors.blueGrey,
         tooltip: 'په‌سه‌ند كردن',
-        onPressed: () {}, // add +1 to the database
+        onPressed: () {
+          debugPrint("favorite button tapped");
+        }, // add +1 to the database
       ),
       IconButton(
         icon: Icon(Icons.share),
         color: Colors.blueGrey,
         tooltip: 'بو هاورێكانت بنێره‌',
         onPressed:
-            () {}, // Standard share for whatsapp + google + faccebook + twitter
+            () {
+              debugPrint("share button tapped");
+            }, // Standard share for whatsapp + google + faccebook + twitter
       ),
     ],
   );
