@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hawalnir1/src/blocs/functions.dart';
+import 'package:hawalnir1/src/widgets/eachPost.dart';
 import 'hawalnir-date-convertor.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -155,6 +157,98 @@ Widget connectionErrorBar() {
       duration: Duration(milliseconds: 200),
       animation: kAlwaysCompleteAnimation,
       content: Text(connectionProblemError),
+    ),
+  );
+}
+
+
+
+//Global Cards for Posts
+postsCardGlobal(int index, context){
+  int postID = posts[index].id;
+  return Card(
+//                      color: Colors.teal[100 * (index % 9)] ,
+    shape: RoundedRectangleBorder(
+        borderRadius:
+        BorderRadius.all(Radius.circular(10.0))),
+    clipBehavior: Clip.hardEdge,
+    child: Column(
+      children: <Widget>[
+        Stack(
+          children: <Widget>[
+            Hero(
+                tag: 'hero$postID',
+                child: hawalImage(posts[index])),
+            Positioned(
+              bottom: 2.0,
+              left: 5.0,
+              child: new ButtonTheme.bar(
+                child: hawalBtnBar(),
+              ),
+            ),
+          ],
+        ),
+        new Padding(
+          padding: EdgeInsets.all(5.0),
+          child: new ListTile(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  //fullscreenDialog: true,
+                  builder: (context) =>
+                      HawalnirPost(post: posts[index]),
+                ),
+              );
+            },
+            title: hawalTitle(posts[index]),
+            subtitle: Row(
+              children: <Widget>[
+                Expanded(child: hawalAuthor(posts[index])),
+                Expanded(
+                  child: hawalDate(posts[index]),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+sliverAppBarGlobal(){
+  return SliverAppBar(
+      backgroundColor: Colors.deepPurple,
+      pinned: false,
+      expandedHeight: 80.0,
+      flexibleSpace: FlexibleSpaceBar(
+        title: Text('Slivers'),
+      ),
+      leading: IconButton(
+        icon: Icon(Icons.arrow_drop_up),
+        onPressed: () {},
+      ));
+}
+
+sliverListGlobal(){
+  return SliverList(
+
+//                itemExtent: 600.0,
+    delegate: SliverChildBuilderDelegate(
+
+          (BuildContext context, index ) {
+
+        return postsCardGlobal(index, context);
+//            return Container(
+//              alignment: Alignment.center,
+//              color: Colors.lightBlue[100 * (index % 9)],
+//              child: Text('list item $index'),
+//            );
+      },
+      childCount: perPageInt ,
+      addAutomaticKeepAlives: true ,
+
     ),
   );
 }
