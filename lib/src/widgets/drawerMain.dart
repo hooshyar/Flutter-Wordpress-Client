@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 Widget drawerMain(context) {
+  debugPrint("Drawer");
   return Drawer(
+    elevation: 10.0 ,
     child: ListView(
-      //physics: BouncingScrollPhysics(),
-
-      padding: EdgeInsets.zero,
+//      physics: BouncingScrollPhysics(),
+      padding: EdgeInsets.zero ,
       children: <Widget>[
+
         DrawerHeader(
           child: Text("data"),
           decoration: BoxDecoration(

@@ -8,7 +8,8 @@ import '../config.dart';
 import '../../wordpress_client.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
+import '../app2.dart';
+import '../pages/listView.dart';
 Widget hawalImage(Post post) {
   return Stack(
     children: <Widget>[
@@ -167,6 +168,7 @@ Widget connectionErrorBar() {
 postsCardGlobal(int index, context){
   int postID = posts[index].id;
   return Card(
+
 //                      color: Colors.teal[100 * (index % 9)] ,
     shape: RoundedRectangleBorder(
         borderRadius:
@@ -217,17 +219,36 @@ postsCardGlobal(int index, context){
   );
 }
 
+// This is the type used by the popup menu below.
+enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
+
 sliverAppBarGlobal(){
   return SliverAppBar(
+
       backgroundColor: Colors.deepPurple,
-      pinned: false,
+      pinned: true,
       expandedHeight: 80.0,
       flexibleSpace: FlexibleSpaceBar(
-        title: Text('Slivers'),
+        collapseMode: CollapseMode.parallax ,
+        title: GestureDetector(child: Text('Slivers') , onTap: scrollToTop,),
       ),
+
+      actions: <Widget>[
+
+        IconButton(
+          icon: const Icon(Icons.add_circle),
+          tooltip: 'Add new entry',
+          onPressed: () {
+
+          },
+        ),
+      ],
+
       leading: IconButton(
         icon: Icon(Icons.arrow_drop_up),
-        onPressed: () {},
+        onPressed: () {
+
+        },
       ));
 }
 
