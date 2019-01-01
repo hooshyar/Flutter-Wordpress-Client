@@ -7,7 +7,7 @@ import 'dart:io';
 import 'package:hawalnir1/wordpress_client.dart';
 
 WordpressClient client = new WordpressClient(_baseUrl, http.Client());
-final String _baseUrl = 'http://ehawal.com/index.php/wp-json';
+final String _baseUrl = mainApiUrl;
 
 var dbHelper = DatabaseHelper();
 int perPageInt = int.parse(perPage);
@@ -68,6 +68,12 @@ doWeHaveNet() async {
   }
   //TODO put a nice widget here for Connectivity problems
 }
+
+Future<List<Post>> getPosts() async {
+  posts = await client.listPosts(perPage: perPageInt, injectObjects: true);
+  return posts ;
+}
+
 
 Future<List<Post>> isExitst() async {
   doWeHaveNet();

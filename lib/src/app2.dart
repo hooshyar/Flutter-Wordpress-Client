@@ -13,7 +13,7 @@ import 'widgets/catWidgets.dart';
 import 'package:flutter_offline/flutter_offline.dart';
 
 WordpressClient client = new WordpressClient(_baseUrl, http.Client());
-final String _baseUrl = 'http://ehawal.com/index.php/wp-json';
+final String _baseUrl = mainApiUrl;
 
 var dbHelper = DatabaseHelper();
 
@@ -112,7 +112,7 @@ class HawalnirHome2State extends State<HawalnirHome2>
                 fit: StackFit.expand,
                 children: [
                   FutureBuilder<List<Post>>(
-                    future: isExitst(),
+                    future: getPosts(),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) print(snapshot.error);
 

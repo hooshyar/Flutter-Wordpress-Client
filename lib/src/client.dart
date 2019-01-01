@@ -64,6 +64,7 @@ class WordpressClient {
       int page: 1,
       int perPage: 10 }) async {
     String _endpoint = '/wp/v2/posts?_embed';
+    print(_endpoint);
 
     // Build query string starting with pagination
     String queryString = '&per_page=$perPage';
@@ -86,7 +87,7 @@ class WordpressClient {
     //_endpoint =
     // Retrieve the data
     List<Map> postMaps = await _get(_endpoint);
-    //print(_endpoint) ;
+    print(_endpoint) ;
 
     List<Post> posts = new List();
     posts = postMaps.map((postMap) => new Post.fromMap(postMap)).toList();
@@ -296,13 +297,14 @@ Future<List<User>> listUser({List<int> includeIDs,
   Future _get(String url) async {
     dynamic jsonObj;
     String endpoint = '$_baseURL$url';
-
+    print("END POINT is " + endpoint) ;
     try {
       Response response = await _client.get(endpoint , headers: {"Accept": "application/json"} );
 
       // Error handling
       if (response.statusCode != 200) {
         _handleError(url, response.statusCode, response.body);
+        print("status code != 200") ;
         return null;
       }
       jsonObj = json.decode(response.body);

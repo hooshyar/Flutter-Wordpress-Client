@@ -53,10 +53,11 @@ class Post {
 //  Map excerpt;
 
   /// The ID of the featured media for the object.
-  //int featuredMediaID;
+  int featuredMediaID;
 
   /// The URL of the featured media for the object.
  dynamic featuredMediaUrl;
+ bool featuredMediaThumb ;
 
   /// Whether or not comments are open on the object
   ///
@@ -96,6 +97,8 @@ class Post {
       return;
     }
 
+
+
     date = map["date"] != null
         ? DateTime.parse(map["date"])
         : null;
@@ -122,7 +125,21 @@ class Post {
     //excerpt = map['excerpt'];
     //featuredMediaID = map['featured_media'];
     //featuredMediaUrl = map ['_links']["self"][0]['href'] ;
-    featuredMediaUrl = map ["_embedded"]["wp:featuredmedia"][0]["source_url"];
+    featuredMediaThumb = map ["_embedded"]["wp:featuredmedia"] != null
+    ? true : false ;
+
+    getFeaturedMedia(){
+      if(featuredMediaThumb == true){
+       return map["_embedded"]["wp:featuredmedia"][0]["source_url"] ;
+      }else{
+        return null ;
+      }
+    }
+    featuredMediaUrl = getFeaturedMedia();
+//    map ["_embedded"]["wp:featuredmedia"][0]["source_url"] ;
+
+
+
     //commentStatus = map['comment_status'];
     //pingStatus = map['ping_status'];
     //format = map['format'];
@@ -138,7 +155,10 @@ class Post {
 //        categories.add(item);
 //      }
 //    }
+
+
   }
+
 
   Map<String, dynamic> toMap() => {
         'date': date?.toIso8601String(),
@@ -182,4 +202,5 @@ class Post {
     this.featuredMediaUrl = map['featured_media'];
   }
 }
+
 
