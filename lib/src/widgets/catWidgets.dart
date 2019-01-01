@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:hawalnir1/src/blocs/functions.dart';
-import 'package:hawalnir1/src/widgets/eachPost.dart';
+import '../../src/db/functions.dart';
+import '../../src/widgets/eachPost.dart';
 import 'hawalnir-date-convertor.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import '../config.dart';
 import '../../wordpress_client.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../app2.dart';
 import '../pages/listView.dart';
+
 Widget hawalImage(Post post) {
   return Stack(
     children: <Widget>[
-
       Positioned(
         bottom: 5.0,
         right: 0,
@@ -48,7 +45,6 @@ Widget hawalImage(Post post) {
               ],
             )),
         child: CachedNetworkImage(
-
 //          width: 200.0,
           fadeInCurve: Curves.decelerate,
           repeat: ImageRepeat.noRepeat,
@@ -62,13 +58,6 @@ Widget hawalImage(Post post) {
           ),
         ),
       ),
-//      Positioned(
-//        bottom: 2.0,
-//        left: 5.0,
-//        child: new ButtonTheme.bar(
-//          child: hawalBtnBar(),
-//        ),
-//      )
     ],
   );
 }
@@ -88,7 +77,7 @@ Widget hawalTitle(Post post) {
 
 Widget hawalAuthor(Post post) {
   return Text(
-    "نووسه‌ر: " + post.author,
+    "author: " + post.author,
     textAlign: TextAlign.right,
   );
 }
@@ -107,9 +96,8 @@ Widget hawalBtnBar() {
         icon: Icon(Icons.save),
         splashColor: Colors.blueAccent[200],
         color: Colors.blueGrey,
-        tooltip: 'پاشكه‌وت كردنی بابه‌ت',
+        tooltip: 'save',
         onPressed: () {
-
           debugPrint("save button tapped");
         }, // add +1 to the database
       ),
@@ -117,7 +105,7 @@ Widget hawalBtnBar() {
         icon: Icon(Icons.favorite),
         splashColor: Colors.redAccent,
         color: Colors.blueGrey,
-        tooltip: 'په‌سه‌ند كردن',
+        tooltip: 'like',
         onPressed: () {
           debugPrint("favorite button tapped");
         }, // add +1 to the database
@@ -125,30 +113,13 @@ Widget hawalBtnBar() {
       IconButton(
         icon: Icon(Icons.share),
         color: Colors.blueGrey,
-        tooltip: 'بو هاورێكانت بنێره‌',
-        onPressed:
-            () {
-              debugPrint("share button tapped");
-            }, // Standard share for whatsapp + google + faccebook + twitter
+        tooltip: 'share',
+        onPressed: () {
+          debugPrint("share button tapped");
+        }, // Standard share for whatsapp + google + faccebook + twitter
       ),
     ],
   );
-}
-
-Future<List<dynamic>> getPosts2(
-  String apiUrl,
-  String categoryId,
-  String hawalPerPage,
-) async {
-  List<dynamic> posts2;
-  var res = await http.get(
-      Uri.encodeFull(apiUrl +
-          "posts?_embed&categories=$categoryId&per_page=$hawalPerPage"), // Works Uri.encodeFull(apiUrl + "posts?categories=7278"),
-      headers: {"Accept": "application/json"});
-  var resBody = json.decode(res.body);
-  posts2 = resBody;
-  //print(posts2);
-  return posts2;
 }
 
 Widget connectionErrorBar() {
@@ -162,25 +133,19 @@ Widget connectionErrorBar() {
   );
 }
 
-
-
 //Global Cards for Posts
-postsCardGlobal(int index, context){
+postsCardGlobal(int index, context) {
   int postID = posts[index].id;
   return Card(
-
 //                      color: Colors.teal[100 * (index % 9)] ,
     shape: RoundedRectangleBorder(
-        borderRadius:
-        BorderRadius.all(Radius.circular(10.0))),
+        borderRadius: BorderRadius.all(Radius.circular(10.0))),
     clipBehavior: Clip.hardEdge,
     child: Column(
       children: <Widget>[
         Stack(
           children: <Widget>[
-            Hero(
-                tag: 'hero$postID',
-                child: hawalImage(posts[index])),
+            Hero(tag: 'hero$postID', child: hawalImage(posts[index])),
             Positioned(
               bottom: 2.0,
               left: 5.0,
@@ -198,18 +163,17 @@ postsCardGlobal(int index, context){
                 context,
                 MaterialPageRoute(
                   //fullscreenDialog: true,
-                  builder: (context) =>
-                      HawalnirPost(post: posts[index]),
+                  builder: (context) => HawalnirPost(post: posts[index]),
                 ),
               );
             },
             title: hawalTitle(posts[index]),
             subtitle: Row(
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Expanded(child: hawalAuthor(posts[index])),
-                Expanded(
-                  child: hawalDate(posts[index]),
-                ),
+                hawalAuthor(posts[index]),
+                hawalDate(posts[index]),
               ],
             ),
           ),
@@ -222,44 +186,33 @@ postsCardGlobal(int index, context){
 // This is the type used by the popup menu below.
 enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
 
-sliverAppBarGlobal(){
+sliverAppBarGlobal() {
   return SliverAppBar(
-
       backgroundColor: Colors.deepPurple,
       pinned: true,
-      expandedHeight: 80.0,
+      expandedHeight: 70.0,
       flexibleSpace: FlexibleSpaceBar(
-        collapseMode: CollapseMode.parallax ,
-        title: GestureDetector(child: Text('Slivers') , onTap: scrollToTop,),
+        collapseMode: CollapseMode.pin,
+        title: GestureDetector(
+          child: Text('WPFlutter'),
+          onTap: scrollToTop,
+        ),
       ),
-
       actions: <Widget>[
-
         IconButton(
           icon: const Icon(Icons.add_circle),
           tooltip: 'Add new entry',
-          onPressed: () {
-
-          },
+          onPressed: () {},
         ),
       ],
-
-      leading: IconButton(
-        icon: Icon(Icons.arrow_drop_up),
-        onPressed: () {
-
-        },
-      ));
+);
 }
 
-sliverListGlobal(){
+sliverListGlobal() {
   return SliverList(
-
 //                itemExtent: 600.0,
     delegate: SliverChildBuilderDelegate(
-
-          (BuildContext context, index ) {
-
+      (BuildContext context, index) {
         return postsCardGlobal(index, context);
 //            return Container(
 //              alignment: Alignment.center,
@@ -267,9 +220,8 @@ sliverListGlobal(){
 //              child: Text('list item $index'),
 //            );
       },
-      childCount: perPageInt ,
-      addAutomaticKeepAlives: true ,
-
+      childCount: perPageInt,
+      addAutomaticKeepAlives: true,
     ),
   );
 }

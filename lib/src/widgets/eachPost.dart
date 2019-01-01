@@ -14,48 +14,42 @@ class HawalnirPost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int postID = post.id;
-    return new Directionality(
-      //fot the rtl on readmore page
-      textDirection: TextDirection.rtl, // wrapped scaffold in the directionly
-      child: new Scaffold(
-        appBar: new AppBar(title: hawalTitle(post)
-            // title gets  the title from post['title'] in api
-            ),
-        body: new Padding(
-            padding: EdgeInsets.all(16.0),
-            child: new ListView(
-              children: <Widget>[
-                Column(
-                  //rossAxisAlignment: CrossAxisAlignment.stretch,
-                  //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Stack(
-                      children: <Widget>[
-                        Hero(tag: 'hero$postID', child: hawalImage(post)),
-                        Positioned(bottom: 0.0,left: 0.0,child: hawalBtnBar(),
-                        ),
-                      ],
-                    ),
-
-                    hawalTitle(post),
-
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: hawalAuthor(post),
-                        ),
-                        Expanded(
-                          child: hawalDate(post),
-                        ),
-                      ],
-                    ),
-                    Divider(),
-                    contentRendered(post),
-                  ],
-                ),
-              ],
-            )),
-      ),
+    return new Scaffold(
+      appBar: new AppBar(title: hawalTitle(post) ,backgroundColor: Colors.deepPurple,
+          ),
+      body: new Padding(
+          padding: EdgeInsets.all(16.0),
+          child: new ListView(
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Stack(
+                    children: <Widget>[
+                      Hero(tag: 'hero$postID', child: hawalImage(post)),
+                      Positioned(
+                        bottom: 0.0,
+                        left: 0.0,
+                        child: hawalBtnBar(),
+                      ),
+                    ],
+                  ),
+                  hawalTitle(post),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: hawalAuthor(post),
+                      ),
+                      Expanded(
+                        child: hawalDate(post),
+                      ),
+                    ],
+                  ),
+                  Divider(),
+                  contentRendered(post),
+                ],
+              ),
+            ],
+          )),
     );
   }
 

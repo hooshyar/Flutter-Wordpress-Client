@@ -15,37 +15,27 @@ Widget drawerMain(context) {
             color: Colors.amberAccent,
           ),
         ),
-        socialBtn("فه‌یسبوك", Icons.closed_caption, Colors.indigo[900]),
-        drawerBtnPadding(),
-        socialBtn("تویتته‌ر", Icons.access_alarms, Colors.indigo[900]),
+
+        socialBtn("twitter", Icons.access_alarms, Colors.indigo[900]),
         drawerBtnPadding(),
         ExpansionTile(
           initiallyExpanded: true,
-          title: Text("بابه‌ته‌كانی هه‌واڵ"),
+          title: Text("Categories"),
           children: <Widget>[
+            drawerBtnPadding(),
             drawerBtn(" CheckOFFLINE", () {
-              // we want to close the drawer
-              Navigator.of(context).pop(); //TODO Find a better way
+              Navigator.of(context).pop(); 
               Navigator.pushNamed(
-                  context, '/MainPage'); // => KurdistanCat.dart
+                  context, '/MainPage'); 
             }),
+            drawerBtnPadding(),
             drawerBtn(" insta", () {
-              // we want to close the drawer
-              Navigator.of(context).pop(); //TODO Find a better way
+              Navigator.of(context).pop(); 
               Navigator.pushNamed(
-                  context, '/InstaPage'); // => KurdistanCat.dart
+                  context, '/InstaPage');
             }),
             drawerBtnPadding(),
-            drawerBtn(" grng", () {
-              // we want to close the drawer
-              Navigator.of(context).pop(); //TODO Find a better way
-              Navigator.pushNamed(
-                  context, '/GrngCat'); // => KurdistanCat.dart
-            }),
-            drawerBtn("ئابوری", (){
-              print("object") ;
-            }),
-            drawerBtnPadding(),
+            
           ],
 
         ),

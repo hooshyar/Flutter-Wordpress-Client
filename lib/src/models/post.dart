@@ -1,4 +1,3 @@
-import 'media.dart';
 
 
 class Post {
@@ -125,19 +124,23 @@ class Post {
     //excerpt = map['excerpt'];
     //featuredMediaID = map['featured_media'];
     //featuredMediaUrl = map ['_links']["self"][0]['href'] ;
-    featuredMediaThumb = map ["_embedded"]["wp:featuredmedia"] != null
-    ? true : false ;
+    featuredMediaUrl = map ["_embedded"]["wp:featuredmedia"] == null
+    ? 'assets/images/placeholder.png'
+    :map["_embedded"]["wp:featuredmedia"][0]["source_url"]  ; 
 
-    getFeaturedMedia(){
-      if(featuredMediaThumb == true){
-       return map["_embedded"]["wp:featuredmedia"][0]["source_url"] ;
-      }else{
-        return null ;
-      }
-    }
-    featuredMediaUrl = getFeaturedMedia();
-//    map ["_embedded"]["wp:featuredmedia"][0]["source_url"] ;
-
+    //  post.featuredMediaUrl == null
+    //           ? 'assets/images/placeholder.png'
+    //           : post.featuredMediaUrl,
+    print(featuredMediaUrl);
+    // getFeaturedMedia(){
+    //   if(featuredMediaThumb = true){
+    //     return map["_embedded"]["wp:featuredmedia"][0]["source_url"] ;
+    //   }else{
+    //      return 'assets/images/placeholder.png' ;
+    //   }
+    // }
+    // featuredMediaUrl = getFeaturedMedia();
+    // print(featuredMediaUrl);
 
 
     //commentStatus = map['comment_status'];

@@ -325,17 +325,15 @@ Future<List<User>> listUser({List<int> includeIDs,
       queryString = '';
     }
 
-    // If this is our first parameter, start with '?'
     if (queryString.length == 0) {
       queryString += '?';
     }
 
-    // Otherwise, add '&'
+
     else {
       queryString += '&';
     }
 
-    // TODO URL encode
     queryString += '$key=$value';
 
     return queryString;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 //import 'src/app.dart';
-import 'src/app2.dart';
+import 'src/app.dart';
 import 'src/pages/instagramPage.dart';
 //import 'src/pages/getCategories.dart';
 //import 'src/pages/kurdistan-cat.dart';
@@ -31,7 +31,7 @@ void main() {
       ) ,
       
       
-      home: HawalnirHome2(),
+      home: HawalnirHome(),
     initialRoute: '/',
     // it will go and get app.dart then it will go to  HawalnirHome() from hawalnir-home.dart
       routes: <String , WidgetBuilder> {

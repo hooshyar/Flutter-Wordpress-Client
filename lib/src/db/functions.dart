@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http; // http requ
 import 'dart:async';
 import '../config.dart';
-import '../blocs/database_helper.dart';
+import '../db/database_helper.dart';
 import 'dart:io';
 import 'package:hawalnir1/wordpress_client.dart';
 
@@ -51,7 +51,6 @@ fillDB() {
 }
 
 doWeHaveNet() async {
-  //TODO POP something to know connection is lost
   int count = await dbHelper.getCount();
   try {
     final result = await InternetAddress.lookup('google.com');
@@ -66,7 +65,6 @@ doWeHaveNet() async {
       netConnection = false;
     }
   }
-  //TODO put a nice widget here for Connectivity problems
 }
 
 Future<List<Post>> getPosts() async {
