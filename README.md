@@ -20,7 +20,7 @@ Flutter
 Make sure your WordPress version is greater or equal to 4.7
 
 Clone repository
-git clone https://github.com/hooshyar/Flutter-Wordpress-Client.git
+<code>git clone https://github.com/hooshyar/Flutter-Wordpress-Client.git </code>
 
 and open <code>pubspec.yaml</code>
 
