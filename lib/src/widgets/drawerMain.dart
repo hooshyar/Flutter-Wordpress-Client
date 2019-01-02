@@ -12,7 +12,7 @@ Widget drawerMain(context) {
         DrawerHeader(
           child: Text("data"),
           decoration: BoxDecoration(
-            color: Colors.amberAccent,
+            // color: Colors.amberAccent,
           ),
         ),
 

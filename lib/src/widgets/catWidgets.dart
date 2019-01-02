@@ -48,7 +48,7 @@ Widget hawalImage(Post post) {
 //          width: 200.0,
           fadeInCurve: Curves.decelerate,
           repeat: ImageRepeat.noRepeat,
-          fadeInDuration: Duration(seconds: 1),
+          fadeInDuration: Duration(milliseconds: 500),
           imageUrl: post.featuredMediaUrl == null
               ? 'assets/images/placeholder.png'
               : post.featuredMediaUrl,
@@ -191,6 +191,7 @@ sliverAppBarGlobal() {
       backgroundColor: Colors.deepPurple,
       pinned: true,
       expandedHeight: 70.0,
+      
       flexibleSpace: FlexibleSpaceBar(
         collapseMode: CollapseMode.pin,
         title: GestureDetector(
