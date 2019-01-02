@@ -13,6 +13,7 @@ For help getting started with Flutter, view Flutter online
 [documentation](https://flutter.io/).
 
 Prerequisites
+
 Flutter
 Make sure your WordPress version is greater or equal to 4.7
 
