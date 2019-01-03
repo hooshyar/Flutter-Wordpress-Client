@@ -26,3 +26,6 @@ and open <code>pubspec.yaml</code>
 
 run 
 <code>flutter packages get</code>
+
+open config.dart and change<code>"https://client.kurd.app/wp-json";</code>
+to your wordpress website address
