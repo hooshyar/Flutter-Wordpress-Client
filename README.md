@@ -1,6 +1,7 @@
 # A Wordpress client for Flutter 
 
 ### This project uses a simple WordPress website as a backend, without any additional plugin.
+
 <p>
 <img src="https://client.kurd.app/wp-content/uploads/2019/01/wordpress_flutter1.gif" alt="foo bar" title="Wordpress-client" />
 <img src="https://client.kurd.app/wp-content/uploads/2019/01/wordpress_flutter2.gif" alt="foo bar" title="Wordpress-client" />
@@ -32,6 +33,8 @@ to your wordpress website address
 
 run app on a simulator
 <code>flutter run</code>
+
+#### Feel free to contribute,no! Please please contribute, Im realy newbie to flutter.
 
 ## Roadmap
 - [x] Sliver app bar
