@@ -32,3 +32,18 @@ to your wordpress website address
 
 run app on a simulator
 <code>flutter run</code>
+
+## Roadmap
+- [x] Sliver app bar
+- [x] Sliver list view
+- [x] Connectivity status, if offline pop a message
+- [x] Cache on device
+- [x] Pull to refresh
+- [x] Global perPage
+- [ ] Global theming
+- [ ] Setting page
+- [ ] Bloc pattern 
+- [ ] Splash screen 
+- [ ] Nice Categories page screen 
+- [ ] real time clap button like Meduim
+- [ ] Share and fav buttons 
