@@ -29,3 +29,6 @@ run
 
 open config.dart and change<code>"https://client.kurd.app/wp-json";</code>
 to your wordpress website address
+
+run app on a simulator
+<code>flutter run</code>
