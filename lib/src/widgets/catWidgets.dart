@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../src/db/functions.dart';
-import '../../src/widgets/eachPost.dart';
+import 'package:hawalnir1/src/pages/eachPost.dart';
 import 'hawalnir-date-convertor.dart';
 import '../config.dart';
 import '../../wordpress_client.dart';

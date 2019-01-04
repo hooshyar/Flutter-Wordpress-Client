@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart'; // pub to load html tags from json api
-import 'hawalnir-date-convertor.dart';
+import '../widgets/hawalnir-date-convertor.dart';
 import 'package:hawalnir1/wordpress_client.dart';
-import 'catWidgets.dart';
+import '../widgets/catWidgets.dart';
 
 class HawalnirPost extends StatelessWidget {
   // i dont know what is the nag
@@ -14,42 +14,45 @@ class HawalnirPost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int postID = post.id;
-    return new Scaffold(
-      appBar: new AppBar(title: hawalTitle(post) ,backgroundColor: Colors.deepPurple,
-          ),
-      body: new Padding(
-          padding: EdgeInsets.all(16.0),
-          child: new ListView(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Stack(
-                    children: <Widget>[
-                      Hero(tag: 'hero$postID', child: hawalImage(post)),
-                      Positioned(
-                        bottom: 0.0,
-                        left: 0.0,
-                        child: hawalBtnBar(),
-                      ),
-                    ],
-                  ),
-                  hawalTitle(post),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: hawalAuthor(post),
-                      ),
-                      Expanded(
-                        child: hawalDate(post),
-                      ),
-                    ],
-                  ),
-                  Divider(),
-                  contentRendered(post),
-                ],
-              ),
-            ],
-          )),
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: new Scaffold(
+        appBar: new AppBar(title: hawalTitle(post) ,backgroundColor: Colors.deepPurple,
+            ),
+        body: new Padding(
+            padding: EdgeInsets.all(16.0),
+            child: new ListView(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Stack(
+                      children: <Widget>[
+                        Hero(tag: 'hero$postID', child: hawalImage(post)),
+                        Positioned(
+                          bottom: 0.0,
+                          left: 0.0,
+                          child: hawalBtnBar(),
+                        ),
+                      ],
+                    ),
+                    hawalTitle(post),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: hawalAuthor(post),
+                        ),
+                        Expanded(
+                          child: hawalDate(post),
+                        ),
+                      ],
+                    ),
+                    Divider(),
+                    contentRendered(post),
+                  ],
+                ),
+              ],
+            )),
+      ),
     );
   }
 

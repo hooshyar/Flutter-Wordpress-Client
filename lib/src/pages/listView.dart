@@ -32,12 +32,15 @@ class ListViewPostsState extends State<ListViewPosts> {
           RefreshIndicator(
             displacement: 150.0,
             onRefresh: isExitst,
-            child: CustomScrollView(
-              controller: scrollCont,
-              slivers: <Widget>[
-                sliverAppBarGlobal(),
-                sliverListGlobal(),
-              ],
+            child: Directionality(
+              textDirection: TextDirection.rtl,
+              child: CustomScrollView(
+                controller: scrollCont,
+                slivers: <Widget>[
+                  sliverAppBarGlobal(),
+                  sliverListGlobal(),
+                ],
+              ),
             ),
           ),
 //            _buildFab(),
