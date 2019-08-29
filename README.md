@@ -28,13 +28,13 @@ and open <code>pubspec.yaml</code>
 run 
 <code>flutter packages get</code>
 
-open config.dart and change<code>"https://client.kurd.app/wp-json";</code>
+open config.dart and change <code>"https://client.kurd.app"</code> to your website address for example if my website is wordpress.com i will change it to this : <code>"http://www.wordpress.com"</code>
+Do not add any additional characters like "/".
+
 to your wordpress website address
 
 run app on a simulator
 <code>flutter run</code>
-
-#### Feel free to contribute,no! Please please contribute, Im realy newbie to flutter.
 
 ## Roadmap
 - [x] Sliver app bar
