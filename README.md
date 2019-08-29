@@ -31,7 +31,7 @@ run
 open config.dart and change <code>"https://client.kurd.app"</code> to your website address for example if my website is wordpress.com i will change it to this : <code>"http://www.wordpress.com"</code>
 Do not add any additional characters like "/".
 
-to your wordpress website address
+to your WordPress website address
 
 run app on a simulator
 <code>flutter run</code>
@@ -48,5 +48,5 @@ run app on a simulator
 - [ ] Bloc pattern 
 - [ ] Splash screen 
 - [ ] Nice Categories page screen 
-- [ ] real time clap button like Meduim
+- [ ] real time clap button like Medium
 - [ ] Share and fav buttons 
