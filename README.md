@@ -28,7 +28,7 @@ and open <code>pubspec.yaml</code>
 run 
 <code>flutter packages get</code>
 
-open config.dart and change <code>"https://client.kurd.app"</code> to your website address for example if my website is wordpress.com i will change it to this : <code>"http://www.wordpress.com"</code>
+open config.dart and change <code>"https://client.kurd.app"</code> to your website address for example if my website is wordpress.com you have to change it to this : <code>"http://www.wordpress.com"</code>
 Do not add any additional characters like "/".
 
 to your WordPress website address
