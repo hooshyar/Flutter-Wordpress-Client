@@ -52,9 +52,11 @@ Widget hawalImage(Post post) {
           imageUrl: post.featuredMediaUrl == null
               ? 'assets/images/placeholder.png'
               : post.featuredMediaUrl,
-          placeholder: Image.asset('assets/images/placeholder.png'),
-          errorWidget: Container(
-            child: Image.asset('assets/images/placeholder.png'),
+          placeholder: (context, url) =>
+              Image.asset('assets/images/placeholder.png'),
+          // placeholder: Image.asset('assets/images/placeholder.png'),
+          errorWidget: (context, url, error) => Container(
+            child: Icon(Icons.error),
           ),
         ),
       ),
@@ -63,16 +65,13 @@ Widget hawalImage(Post post) {
 }
 
 Widget hawalTitle(Post post) {
-  return Padding(
-    padding: EdgeInsets.symmetric(vertical: 10.0),
-    child: // Text("data")
-        Html(
-            data: post.title,
-            defaultTextStyle: TextStyle(
-                //fontFamily: 'NotoKufiArabic',
-                fontSize: 20.0,
-                decoration: TextDecoration.none)),
-  );
+  return // Text("data")
+      Html(
+          data: post.title,
+          defaultTextStyle: TextStyle(
+              //fontFamily: 'NotoKufiArabic',
+              fontSize: 20.0,
+              decoration: TextDecoration.none));
 }
 
 Widget hawalAuthor(Post post) {
@@ -188,28 +187,27 @@ enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
 
 sliverAppBarGlobal() {
   return SliverAppBar(
-      backgroundColor: Colors.deepPurple,
-      pinned: true,
-      expandedHeight: 70.0,
-      
-      flexibleSpace: FlexibleSpaceBar(
-        collapseMode: CollapseMode.pin,
-        title: GestureDetector(
-          child: Text('WPFlutter'),
-          onTap: scrollToTop,
-        ),
+    backgroundColor: Colors.deepPurple,
+    pinned: true,
+    expandedHeight: 70.0,
+    flexibleSpace: FlexibleSpaceBar(
+      collapseMode: CollapseMode.pin,
+      title: GestureDetector(
+        child: Text('WPFlutter'),
+        onTap: scrollToTop,
       ),
-      actions: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.add_circle),
-          tooltip: 'Add new entry',
-          onPressed: () {},
-        ),
-      ],
-);
+    ),
+    actions: <Widget>[
+      IconButton(
+        icon: const Icon(Icons.add_circle),
+        tooltip: 'Add new entry',
+        onPressed: () {},
+      ),
+    ],
+  );
 }
 
-sliverListGlobal() {
+sliverListGlobal(List<Post> posts) {
   return SliverList(
 //                itemExtent: 600.0,
     delegate: SliverChildBuilderDelegate(
@@ -221,7 +219,7 @@ sliverListGlobal() {
 //              child: Text('list item $index'),
 //            );
       },
-      childCount: perPageInt,
+      childCount: posts.length,
       addAutomaticKeepAlives: true,
     ),
   );

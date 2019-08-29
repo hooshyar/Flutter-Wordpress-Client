@@ -10,18 +10,18 @@ description: A Kurdish News gathering.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: 
 
 dependencies:
-  flutter_offline: "^0.2.2"
-  cached_network_image: ^0.5.1
-  json_annotation: ^2.0.0
-  sqflite: any
-  path_provider: ^0.4.1
-  http: ^0.11.3
-  transparent_image: ^0.1.0
+  flutter_offline: 
+  cached_network_image: 
+  json_annotation: 
+  sqflite: 
+  path_provider: 
+  http: 
+  transparent_image: 
   #flutter_html_view: "^0.5.8"
-  flutter_html: ^0.8.2
+  flutter_html: 
   flutter:
     sdk: flutter
     

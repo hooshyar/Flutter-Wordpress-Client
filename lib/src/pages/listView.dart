@@ -36,7 +36,7 @@ class ListViewPostsState extends State<ListViewPosts> {
               controller: scrollCont,
               slivers: <Widget>[
                 sliverAppBarGlobal(),
-                sliverListGlobal(),
+                sliverListGlobal(widget.posts),
               ],
             ),
           ),
