@@ -1,54 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:hawalnir1/src/app.dart';
+import 'package:hawalnir1/src/models/category.dart';
 
 Widget drawerMain(context) {
   debugPrint("Drawer");
   return Drawer(
-    elevation: 10.0 ,
-    child: ListView(
-//      physics: BouncingScrollPhysics(),
-      padding: EdgeInsets.zero ,
-      children: <Widget>[
-
-        DrawerHeader(
-          child: Text("data"),
-          decoration: BoxDecoration(
-            // color: Colors.amberAccent,
-          ),
+    elevation: 10.0,
+    child: SafeArea(
+      child: Container(
+        child: FutureBuilder<List<Category>>(
+          future: client.listCategories(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return LinearProgressIndicator();
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  List<Category> _categories = snapshot.data;
+                  return Container(
+                    height: 100,
+                    child: ListTile(
+                      
+                        title: Text(_categories[index].name),
+                        subtitle: Text(_categories[index].description),
+                        leading: Text(
+                          _categories[index].id.toString(),
+                      
+                        ),
+                        trailing: Container( width: 50,child: Text(_categories[index].link)),
+                        ),
+                  );
+                },
+              );
+            }
+          },
         ),
-
-        socialBtn("twitter", Icons.access_alarms, Colors.indigo[900]),
-        drawerBtnPadding(),
-        ExpansionTile(
-          initiallyExpanded: true,
-          title: Text("Categories"),
-          children: <Widget>[
-            drawerBtnPadding(),
-            drawerBtn(" CheckOFFLINE", () {
-              Navigator.of(context).pop(); 
-              Navigator.pushNamed(
-                  context, '/MainPage'); 
-            }),
-            drawerBtnPadding(),
-            drawerBtn(" insta", () {
-              Navigator.of(context).pop(); 
-              Navigator.pushNamed(
-                  context, '/InstaPage');
-            }),
-            drawerBtnPadding(),
-            
-          ],
-
-        ),
-        drawerBtn("text", () {
-          print('object2');
-        }),
-      ],
+      ),
     ),
+
+    // ExpansionTile(
+    //   initiallyExpanded: true,
+    //   title: Text("Categories"),
+    //   children: <Widget>[
+    //     drawerBtnPadding(),
+    //     drawerBtn(" CheckOFFLINE", () {
+    //       Navigator.of(context).pop();
+    //       Navigator.pushNamed(
+    //           context, '/MainPage');
+    //     }),
+    //     drawerBtnPadding(),
+    //     drawerBtn(" insta", () {
+    //       Navigator.of(context).pop();
+    //       Navigator.pushNamed(
+    //           context, '/InstaPage');
+    //     }),
+    //     drawerBtnPadding(),
+
+    //   ],
+
+    // ),
   );
-
 }
-
-
 
 Widget kurdistanCatBtn() {
 //String text ;
@@ -69,7 +82,7 @@ Widget kurdistanCatBtn() {
           animationDuration: Duration(microseconds: 200),
           shape: RoundedRectangleBorder(
               borderRadius:
-              BorderRadius.only(bottomLeft: Radius.circular(10.0))),
+                  BorderRadius.only(bottomLeft: Radius.circular(10.0))),
           color: Colors.amber,
           onPressed: () {},
         ),
@@ -95,7 +108,7 @@ Widget drawerBtn(String text, Function function) {
           animationDuration: Duration(microseconds: 200),
           shape: RoundedRectangleBorder(
               borderRadius:
-              BorderRadius.only(bottomLeft: Radius.circular(10.0))),
+                  BorderRadius.only(bottomLeft: Radius.circular(10.0))),
           color: Colors.amber,
           onPressed: function,
         ),
@@ -134,7 +147,7 @@ Widget socialBtn(String text, IconData iconData, Color color) {
           animationDuration: Duration(microseconds: 200),
           shape: RoundedRectangleBorder(
               borderRadius:
-              BorderRadius.only(bottomLeft: Radius.circular(10.0))),
+                  BorderRadius.only(bottomLeft: Radius.circular(10.0))),
           color: color,
           onPressed: () {},
         ),

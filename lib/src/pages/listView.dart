@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hawalnir1/src/widgets/sliver_app_bar.dart';
 import '../../src/db/database_helper.dart';
 import '../../src/db/functions.dart';
 import '../../src/widgets/catWidgets.dart';
@@ -20,12 +21,12 @@ var scrollCont =
 
 class ListViewPostsState extends State<ListViewPosts> {
   var dbHelper = DatabaseHelper();
-  List<Post> postList;
+ 
   int count = 0;
 
   @override
   Widget build(BuildContext context) {
-    getPostsIDs();
+      debugPrint('posts count' + widget.posts.length.toString());
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -35,8 +36,9 @@ class ListViewPostsState extends State<ListViewPosts> {
             child: CustomScrollView(
               controller: scrollCont,
               slivers: <Widget>[
-                sliverAppBarGlobal(),
-                sliverListGlobal(widget.posts),
+                SliverAppBarCustomized(),
+                sliverListGlobal(widget.posts),      
+                  
               ],
             ),
           ),

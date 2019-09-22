@@ -5,18 +5,22 @@ import 'package:hawalnir1/wordpress_client.dart';
 import 'catWidgets.dart';
 
 class HawalnirPost extends StatelessWidget {
-  // i dont know what is the nag
-
-  HawalnirPost({Key key, @required var this.post})
-      : super(key: key); //we refer post as required
-  final Post post; //the variable
+  HawalnirPost({Key key, @required var this.post}) : super(key: key);
+  final Post post;
 
   @override
   Widget build(BuildContext context) {
-    int postID = post.id;
+    debugPrint(post.id.toString());
+
     return new Scaffold(
-      appBar: new AppBar(title: hawalTitle(post) ,backgroundColor: Colors.deepPurple,
-          ),
+      appBar: new AppBar(
+        elevation: 0,
+        title:
+            FittedBox( child: hawalTitle(post)
+),
+          
+        backgroundColor: Colors.transparent,
+      ),
       body: new Padding(
           padding: EdgeInsets.all(16.0),
           child: new ListView(
@@ -25,7 +29,7 @@ class HawalnirPost extends StatelessWidget {
                 children: <Widget>[
                   Stack(
                     children: <Widget>[
-                      Hero(tag: 'hero$postID', child: hawalImage(post)),
+                      Hero(tag: 'hero${post.id}', child: hawalImage(post)),
                       Positioned(
                         bottom: 0.0,
                         left: 0.0,
@@ -82,7 +86,7 @@ class HawalnirPost extends StatelessWidget {
 
   Widget authorEmbedded(Post post) {
     return Text(
-      "نووسه‌ر: " + post.author,
+      "author: " + post.author,
       textAlign: TextAlign.right,
     );
   }

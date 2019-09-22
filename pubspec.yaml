@@ -13,6 +13,7 @@ environment:
   sdk: 
 
 dependencies:
+  provider:
   flutter_offline: 
   cached_network_image: 
   json_annotation: 
