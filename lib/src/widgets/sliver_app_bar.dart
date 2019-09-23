@@ -16,20 +16,20 @@ class SliverAppBarCustomized extends StatelessWidget {
       backgroundColor: Colors.transparent,
       pinned: true,
       expandedHeight: 60.0,
-    
       leading: IconButton(
-            icon: Icon(
-              Icons.menu,
-            ),
-            onPressed: () => Provider.of<Keys>(context).appScaffoldKey.currentState.openEndDrawer()),
-     
+          icon: Icon(
+            Icons.menu,
+          ),
+          onPressed: () => Provider.of<Keys>(context)
+              .appScaffoldKey
+              .currentState
+              .openDrawer()),
       flexibleSpace: Stack(
         children: <Widget>[
           Container(
             color: Colors.deepPurple.withOpacity(0.7),
           ),
           FlexibleSpaceBar(
-            
             collapseMode: CollapseMode.pin,
             title: GestureDetector(
               child: BackdropFilter(

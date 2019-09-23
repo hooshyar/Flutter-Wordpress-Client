@@ -1,6 +1,6 @@
 // change this to your website address
 //for example change it to : "http://www.wordpress.com"
-final String urWebsiteUrl = "http://client.kurd.app" ; 
+final String urWebsiteUrl = "https://client.kurd.app" ; 
 
 //Show how many per_page ?
 final String perPage = "10";

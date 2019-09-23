@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:hawalnir1/src/pages/listView.dart';
 import 'package:hawalnir1/src/view_models/app_key.dart';
 import 'package:http/http.dart' as http;
@@ -32,18 +31,7 @@ class HawalnirHomeState extends State<HawalnirHome>
   Widget build(BuildContext context) {
     return Scaffold(
         key: Provider.of<Keys>(context).appScaffoldKey,
-        endDrawer: drawerMain(context),
-        // bottomNavigationBar: bottomNavAppBar(),
-        // floatingActionButton:
-        //  FloatingActionButton(
-        //     isExtended: false,
-        //     elevation: 10.0,
-        //     shape: CircleBorder(),
-        //     child: Icon(Icons.menu),
-        //     backgroundColor: Colors.deepPurple,
-        //     onPressed: () {
-        //       appScaffoldKey.currentState.openEndDrawer();
-        //     }),
+        drawer: drawerMain(context),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         resizeToAvoidBottomPadding: true,
         body: OfflineBuilder(
@@ -120,11 +108,11 @@ class HawalnirHomeState extends State<HawalnirHome>
           child: Stack(
             children: <Widget>[
               BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 5,sigmaY: 5),
-                child: BottomNavigationBar(backgroundColor: Colors.transparent, items: [
-                  BottomNavigationBarItem(title: Text('data'), icon: Icon(Icons.link)),
-                  BottomNavigationBarItem(title: Text('data'), icon: Icon(Icons.link)),
-                  BottomNavigationBarItem(title: Text('data'), icon: Icon(Icons.link)),
+                filter: ImageFilter.blur(sigmaX: 2,sigmaY: 2),
+                child: BottomNavigationBar(backgroundColor: Colors.transparent,elevation: 0 ,items: [
+                  BottomNavigationBarItem(title: Text('Home'), icon: Icon(Icons.home)),
+                  BottomNavigationBarItem(title: Text('Favorites'), icon: Icon(Icons.favorite)),
+                  BottomNavigationBarItem(title: Text('gallery'), icon: Icon(Icons.image)),
                 ]),
               ),
             ],

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 import 'package:logging/logging.dart';
 
@@ -8,8 +9,8 @@ import 'models/category.dart';
 import 'models/media.dart';
 import 'models/post.dart';
 import 'models/users.dart';
-typedef void APIErrorHandler(String endpoint, int statusCode, String response);
 
+typedef void APIErrorHandler(String endpoint, int statusCode, String response);
 
 class WordpressClient {
   final Logger _logger = new Logger('API');
@@ -62,7 +63,7 @@ class WordpressClient {
       bool injectObjects: false,
       List<int> excludeIDs,
       int page: 1,
-      int perPage: 10 }) async {
+      int perPage: 10}) async {
     String _endpoint = '/wp/v2/posts?_embed';
     print(_endpoint);
 
@@ -87,7 +88,7 @@ class WordpressClient {
     //_endpoint =
     // Retrieve the data
     List<Map> postMaps = await _get(_endpoint);
-    print(_endpoint) ;
+    print(_endpoint);
 
     List<Post> posts = new List();
     posts = postMaps.map((postMap) => new Post.fromMap(postMap)).toList();
@@ -108,9 +109,8 @@ class WordpressClient {
   ///
   /// If [mediaIDs] list is provided then only these specific media items
   /// will be returned. The [page] and [perPage] parameters allow for pagination.
-  Future<List<Media>> listMedia({List<int> includeIDs,
-      int page: 1,
-    perPage: 10 }) async {
+  Future<List<Media>> listMedia(
+      {List<int> includeIDs, int page: 1, perPage: 10}) async {
     String _endpoint = '/wp/v2/media';
 
     // Build query string starting with pagination
@@ -137,16 +137,12 @@ class WordpressClient {
     return media;
   }
 
-
-
-
-
- //****** */
+  //****** */
   /// Get all available user.
   ///
   /// If [userIDs] list is provided then only these specific user items
   /// will be returned. The [page] and [perPage] parameters allow for pagination.
- /* Future<List<User>> listUser() async {
+  /* Future<List<User>> listUser() async {
     String _endpoint = '/wp/v2/users';
 
     List<Map> userMaps = await _get(_endpoint);
@@ -157,40 +153,38 @@ class WordpressClient {
     return user;
   }
   */
-Future<List<User>> listUser({List<int> includeIDs,
-      int page: 1,
-        int perPage: 10}) async {
+  Future<List<User>> listUser(
+      {List<int> includeIDs, int page: 1, int perPage: 10}) async {
     String _endpoint = '/wp/v2/users';
 
-    // Build query string starting with pagination
-    String queryString = '';
-    queryString = _addParamToQueryString(queryString, 'page', page.toString());
-    queryString =
-        _addParamToQueryString(queryString, 'per_page', perPage.toString());
+    // // Build query string starting with pagination
+    // String queryString = '';
+    // queryString = _addParamToQueryString(queryString, 'page', page.toString());
+    // queryString =
+    //     _addParamToQueryString(queryString, 'per_page', perPage.toString());
 
-    // Requesting specific items
-    if (includeIDs != null && includeIDs.length > 0) {
-      queryString =
-          _addParamToQueryString(queryString, 'include', includeIDs.join(','));
-    }
+    // // Requesting specific items
+    // if (includeIDs != null && includeIDs.length > 0) {
+    //   queryString =
+    //       _addParamToQueryString(queryString, 'include', includeIDs.join(','));
+    // }
 
     // Append the query string
-    _endpoint += queryString;
+    // _endpoint += queryString;
 
     // Retrieve the data
-    List<Map> userMaps = await _get(_endpoint);
+    List<Map> userMaps = await _get(_endpoint).then((onValue) {
+      debugPrint('the userMpas'+ onValue.toString()); 
+    }).catchError((e)=> debugPrint(e));
 
-    List<User> user = new List();
-    user = userMaps.map((userMap) => new User.fromMap(userMap)).toList();
+    var users = new List();
 
-    return user;
+    for (int i = 0; i < userMaps.length; i++) {
+      users.add(User.fromMap(userMaps[i]));
+    }
+
+    return users;
   }
-
-
-
-
-
-
 
   /// Get post
   Future<Post> getPost(int postID, {bool injectObjects: true}) async {
@@ -235,7 +229,6 @@ Future<List<User>> listUser({List<int> includeIDs,
     return new Media.fromMap(mediaMap);
   }
 
-
   /// Get media item
   Future<Media> getAttMedia(int mediaID) async {
     if (mediaID == null) {
@@ -252,9 +245,6 @@ Future<List<User>> listUser({List<int> includeIDs,
 
     return new Media.fromMap(mediaMap);
   }
-
-
-
 
   /// Get User item
   Future<User> getUser(int userID) async {
@@ -273,19 +263,10 @@ Future<List<User>> listUser({List<int> includeIDs,
     return new User.fromMap(userMap);
   }
 
-
-
-
-
-
-
-
-
-  
-
   _handleError(String endpoint, int statusCode, String response) {
     // If an error handler has been provided use that, otherwise log
     if (_errorHandler != null) {
+      debugPrint(statusCode.toString());
       _errorHandler(endpoint, statusCode, response);
       return;
     }
@@ -297,14 +278,15 @@ Future<List<User>> listUser({List<int> includeIDs,
   Future _get(String url) async {
     dynamic jsonObj;
     String endpoint = '$_baseURL$url';
-    print("END POINT is " + endpoint) ;
+    print("END POINT is " + endpoint);
     try {
-      Response response = await _client.get(endpoint , headers: {"Accept": "application/json"} );
+      Response response =
+          await _client.get(endpoint, headers: {"Accept": "application/json"});
 
       // Error handling
       if (response.statusCode != 200) {
         _handleError(url, response.statusCode, response.body);
-        print("status code != 200") ;
+        print("status code != 200");
         return null;
       }
       jsonObj = json.decode(response.body);
@@ -327,10 +309,7 @@ Future<List<User>> listUser({List<int> includeIDs,
 
     if (queryString.length == 0) {
       queryString += '?';
-    }
-
-
-    else {
+    } else {
       queryString += '&';
     }
 
