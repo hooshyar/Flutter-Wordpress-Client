@@ -1,4 +1,4 @@
-import 'dart:ui' as prefix0;
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:hawalnir1/src/widgets/posts_card.dart';
@@ -7,7 +7,6 @@ import '../config.dart';
 import '../../wordpress_client.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../pages/listView.dart';
 
 Widget hawalImage(Post post) {
   return Stack(

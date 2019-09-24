@@ -32,7 +32,7 @@ class ListViewPostsState extends State<ListViewPosts> {
         children: <Widget>[
           RefreshIndicator(
             displacement: 150.0,
-            onRefresh: isExitst,
+            onRefresh:()=> client.listPosts(),
             child: CustomScrollView(
               controller: scrollCont,
               slivers: <Widget>[

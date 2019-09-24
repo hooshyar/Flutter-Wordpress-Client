@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:hawalnir1/src/app.dart';
 import 'package:hawalnir1/src/view_models/app_key.dart';
 import 'package:provider/provider.dart';
 
