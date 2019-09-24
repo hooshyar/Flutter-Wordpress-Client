@@ -40,7 +40,7 @@ run app on a simulator
 - [x] Sliver app bar
 - [x] Sliver list view
 - [x] Connectivity status, if offline pop a message
-- [x] Cache on device
+- [ ] Cache on device
 - [x] Pull to refresh
 - [x] Global perPage
 - [ ] Global theming
