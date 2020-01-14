@@ -3,8 +3,8 @@
 ### This project uses a simple WordPress website as a backend, without any additional plugin.
 
 <p>
-<img src="https://client.kurd.app/wp-content/uploads/2019/01/wordpress_flutter1.gif" alt="foo bar" title="Wordpress-client" />
-<img src="https://client.kurd.app/wp-content/uploads/2019/01/wordpress_flutter2.gif" alt="foo bar" title="Wordpress-client" />
+<img src="https://www.datacode.app/flutter-wp/wp-content/uploads/2020/01/wordpress_flutter1.gif" alt="gif 1 title="Wordpress-client" />
+<img src="https://www.datacode.app/flutter-wp/wp-content/uploads/2020/01/wordpress_flutter2.gif" alt="image 2" title="Wordpress-client" />
 </p>
 for more information about WordPress rest API visit https://developer.wordpress.org/rest-api/ 
 
