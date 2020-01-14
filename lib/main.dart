@@ -6,7 +6,7 @@ import 'src/app.dart';
 void main() {
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider(builder: (_) => Keys()),
+      ChangeNotifierProvider( create: (_) => Keys()),
     ],
     child: MaterialApp(
       debugShowCheckedModeBanner: false,

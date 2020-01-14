@@ -12,6 +12,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:hawalnir1/wordpress_client.dart';
 import 'package:flutter_offline/flutter_offline.dart';
 
+import 'widgets/drawerMain.dart';
+
 WordpressClient client = new WordpressClient(_baseUrl, http.Client());
 final String _baseUrl = mainApiUrl;
 
@@ -30,8 +32,8 @@ class HawalnirHomeState extends State<HawalnirHome>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: Provider.of<Keys>(context).appScaffoldKey,
-        drawer: drawerMain(context),
+        key: Provider.of<Keys>(context, listen: false).appScaffoldKey,
+        drawer: DrawerMain(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         resizeToAvoidBottomPadding: true,
         body: OfflineBuilder(
@@ -74,13 +76,9 @@ class HawalnirHomeState extends State<HawalnirHome>
                     bottom: 0,
                     left: 0,
                     right: 0,
-                 
                     child: Container(
-                     
                       color: Colors.deepPurple.withOpacity(0.8),
-                      child: 
-                      
-                      bottomNavAppBar(),
+                      child: bottomNavAppBar(),
                     ),
                   ),
                 ],
@@ -101,23 +99,26 @@ class HawalnirHomeState extends State<HawalnirHome>
 
   bottomNavAppBar() {
     return ClipRect(
-          child: Container(
+      child: Container(
         height: 80,
-        
-          
-          child: Stack(
-            children: <Widget>[
-              BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 2,sigmaY: 2),
-                child: BottomNavigationBar(backgroundColor: Colors.transparent,elevation: 0 ,items: [
-                  BottomNavigationBarItem(title: Text('Home'), icon: Icon(Icons.home)),
-                  BottomNavigationBarItem(title: Text('Favorites'), icon: Icon(Icons.favorite)),
-                  BottomNavigationBarItem(title: Text('gallery'), icon: Icon(Icons.image)),
-                ]),
-              ),
-            ],
-          ),
-        
+        child: Stack(
+          children: <Widget>[
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+              child: BottomNavigationBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  items: [
+                    BottomNavigationBarItem(
+                        title: Text('Home'), icon: Icon(Icons.home)),
+                    BottomNavigationBarItem(
+                        title: Text('Favorites'), icon: Icon(Icons.favorite)),
+                    BottomNavigationBarItem(
+                        title: Text('gallery'), icon: Icon(Icons.image)),
+                  ]),
+            ),
+          ],
+        ),
       ),
     );
   }

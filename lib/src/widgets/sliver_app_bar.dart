@@ -19,7 +19,7 @@ class SliverAppBarCustomized extends StatelessWidget {
           icon: Icon(
             Icons.menu,
           ),
-          onPressed: () => Provider.of<Keys>(context)
+          onPressed: () => Provider.of<Keys>(context, listen: false)
               .appScaffoldKey
               .currentState
               .openDrawer()),
