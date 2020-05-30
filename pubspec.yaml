@@ -13,16 +13,11 @@ environment:
   sdk: 
 
 dependencies:
-  provider:
-  flutter_offline: 
-  cached_network_image: 
-  json_annotation: 
-  sqflite: 
-  path_provider: 
-  http: 
-  transparent_image: 
-  #flutter_html_view: "^0.5.8"
-  flutter_html: 
+  provider: ^4.1.2
+  flutter_offline: "^0.3.0"
+  cached_network_image: ^2.2.0+1
+  http: ^0.12.1
+  flutter_html: ^1.0.0-pre.1
   flutter:
     sdk: flutter
     

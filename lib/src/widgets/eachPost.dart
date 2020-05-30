@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart'; // pub to load html tags from json api
-import 'hawalnir-date-convertor.dart';
+import 'package:flutter_html/style.dart';
 import 'package:hawalnir1/wordpress_client.dart';
+
 import 'catWidgets.dart';
+import 'hawalnir-date-convertor.dart';
 
 class HawalnirPost extends StatelessWidget {
   HawalnirPost({Key key, @required var this.post}) : super(key: key);
@@ -15,10 +17,7 @@ class HawalnirPost extends StatelessWidget {
     return new Scaffold(
       appBar: new AppBar(
         elevation: 0,
-        title:
-            FittedBox( child: hawalTitle(post)
-),
-          
+        title: FittedBox(child: hawalTitle(post)),
         backgroundColor: Colors.transparent,
       ),
       body: new Padding(
@@ -68,20 +67,22 @@ class HawalnirPost extends StatelessWidget {
 
   Widget titleRendered(Post post) {
     return Html(
-        data: post.title,
-        defaultTextStyle: TextStyle(
-            //fontFamily: 'NotoKufiArabic',
-            fontSize: 20.0,
-            decoration: TextDecoration.none));
+      data: post.title,
+      style: {
+        "div": Style(fontSize: FontSize(20)),
+      },
+      shrinkWrap: true,
+    );
   }
 
   Widget contentRendered(Post post) {
     return Html(
-        data: (post.content).toString(),
-        defaultTextStyle: TextStyle(
-            fontFamily: 'NotoKufiArabic',
-            fontSize: 20.0,
-            decoration: TextDecoration.none));
+      data: (post.content).toString(),
+      style: {
+        "div": Style(fontSize: FontSize(20)),
+      },
+      shrinkWrap: true,
+    );
   }
 
   Widget authorEmbedded(Post post) {

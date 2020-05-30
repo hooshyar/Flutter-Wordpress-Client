@@ -1,12 +1,14 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
-import 'package:hawalnir1/src/widgets/posts_card.dart';
-import 'hawalnir-date-convertor.dart';
-import '../config.dart';
-import '../../wordpress_client.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
+import 'package:hawalnir1/src/widgets/posts_card.dart';
+
+import '../../wordpress_client.dart';
+import '../config.dart';
+import 'hawalnir-date-convertor.dart';
 
 Widget hawalImage(Post post) {
   return Stack(
@@ -69,10 +71,12 @@ Widget hawalImage(Post post) {
 
 Widget hawalTitle(Post post) {
   return Html(
-      data: post.title,
-      defaultTextStyle: TextStyle(
-        fontSize: 20.0,
-      ));
+    data: post.title,
+    style: {
+      "div": Style(fontSize: FontSize(20)),
+    },
+    shrinkWrap: true,
+  );
 }
 
 Widget hawalAuthor(Post post) {
@@ -135,8 +139,6 @@ Widget connectionErrorBar() {
 
 // This is the type used by the popup menu below.
 enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
-
-
 
 sliverListGlobal(List<Post> posts) {
   debugPrint('SliverListGlobal recived ' + posts.length.toString());

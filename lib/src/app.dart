@@ -1,23 +1,18 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:hawalnir1/src/pages/listView.dart';
-import 'package:hawalnir1/src/view_models/app_key.dart';
-import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
-import 'widgets/drawerMain.dart';
-import 'config.dart';
-import 'db/database_helper.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:hawalnir1/wordpress_client.dart';
 import 'package:flutter_offline/flutter_offline.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart' as provider;
 
+import '../wordpress_client.dart';
+import 'config.dart';
+import 'pages/listView.dart';
+import 'view_models/app_key.dart';
 import 'widgets/drawerMain.dart';
 
 WordpressClient client = new WordpressClient(_baseUrl, http.Client());
 final String _baseUrl = mainApiUrl;
-
-var dbHelper = DatabaseHelper();
 
 class HawalnirHome extends StatefulWidget {
   @override
@@ -32,7 +27,7 @@ class HawalnirHomeState extends State<HawalnirHome>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: Provider.of<Keys>(context, listen: false).appScaffoldKey,
+        key: provider.Provider.of<Keys>(context, listen: false).appScaffoldKey,
         drawer: DrawerMain(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         resizeToAvoidBottomPadding: true,
