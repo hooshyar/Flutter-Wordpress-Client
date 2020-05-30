@@ -69,7 +69,7 @@ class WordpressClient {
 
     // Build query string starting with pagination
     String queryString = '&per_page=$perPage';
-    //queryString = _addParamToQueryString(queryString, 'page', page.toString());
+    queryString = _addParamToQueryString(queryString, 'page', page.toString());
 
     // If category IDs were sent, limit to those
     if (categoryIDs != null && categoryIDs.length > 0) {
@@ -174,8 +174,8 @@ class WordpressClient {
 
     // Retrieve the data
     List<Map> userMaps = await _get(_endpoint).then((onValue) {
-      debugPrint('the userMpas'+ onValue.toString()); 
-    }).catchError((e)=> debugPrint(e));
+      debugPrint('the userMpas' + onValue.toString());
+    }).catchError((e) => debugPrint(e));
 
     var users = new List();
 

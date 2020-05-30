@@ -44,7 +44,7 @@ class HawalnirHomeState extends State<HawalnirHome>
                 children: [
                   Container(
                     child: FutureBuilder<List<Post>>(
-                      future: client.listPosts(),
+                      future: client.listPosts(page: 3, perPage: 4),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) print(snapshot.error);
 
@@ -67,15 +67,15 @@ class HawalnirHomeState extends State<HawalnirHome>
                               textDirection: TextDirection.rtl)),
                     ),
                   ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      color: Colors.deepPurple.withOpacity(0.8),
-                      child: bottomNavAppBar(),
-                    ),
-                  ),
+//                  Positioned(
+//                    bottom: 0,
+//                    left: 0,
+//                    right: 0,
+//                    child: Container(
+//                      color: Colors.deepPurple.withOpacity(0.8),
+//                      child: bottomNavAppBar(),
+//                    ),
+//                  ),
                 ],
               );
             },
