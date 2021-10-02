@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_offline/flutter_offline.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart' as provider;
 
@@ -30,16 +30,9 @@ class HawalnirHomeState extends State<HawalnirHome>
         key: provider.Provider.of<Keys>(context, listen: false).appScaffoldKey,
         drawer: DrawerMain(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        resizeToAvoidBottomPadding: true,
-        body: OfflineBuilder(
-            debounceDuration: Duration(seconds: 3),
-            connectivityBuilder: (
-              BuildContext context,
-              ConnectivityResult connectivity,
-              Widget child,
-            ) {
-              final bool connected = connectivity != ConnectivityResult.none;
-              return new Stack(
+        resizeToAvoidBottomInset: true,
+        body:
+                 Stack(
                 fit: StackFit.expand,
                 children: [
                   Container(
@@ -54,42 +47,9 @@ class HawalnirHomeState extends State<HawalnirHome>
                       },
                     ),
                   ),
-                  Positioned(
-                    height: 24.0,
-                    left: 0.0,
-                    right: 0.0,
-                    bottom: 0.0,
-                    child: Container(
-                      color: connected ? null : Color(0xFFEE4400),
-                      child: Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: Text("${connected ? '' : 'OFFLINE'}",
-                              textDirection: TextDirection.rtl)),
-                    ),
-                  ),
-//                  Positioned(
-//                    bottom: 0,
-//                    left: 0,
-//                    right: 0,
-//                    child: Container(
-//                      color: Colors.deepPurple.withOpacity(0.8),
-//                      child: bottomNavAppBar(),
-//                    ),
-//                  ),
-                ],
-              );
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Text(
-                  'There are no bottons to push :)',
-                ),
-                new Text(
-                  'Just turn off your internet.',
-                ),
-              ],
-            )));
+
+                ]),
+           );
   }
 
   bottomNavAppBar() {

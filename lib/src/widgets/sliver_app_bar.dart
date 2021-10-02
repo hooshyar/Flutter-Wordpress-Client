@@ -7,7 +7,7 @@ import 'package:provider/provider.dart' as provider;
 import '../pages/listView.dart';
 
 class SliverAppBarCustomized extends StatelessWidget {
-  const SliverAppBarCustomized({Key key}) : super(key: key);
+  const SliverAppBarCustomized({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class SliverAppBarCustomized extends StatelessWidget {
           ),
           onPressed: () => provider.Provider.of<Keys>(context, listen: false)
               .appScaffoldKey
-              .currentState
+              .currentState!
               .openDrawer()),
       flexibleSpace: Stack(
         children: <Widget>[

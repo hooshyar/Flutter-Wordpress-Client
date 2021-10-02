@@ -8,8 +8,8 @@ import 'catWidgets.dart';
 import 'eachPost.dart';
 
 class PostsCard extends StatefulWidget {
-  PostsCard({Key key, this.post}) : super(key: key);
-  final Post post ; 
+  PostsCard({Key? key, this.post}) : super(key: key);
+  final Post? post ; 
 
   _PostsCardState createState() => _PostsCardState();
 }
@@ -25,11 +25,11 @@ class _PostsCardState extends State<PostsCard> {
       children: <Widget>[
         Stack(
           children: <Widget>[
-            Hero(tag: 'hero${widget.post.id}', child: hawalImage(widget.post)),
+            Hero(tag: 'hero${widget.post!.id}', child: hawalImage(widget.post!)),
             Positioned(
               bottom: 2.0,
               left: 5.0,
-              child: new ButtonTheme.bar(
+              child: new ButtonTheme(
                 child: hawalBtnBar(),
               ),
             ),
@@ -46,13 +46,13 @@ class _PostsCardState extends State<PostsCard> {
                 ),
               );
             },
-            title: hawalTitle(widget.post),
+            title: hawalTitle(widget.post!),
             subtitle: Row(
               // crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                hawalAuthor(widget.post),
-                hawalDate(widget.post),
+                hawalAuthor(widget.post!),
+                hawalDate(widget.post!),
               ],
             ),
           ),

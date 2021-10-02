@@ -1,12 +1,12 @@
 class User {
-  int id;
-  String name;
-  String url;
-  String description;
-  String link;
-  String slug;
-  AvatarUrls avatarUrls;
-  List<Null> meta;
+  int? id;
+  String? name;
+  String? url;
+  String? description;
+  String? link;
+  String? slug;
+  AvatarUrls? avatarUrls;
+  List<Null>? meta;
 
 
   User(
@@ -45,7 +45,7 @@ class User {
     data['link'] = this.link;
     data['slug'] = this.slug;
     if (this.avatarUrls != null) {
-      data['avatar_urls'] = this.avatarUrls.toJson();
+      data['avatar_urls'] = this.avatarUrls!.toJson();
     }
  
     return data;
@@ -53,9 +53,9 @@ class User {
 }
 
 class AvatarUrls {
-  String s24;
-  String s48;
-  String s96;
+  String? s24;
+  String? s48;
+  String? s96;
 
   AvatarUrls({this.s24, this.s48, this.s96});
 
@@ -77,7 +77,7 @@ class AvatarUrls {
 
 
 class Self {
-  String href;
+  String? href;
 
   Self({this.href});
 

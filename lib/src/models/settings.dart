@@ -1,42 +1,42 @@
 class Settings {
   /// Site title.
-  String title;
+  String? title;
 
   /// Site tagline.
-  String description;
+  String? description;
 
   /// A city in the same timezone as you.
-  String timezone;
+  String? timezone;
 
   /// A date format for all date strings.
-  String dateFormat;
+  String? dateFormat;
 
   /// A time format for all time strings.
-  String timeFormat;
+  String? timeFormat;
 
   /// A day number of the week that the week should start on.
-  int startOfWeek;
+  int? startOfWeek;
 
   /// WordPress locale code.
-  String language;
+  String? language;
 
   /// Convert emoticons like :-) and :-P to graphics on display.
-  bool useSmilies;
+  bool? useSmilies;
 
   /// Default post category.
-  int defaultCategory;
+  int? defaultCategory;
 
   /// Default post format.
-  String defaultPostFormat;
+  String? defaultPostFormat;
 
   /// Blog pages show at most.
-  int postsPerPage;
+  int? postsPerPage;
 
   /// Allow link notifications from other blogs (pingbacks and trackbacks) on new articles.
-  String defaultPingStatus;
+  String? defaultPingStatus;
 
   /// Allow people to post comments on new articles.
-  String defaultCommentStatus;
+  String? defaultCommentStatus;
 
   Settings.fromMap(Map<String, dynamic> map) {
     if (map == null) {

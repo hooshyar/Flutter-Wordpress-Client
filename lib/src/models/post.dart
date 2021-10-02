@@ -2,7 +2,7 @@
 
 class Post {
   /// The date the object was published, in the site's timezone.
-  DateTime date;
+  DateTime? date;
 
   /// The date the object was published, as GMT.
   //DateTime dateGMT;
@@ -11,7 +11,7 @@ class Post {
   //Map guid;
 
   /// Unique identifier for the object.
-  int id;
+  int? id;
 
   /// URL to the object.
   //String link;
@@ -37,26 +37,26 @@ class Post {
   //String password;
 
   /// The title for the object.
-  String title;
+  String? title;
 
   /// The content for the object.
-  String content;
+  String? content;
 
   /// The ID for the author of the object
   //int author;
 
  /// The ID for the author of the object
-  String author;
+  String? author;
 
   /// The excerpt for the object.
 //  Map excerpt;
 
   /// The ID of the featured media for the object.
-  int featuredMediaID;
+  int? featuredMediaID;
 
   /// The URL of the featured media for the object.
  dynamic featuredMediaUrl;
- bool featuredMediaThumb ;
+ bool? featuredMediaThumb ;
 
   /// Whether or not comments are open on the object
   ///

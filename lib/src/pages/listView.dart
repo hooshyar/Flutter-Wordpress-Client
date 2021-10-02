@@ -6,9 +6,9 @@ import '../../src/widgets/catWidgets.dart';
 import '../../wordpress_client.dart';
 
 class ListViewPosts extends StatefulWidget {
-  final List<Post> posts;
+  final List<Post>? posts;
 
-  ListViewPosts({Key key, this.posts}) : super(key: key);
+  ListViewPosts({Key? key, this.posts}) : super(key: key);
 
   @override
   ListViewPostsState createState() {
@@ -26,7 +26,7 @@ class ListViewPostsState extends State<ListViewPosts> {
 
   @override
   Widget build(BuildContext context) {
-      debugPrint('posts count' + widget.posts.length.toString());
+      debugPrint('posts count' + widget.posts!.length.toString());
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -37,7 +37,7 @@ class ListViewPostsState extends State<ListViewPosts> {
               controller: scrollCont,
               slivers: <Widget>[
                 SliverAppBarCustomized(),
-                sliverListGlobal(widget.posts),      
+                sliverListGlobal(widget.posts!),      
                   
               ],
             ),

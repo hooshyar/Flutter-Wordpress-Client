@@ -7,17 +7,17 @@ import 'catWidgets.dart';
 import 'hawalnir-date-convertor.dart';
 
 class HawalnirPost extends StatelessWidget {
-  HawalnirPost({Key key, @required var this.post}) : super(key: key);
-  final Post post;
+  HawalnirPost({Key? key, required var this.post}) : super(key: key);
+  final Post? post;
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(post.id.toString());
+    debugPrint(post!.id.toString());
 
     return new Scaffold(
       appBar: new AppBar(
         elevation: 0,
-        title: FittedBox(child: hawalTitle(post)),
+        title: FittedBox(child: hawalTitle(post!)),
         backgroundColor: Colors.transparent,
       ),
       body: new Padding(
@@ -28,7 +28,7 @@ class HawalnirPost extends StatelessWidget {
                 children: <Widget>[
                   Stack(
                     children: <Widget>[
-                      Hero(tag: 'hero${post.id}', child: hawalImage(post)),
+                      Hero(tag: 'hero${post!.id}', child: hawalImage(post!)),
                       Positioned(
                         bottom: 0.0,
                         left: 0.0,
@@ -36,19 +36,19 @@ class HawalnirPost extends StatelessWidget {
                       ),
                     ],
                   ),
-                  hawalTitle(post),
+                  hawalTitle(post!),
                   Row(
                     children: <Widget>[
                       Expanded(
-                        child: hawalAuthor(post),
+                        child: hawalAuthor(post!),
                       ),
                       Expanded(
-                        child: hawalDate(post),
+                        child: hawalDate(post!),
                       ),
                     ],
                   ),
                   Divider(),
-                  contentRendered(post),
+                  contentRendered(post!),
                 ],
               ),
             ],
@@ -87,7 +87,7 @@ class HawalnirPost extends StatelessWidget {
 
   Widget authorEmbedded(Post post) {
     return Text(
-      "author: " + post.author,
+      "author: " + post.author!,
       textAlign: TextAlign.right,
     );
   }

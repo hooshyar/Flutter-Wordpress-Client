@@ -3,9 +3,9 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class AnimatedFab extends StatefulWidget {
-  final VoidCallback onClick;
+  final VoidCallback? onClick;
 
-  const AnimatedFab({Key key, this.onClick}) : super(key: key);
+  const AnimatedFab({Key? key, this.onClick}) : super(key: key);
 
   @override
   _AnimatedFabState createState() => new _AnimatedFabState();
@@ -13,8 +13,8 @@ class AnimatedFab extends StatefulWidget {
 
 class _AnimatedFabState extends State<AnimatedFab>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<Color> _colorAnimation;
+  late AnimationController _animationController;
+  late Animation<Color?> _colorAnimation;
 
   final double expandedSize = 180.0;
   final double hiddenSize = 20.0;
@@ -41,7 +41,7 @@ class _AnimatedFabState extends State<AnimatedFab>
       height: expandedSize,
       child: new AnimatedBuilder(
         animation: _animationController,
-        builder: (BuildContext context, Widget child) {
+        builder: (BuildContext context, Widget? child) {
           return new Stack(
             alignment: Alignment.center,
             children: <Widget>[
@@ -138,7 +138,7 @@ class _AnimatedFabState extends State<AnimatedFab>
   }
 
   _onIconClick() {
-    widget.onClick();
+    widget.onClick!();
     close();
   }
 }

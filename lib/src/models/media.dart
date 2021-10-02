@@ -1,92 +1,92 @@
 class Media {
   /// The date the object was published, in the site's timezone.
-  DateTime date;
+  DateTime? date;
 
   /// The date the object was published, as GMT.
-  DateTime dateGMT;
+  DateTime? dateGMT;
 
   /// The globally unique identifier for the object.
-  Map guid;
+  Map? guid;
 
   /// Unique identifier for the object.
-  int id;
+  int? id;
 
   /// URL to the object.
-  String link;
+  String? link;
 
   /// The date the object was last modified, in the site's timezone.
-  DateTime modified;
+  DateTime? modified;
 
   /// The date the object was last modified, as GMT.
-  DateTime modifiedGMT;
+  DateTime? modifiedGMT;
 
   /// An alphanumeric identifier for the object unique to its type.
-  String slug;
+  String? slug;
 
   /// A named status for the object.
   ///
   /// One of: publish, future, draft, pending, private
-  String status;
+  String? status;
 
   /// Type of Post for the object.
-  String type;
+  String? type;
 
   /// The title for the object.
-  Map title;
+  Map? title;
 
   /// The ID for the author of the object.
-  int author;
+  int? author;
 
   /// Whether or not comments are open on the object.
   ///
   /// One of: open, closed
-  String commentStatus;
+  String? commentStatus;
 
   /// Whether or not the object can be pinged.
   ///
   /// One of: open, closed
-  String pingStatus;
+  String? pingStatus;
 
   /// Meta fields.
   dynamic meta;
 
   /// The theme file to use to display the object.
-  String template;
+  String? template;
 
   /// Alternative text to display when attachment is not displayed.
-  String altText;
+  String? altText;
 
   /// The attachment caption.
-  Map caption;
+  Map? caption;
 
   /// The attachment description.
-  Map description;
+  Map? description;
 
   /// Attachment type.
   ///
   /// One of: image, file
-  String mediaType;
+  String? mediaType;
 
   /// The attachment MIME type.
-  String mimeType;
+  String? mimeType;
 
   /// Details about the media file, specific to its type.
-  Map mediaDetails;
+  Map? mediaDetails;
 
   /// The ID for the associated post of the attachment.
-  int post;
+  int? post;
 
   /// URL to the original attachment file.
-  String sourceURL;
+  String? sourceURL;
 
   /// Convenience method to retrieve thumbnail URL
-  String get featuredMediaURLThumbnail => _featuredMediaURLThumbnail();
+  String? get featuredMediaURLThumbnail => _featuredMediaURLThumbnail();
 
   /// Convenience method to retrieve medium URL
-  String get featuredMediaURLMedium => _featuredMediaURLMedium();
+  String? get featuredMediaURLMedium => _featuredMediaURLMedium();
 
   /// Convenience method to retrieve large URL
-  String get featuredMediaURLLarge => _featuredMediaURLLarge();
+  String? get featuredMediaURLLarge => _featuredMediaURLLarge();
 
   Media();
 
@@ -152,39 +152,39 @@ class Media {
 
   toString() => "Media => " + toMap().toString();
 
-  String _featuredMediaURLThumbnail() {
+  String? _featuredMediaURLThumbnail() {
     // Make sure we have what we need
     if (mediaDetails == null ||
-        mediaDetails['sizes'] == null ||
-        mediaDetails['sizes']['thumbnail'] == null) {
+        mediaDetails!['sizes'] == null ||
+        mediaDetails!['sizes']['thumbnail'] == null) {
       return null;
     }
 
-    Map thumbnail = mediaDetails['sizes']['thumbnail'];
+    Map thumbnail = mediaDetails!['sizes']['thumbnail'];
     return thumbnail['source_url'];
   }
 
-  String _featuredMediaURLMedium() {
+  String? _featuredMediaURLMedium() {
     // Make sure we have what we need
     if (mediaDetails == null ||
-        mediaDetails['sizes'] == null ||
-        mediaDetails['sizes']['medium'] == null) {
+        mediaDetails!['sizes'] == null ||
+        mediaDetails!['sizes']['medium'] == null) {
       return null;
     }
 
-    Map medium = mediaDetails['sizes']['medium'];
+    Map medium = mediaDetails!['sizes']['medium'];
     return medium['source_url'];
   }
 
-  String _featuredMediaURLLarge() {
+  String? _featuredMediaURLLarge() {
     // Make sure we have what we need
     if (mediaDetails == null ||
-        mediaDetails['sizes'] == null ||
-        mediaDetails['sizes']['large'] == null) {
+        mediaDetails!['sizes'] == null ||
+        mediaDetails!['sizes']['large'] == null) {
       return null;
     }
 
-    Map large = mediaDetails['sizes']['large'];
+    Map large = mediaDetails!['sizes']['large'];
     return large['source_url'];
   }
 }

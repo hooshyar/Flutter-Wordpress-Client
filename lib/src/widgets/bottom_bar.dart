@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart';
 
 class BottomBar extends StatelessWidget {
   BottomBar({
-    @required this.currentIndex,
-    @required this.onTap,
-    @required this.items,
+    required this.currentIndex,
+    required this.onTap,
+    required this.items,
 }
 );
 

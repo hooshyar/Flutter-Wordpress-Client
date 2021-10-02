@@ -5,7 +5,7 @@ import 'package:hawalnir1/src/models/category.dart';
 import '../../wordpress_client.dart';
 
 class DrawerMain extends StatefulWidget {
-  DrawerMain({Key key}) : super(key: key);
+  DrawerMain({Key? key}) : super(key: key);
 
   @override
   _DrawerMainState createState() => _DrawerMainState();
@@ -46,18 +46,18 @@ class _DrawerMainState extends State<DrawerMain> {
                                 return LinearProgressIndicator();
                               } else {
                                 return ListView.builder(
-                                  itemCount: snapshot.data.length,
+                                  itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
-                                    List<Category> _categories = snapshot.data;
+                                    List<Category> _categories = snapshot.data!;
                                     return Container(
                                       margin: EdgeInsets.only(top: 4),
                                       color: Colors.white12,
                                       height: 60,
                                       child: ListTile(
-                                        title: Text(_categories[index].name),
+                                        title: Text(_categories[index].name!),
                                         subtitle: Wrap(children: [
                                           Text(
-                                            _categories[index].description,
+                                            _categories[index].description!,
                                             softWrap: false,
                                             overflow: TextOverflow.clip,
                                           ),
@@ -68,7 +68,7 @@ class _DrawerMainState extends State<DrawerMain> {
                                         trailing: Container(
                                             width: 80,
                                             child:
-                                                Text(_categories[index].slug)),
+                                                Text(_categories[index].slug!)),
                                       ),
                                     );
                                   },
@@ -111,9 +111,9 @@ class _DrawerMainState extends State<DrawerMain> {
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 2),
-                                  itemCount: snapshot.data.length,
+                                  itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
-                                    List<Media> _medias = snapshot.data;
+                                    List<Media> _medias = snapshot.data!;
                                     return Container(
                                       margin: EdgeInsets.only(top: 4),
                                       height: 60,
@@ -123,11 +123,11 @@ class _DrawerMainState extends State<DrawerMain> {
                                           borderRadius:
                                               BorderRadius.circular(10),
                                           child: Image.network(
-                                            _medias[index].sourceURL,
+                                            _medias[index].sourceURL!,
                                             loadingBuilder:
                                                 (BuildContext context,
                                                     Widget child,
-                                                    ImageChunkEvent
+                                                    ImageChunkEvent?
                                                         loadingProgress) {
                                               if (loadingProgress == null)
                                                 return child;
@@ -139,7 +139,7 @@ class _DrawerMainState extends State<DrawerMain> {
                                                       ? loadingProgress
                                                               .cumulativeBytesLoaded /
                                                           loadingProgress
-                                                              .expectedTotalBytes
+                                                              .expectedTotalBytes!
                                                       : null,
                                                 ),
                                               );
@@ -187,7 +187,7 @@ Widget drawerBtn(String text, Function function) {
               borderRadius:
                   BorderRadius.only(bottomLeft: Radius.circular(10.0))),
           color: Colors.amber,
-          onPressed: function,
+          onPressed: function as void Function()?,
         ),
       ]);
 }

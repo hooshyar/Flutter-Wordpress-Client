@@ -12,46 +12,46 @@ final String _baseUrl = mainApiUrl;
 var dbHelper = DatabaseHelper();
 int perPageInt = int.parse(perPage);
 
-List<Post> cachedPosts;
-List<Post> posts;
-int dbCount;
+List<Post>? cachedPosts;
+List<Post>? posts;
+int? dbCount;
 bool netConnection = false;
 
-List<int> postsIDs = List();
-List<int> cachedPostsIDs = List();
+List<int?> postsIDs = [];
+List<int?> cachedPostsIDs = [];
 
 getCachedPostsIDs() {
-  for (int i = 0; i < cachedPosts.length; i++) {
-    cachedPostsIDs.add(cachedPosts[i].id);
+  for (int i = 0; i < cachedPosts!.length; i++) {
+    cachedPostsIDs.add(cachedPosts![i].id);
   }
 }
 
 getPostsIDs() {
-  for (int i = 0; i < posts.length; i++) {
-    postsIDs.add(posts[i].id);
+  for (int i = 0; i < posts!.length; i++) {
+    postsIDs.add(posts![i].id);
   }
 }
 
 clearDB() async {
-  int count = await dbHelper.getCount();
+  int count = await (dbHelper.getCount() as FutureOr<int>);
 
   debugPrint("count is :  " + count.toString());
   for (int i = 0; i < count; i++) {
-    dbHelper.deletePost(cachedPosts[i].id);
-    debugPrint("this post has been deleted" + (posts[i].id).toString());
-    debugPrint("${cachedPosts[i].id} has been Deleted from  DB");
+    dbHelper.deletePost(cachedPosts![i].id);
+    debugPrint("this post has been deleted" + (posts![i].id).toString());
+    debugPrint("${cachedPosts![i].id} has been Deleted from  DB");
   }
 }
 
 fillDB() {
-  for (int i = 0; i < posts.length; i++) {
-    dbHelper.insertPost(posts[i]);
-    debugPrint("${posts[i].id} has been inserted to DB");
+  for (int i = 0; i < posts!.length; i++) {
+    dbHelper.insertPost(posts![i]);
+    debugPrint("${posts![i].id} has been inserted to DB");
   }
 }
 
 doWeHaveNet() async {
-  int count = await dbHelper.getCount();
+  int? count = await dbHelper.getCount();
   try {
     final result = await InternetAddress.lookup('google.com');
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -60,27 +60,27 @@ doWeHaveNet() async {
     }
   } on SocketException catch (_) {
     print('not connected');
-    if (count < 1) {
+    if (count! < 1) {
       debugPrint('we need intenet');
       netConnection = false;
     }
   }
 }
 
-Future<List<Post>> getPosts() async {
+Future<List<Post>?> getPosts() async {
   posts = await client.listPosts(perPage: perPageInt, injectObjects: true);
   return posts ;
 }
 
 
-Future<List<Post>> isExitst() async {
+Future<List<Post>?> isExitst() async {
   doWeHaveNet();
   cachedPosts = await dbHelper.getPostList();
 
   if (netConnection != true) {
     debugPrint("doWeHaveNet() is != true ");
     posts = cachedPosts;
-    posts.sort((a, b) => b.id.compareTo(a.id));
+    posts!.sort((a, b) => b.id!.compareTo(a.id!));
   } else {
     debugPrint("doWeHaveNet() is == true ");
     posts = await client.listPosts(perPage: perPageInt, injectObjects: true);
@@ -92,7 +92,7 @@ Future<List<Post>> isExitst() async {
   debugPrint('Posts Ids are: ' + postsIDs.toString());
   debugPrint('Cached pOsts ids are : ' + cachedPostsIDs.toString());
 
-  if (cachedPosts.length < 1) {
+  if (cachedPosts!.length < 1) {
     debugPrint('No Cached Posts Has Been FOUND');
     posts = await client.listPosts(perPage: perPageInt, injectObjects: true);
     fillDB();
@@ -112,8 +112,8 @@ Future<List<Post>> isExitst() async {
       }
 
       if (foundPost == true) {
-        for (int i = 0; i < posts.length; i++) {
-          posts[i] = cachedPosts[i];
+        for (int i = 0; i < posts!.length; i++) {
+          posts![i] = cachedPosts![i];
         }
 
         debugPrint('found post is TRUE ');
@@ -126,6 +126,6 @@ Future<List<Post>> isExitst() async {
       }
     }
   }
-  posts.sort((a, b) => b.id.compareTo(a.id));
+  posts!.sort((a, b) => b.id!.compareTo(a.id!));
   return posts;
 }

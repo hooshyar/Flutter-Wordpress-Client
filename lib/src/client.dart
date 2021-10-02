@@ -16,7 +16,7 @@ class WordpressClient {
   final Logger _logger = new Logger('API');
   String _baseURL;
   Client _client;
-  APIErrorHandler _errorHandler;
+  APIErrorHandler? _errorHandler;
 
   WordpressClient(this._baseURL, this._client, [this._errorHandler]);
 
@@ -25,7 +25,7 @@ class WordpressClient {
   /// If [hideEmpty] is false then ALL categories will be returned, and
   /// [excludeIDs] can be used to ignore specific category IDs
   Future<List<Category>> listCategories(
-      {bool hideEmpty: true, List<int> excludeIDs}) async {
+      {bool hideEmpty: true, List<int>? excludeIDs}) async {
     String _endpoint = '/wp/v2/categories';
 
     // Build query string
@@ -42,11 +42,11 @@ class WordpressClient {
     _endpoint += queryString;
 
     // Retrieve the data
-    List<Map> categoryMaps = await _get(_endpoint);
+    List<Map> categoryMaps = await (_get(_endpoint) as FutureOr<List<Map<dynamic, dynamic>>>);
 
-    List<Category> categories = new List();
+    List<Category> categories = [];
     categories = categoryMaps
-        .map((categoryMap) => new Category.fromMap(categoryMap))
+        .map((categoryMap) =>  Category.fromMap(categoryMap as Map<String, dynamic>))
         .toList();
 
     return categories;
@@ -59,9 +59,9 @@ class WordpressClient {
   /// rather than just the object ID (i.e. a posts's featured media). The [page]
   /// and [perPage] parameters allow for pagination.
   Future<List<Post>> listPosts(
-      {List<int> categoryIDs,
+      {List<int>? categoryIDs,
       bool injectObjects: false,
-      List<int> excludeIDs,
+      List<int>? excludeIDs,
       int page: 1,
       int perPage: 10}) async {
     String _endpoint = '/wp/v2/posts?_embed';
@@ -87,11 +87,11 @@ class WordpressClient {
     _endpoint += queryString;
     //_endpoint =
     // Retrieve the data
-    List<Map> postMaps = await _get(_endpoint);
+    List<Map> postMaps = await (_get(_endpoint) as FutureOr<List<Map<dynamic, dynamic>>>);
     print(_endpoint);
 
-    List<Post> posts = new List();
-    posts = postMaps.map((postMap) => new Post.fromMap(postMap)).toList();
+    List<Post> posts = [];
+    posts = postMaps.map((postMap) => new Post.fromMap(postMap as Map<String, dynamic>)).toList();
     //print(posts.toString()) ;
     // Inject objects if requested
 //    if (injectObjects) {
@@ -110,7 +110,7 @@ class WordpressClient {
   /// If [mediaIDs] list is provided then only these specific media items
   /// will be returned. The [page] and [perPage] parameters allow for pagination.
   Future<List<Media>> listMedia(
-      {List<int> includeIDs, int page: 1, perPage: 10}) async {
+      {List<int>? includeIDs, int page: 1, perPage: 10}) async {
     String _endpoint = '/wp/v2/media';
 
     // Build query string starting with pagination
@@ -129,10 +129,10 @@ class WordpressClient {
     _endpoint += queryString;
 
     // Retrieve the data
-    List<Map> mediaMaps = await _get(_endpoint);
+    List<Map> mediaMaps = await (_get(_endpoint) as FutureOr<List<Map<dynamic, dynamic>>>);
 
-    List<Media> media = new List();
-    media = mediaMaps.map((mediaMap) => new Media.fromMap(mediaMap)).toList();
+    List<Media> media = [];
+    media = mediaMaps.map((mediaMap) => new Media.fromMap(mediaMap as Map<String, dynamic>)).toList();
 
     return media;
   }
@@ -154,7 +154,7 @@ class WordpressClient {
   }
   */
   Future<List<User>> listUser(
-      {List<int> includeIDs, int page: 1, int perPage: 10}) async {
+      {List<int>? includeIDs, int page: 1, int perPage: 10}) async {
     String _endpoint = '/wp/v2/users';
 
     // // Build query string starting with pagination
@@ -173,21 +173,21 @@ class WordpressClient {
     // _endpoint += queryString;
 
     // Retrieve the data
-    List<Map> userMaps = await _get(_endpoint).then((onValue) {
+    List<Map> userMaps = await (_get(_endpoint).then((onValue) {
       debugPrint('the userMpas' + onValue.toString());
-    }).catchError((e) => debugPrint(e));
+    }).catchError((e) => debugPrint(e)) as FutureOr<List<Map<dynamic, dynamic>>>);
 
-    var users = new List();
+    var users = [];
 
     for (int i = 0; i < userMaps.length; i++) {
       users.add(User.fromMap(userMaps[i]));
     }
 
-    return users;
+    return users as FutureOr<List<User>>;
   }
 
   /// Get post
-  Future<Post> getPost(int postID, {bool injectObjects: true}) async {
+  Future<Post?> getPost(int postID, {bool injectObjects: true}) async {
     if (postID == null) {
       return null;
     }
@@ -195,12 +195,12 @@ class WordpressClient {
     String _endpoint = '/wp/v2/posts/$postID?_embed';
 
     // Retrieve the data
-    Map postMap = await _get(_endpoint);
+    Map? postMap = await (_get(_endpoint) as FutureOr<Map<dynamic, dynamic>?>);
     if (postMap == null) {
       return null;
     }
 
-    Post p = new Post.fromMap(postMap);
+    Post p = new Post.fromMap(postMap as Map<String, dynamic>);
 
     // Inject objects if requested
 //    if (injectObjects) {
@@ -213,7 +213,7 @@ class WordpressClient {
   }
 
   /// Get media item
-  Future<Media> getMedia(int mediaID) async {
+  Future<Media?> getMedia(int mediaID) async {
     if (mediaID == null) {
       return null;
     }
@@ -221,16 +221,16 @@ class WordpressClient {
     String _endpoint = '/wp/v2/media/$mediaID';
 
     // Retrieve the data
-    Map mediaMap = await _get(_endpoint);
+    Map? mediaMap = await (_get(_endpoint) as FutureOr<Map<dynamic, dynamic>?>);
     if (mediaMap == null) {
       return null;
     }
 
-    return new Media.fromMap(mediaMap);
+    return new Media.fromMap(mediaMap as Map<String, dynamic>);
   }
 
   /// Get media item
-  Future<Media> getAttMedia(int mediaID) async {
+  Future<Media?> getAttMedia(int mediaID) async {
     if (mediaID == null) {
       return null;
     }
@@ -238,16 +238,16 @@ class WordpressClient {
     String _endpoint = '/wp/v2/media/$mediaID';
 
     // Retrieve the data
-    Map mediaMap = await _get(_endpoint);
+    Map? mediaMap = await (_get(_endpoint) as FutureOr<Map<dynamic, dynamic>?>);
     if (mediaMap == null) {
       return null;
     }
 
-    return new Media.fromMap(mediaMap);
+    return new Media.fromMap(mediaMap as Map<String, dynamic>);
   }
 
   /// Get User item
-  Future<User> getUser(int userID) async {
+  Future<User?> getUser(int userID) async {
     if (userID == null) {
       return null;
     }
@@ -255,7 +255,7 @@ class WordpressClient {
     String _endpoint = '/wp/v2/users/$userID';
 
     // Retrieve the user data
-    Map userMap = await _get(_endpoint);
+    Map? userMap = await (_get(_endpoint) as FutureOr<Map<dynamic, dynamic>?>);
     if (userMap == null) {
       return null;
     }
@@ -267,7 +267,7 @@ class WordpressClient {
     // If an error handler has been provided use that, otherwise log
     if (_errorHandler != null) {
       debugPrint(statusCode.toString());
-      _errorHandler(endpoint, statusCode, response);
+      _errorHandler!(endpoint, statusCode, response);
       return;
     }
 
@@ -281,7 +281,7 @@ class WordpressClient {
     print("END POINT is " + endpoint);
     try {
       Response response =
-          await _client.get(endpoint, headers: {"Accept": "application/json"});
+          await _client.get(Uri.parse(endpoint), headers: {"Accept": "application/json"});
 
       // Error handling
       if (response.statusCode != 200) {

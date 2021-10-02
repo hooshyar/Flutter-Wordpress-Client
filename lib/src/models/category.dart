@@ -1,27 +1,27 @@
 class Category {
   /// Unique identifier for the term.
-  int id;
+  int? id;
 
   /// Number of published posts for the term.
-  int count;
+  int? count;
 
   /// HTML description of the term.
-  String description;
+  String? description;
 
   /// URL of the term.
-  String link;
+  String? link;
 
   /// HTML title for the term
-  String name;
+  String? name;
 
   /// An alphanumeric identifier for the term unique to its type.
-  String slug;
+  String? slug;
 
   /// Type attribution for the term.
-  String taxonomy;
+  String? taxonomy;
 
   /// The parent term ID.
-  int parent;
+  int? parent;
 
   /// Meta fields
   dynamic meta; // List?
