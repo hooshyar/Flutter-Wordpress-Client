@@ -1,5 +1,3 @@
-
-
 class Post {
   /// The date the object was published, in the site's timezone.
   DateTime? date;
@@ -17,7 +15,7 @@ class Post {
   //String link;
 
   /// The date the object was last modified, in the site's timezone.
- // DateTime modified;
+  // DateTime modified;
 
   /// The date the object was last modified, as GMT.
   //DateTime modifiedGMT;
@@ -28,7 +26,7 @@ class Post {
   /// A named status for the object.
   ///
   /// One of: publish, future, draft, pending, private
- // String status;
+  // String status;
 
   /// Type of Post for the object.
   //String type;
@@ -45,7 +43,7 @@ class Post {
   /// The ID for the author of the object
   //int author;
 
- /// The ID for the author of the object
+  /// The ID for the author of the object
   String? author;
 
   /// The excerpt for the object.
@@ -55,8 +53,8 @@ class Post {
   int? featuredMediaID;
 
   /// The URL of the featured media for the object.
- dynamic featuredMediaUrl;
- bool? featuredMediaThumb ;
+  dynamic featuredMediaUrl;
+  bool? featuredMediaThumb;
 
   /// Whether or not comments are open on the object
   ///
@@ -96,23 +94,19 @@ class Post {
       return;
     }
 
-
-
-    date = map["date"] != null
-        ? DateTime.parse(map["date"])
-        : null;
+    date = map["date"] != null ? DateTime.parse(map["date"]) : null;
     //dateGMT = map["date_gmt"] != null
-      //  ? DateTime.parse(map["date_gmt"])
-       // : null;
+    //  ? DateTime.parse(map["date_gmt"])
+    // : null;
     //guid = map['guid'];
     id = map['id'];
     //link = map['link'];
     //modified = map["modified"] != null
-     //   ? DateTime.parse(map["modified"])
-      //  : null;
+    //   ? DateTime.parse(map["modified"])
+    //  : null;
     //modifiedGMT = map["modified_gmt"] != null
-     //   ? DateTime.parse(map["modified_gmt"])
-      //  : null;
+    //   ? DateTime.parse(map["modified_gmt"])
+    //  : null;
     //slug = map['slug'];
     //status = map['status'];
     //type = map['type'];
@@ -124,9 +118,9 @@ class Post {
     //excerpt = map['excerpt'];
     //featuredMediaID = map['featured_media'];
     //featuredMediaUrl = map ['_links']["self"][0]['href'] ;
-    featuredMediaUrl = map ["_embedded"]["wp:featuredmedia"] == null
-    ? 'assets/images/placeholder.png'
-    :map["_embedded"]["wp:featuredmedia"][0]["source_url"]  ; 
+    featuredMediaUrl = map["_embedded"]["wp:featuredmedia"] == null
+        ? 'https://via.placeholder.com/300x150.png'
+        : map["_embedded"]["wp:featuredmedia"][0]["source_url"];
 
     //  post.featuredMediaUrl == null
     //           ? 'assets/images/placeholder.png'
@@ -141,7 +135,6 @@ class Post {
     // }
     // featuredMediaUrl = getFeaturedMedia();
     // print(featuredMediaUrl);
-
 
     //commentStatus = map['comment_status'];
     //pingStatus = map['ping_status'];
@@ -158,10 +151,7 @@ class Post {
 //        categories.add(item);
 //      }
 //    }
-
-
   }
-
 
   Map<String, dynamic> toMap() => {
         'date': date?.toIso8601String(),
@@ -199,11 +189,7 @@ class Post {
     this.title = map['title'];
     this.content = map['content'];
     this.author = map['author'];
-    this.date = map["date"] != null
-        ? DateTime.parse(map["date"])
-        : null;
+    this.date = map["date"] != null ? DateTime.parse(map["date"]) : null;
     this.featuredMediaUrl = map['featured_media'];
   }
 }
-
-

@@ -54,7 +54,7 @@ Widget hawalImage(Post post) {
             repeat: ImageRepeat.noRepeat,
             fadeInDuration: Duration(milliseconds: 500),
             imageUrl: post.featuredMediaUrl == null
-                ? 'assets/images/placeholder.png'
+                ? 'https://via.placeholder.com/300x150.png'
                 : post.featuredMediaUrl,
             placeholder: (context, url) =>
                 Image.asset('assets/images/placeholder.png'),

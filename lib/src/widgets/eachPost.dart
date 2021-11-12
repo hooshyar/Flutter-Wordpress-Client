@@ -58,7 +58,7 @@ class HawalnirPost extends StatelessWidget {
 
   Widget mainImage(Post post) {
     return FadeInImage.assetNetwork(
-      placeholder: 'assets/images/placeholder.png',
+      placeholder: 'https://via.placeholder.com/300.png/09f/fff',
       image: post.featuredMediaUrl == 0
           ? 'src/images/placeholder.png'
           : post.featuredMediaUrl,

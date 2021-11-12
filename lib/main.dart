@@ -16,11 +16,11 @@ void main() {
         brightness: Brightness.dark, //changing the theme to dark
         primaryColor: Colors.deepPurple,
         // accentColor: Colors.deepPurple[300],
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          secondary: Colors.deepPurple[300],
-        ),
+        // colorScheme: ColorScheme.fromSwatch().copyWith(
+        //   secondary: Colors.deepPurple[300],
+        // ),
 
-        fontFamily: 'NotoSansArabic',
+        // fontFamily: 'NotoSansArabic',
         tabBarTheme: TabBarTheme(),
         iconTheme: IconThemeData(),
       ),

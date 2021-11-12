@@ -42,8 +42,7 @@ class WordpressClient {
     _endpoint += queryString;
 
     // Retrieve the data
-    List<Map> categoryMaps =
-        await (_get(_endpoint) as FutureOr<List<Map<dynamic, dynamic>>>);
+    List<Map> categoryMaps = await (_get(_endpoint));
 
     List<Category> categories = [];
     categories = categoryMaps
@@ -89,12 +88,11 @@ class WordpressClient {
     _endpoint += queryString;
     //_endpoint =
     // Retrieve the data
-    List<Map> postMaps =
-        await (_get(_endpoint) as FutureOr<List<Map<dynamic, dynamic>>>);
+    List<Map>? postMaps = await (_get(_endpoint));
     print(_endpoint);
 
-    List<Post> posts = [];
-    posts = postMaps
+    List<Post>? posts = [];
+    posts = postMaps!
         .map((postMap) => new Post.fromMap(postMap as Map<String, dynamic>))
         .toList();
     //print(posts.toString()) ;
@@ -103,7 +101,7 @@ class WordpressClient {
 //      for (Post p in posts) {
 //        if (p.featuredMediaID != null && p.featuredMediaID > 0) {
 //          p.featuredMedia = await getMedia(p.featuredMediaID);
-//        }
+//        }5
 //      }
 //    }
 
@@ -134,8 +132,7 @@ class WordpressClient {
     _endpoint += queryString;
 
     // Retrieve the data
-    List<Map> mediaMaps =
-        await (_get(_endpoint) as FutureOr<List<Map<dynamic, dynamic>>>);
+    List<Map> mediaMaps = await (_get(_endpoint));
 
     List<Media> media = [];
     media = mediaMaps
