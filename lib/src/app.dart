@@ -27,29 +27,25 @@ class HawalnirHomeState extends State<HawalnirHome>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: provider.Provider.of<Keys>(context, listen: false).appScaffoldKey,
-        drawer: DrawerMain(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        resizeToAvoidBottomInset: true,
-        body:
-                 Stack(
-                fit: StackFit.expand,
-                children: [
-                  Container(
-                    child: FutureBuilder<List<Post>>(
-                      future: client.listPosts(page: 3, perPage: 4),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) print(snapshot.error);
+      key: provider.Provider.of<Keys>(context, listen: false).appScaffoldKey,
+      drawer: DrawerMain(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      resizeToAvoidBottomInset: true,
+      body: Stack(fit: StackFit.expand, children: [
+        Container(
+          child: FutureBuilder<List<Post>>(
+            future: client.listPosts(page: 3, perPage: 4),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) print(snapshot.error);
 
-                        return snapshot.hasData
-                            ? ListViewPosts(posts: snapshot.data)
-                            : Center(child: CircularProgressIndicator());
-                      },
-                    ),
-                  ),
-
-                ]),
-           );
+              return snapshot.hasData
+                  ? ListViewPosts(posts: snapshot.data)
+                  : Center(child: CircularProgressIndicator());
+            },
+          ),
+        ),
+      ]),
+    );
   }
 
   bottomNavAppBar() {
@@ -65,11 +61,11 @@ class HawalnirHomeState extends State<HawalnirHome>
                   elevation: 0,
                   items: [
                     BottomNavigationBarItem(
-                        title: Text('Home'), icon: Icon(Icons.home)),
+                        label: 'Home', icon: Icon(Icons.home)),
                     BottomNavigationBarItem(
-                        title: Text('Favorites'), icon: Icon(Icons.favorite)),
+                        label: 'Favorites', icon: Icon(Icons.favorite)),
                     BottomNavigationBarItem(
-                        title: Text('gallery'), icon: Icon(Icons.image)),
+                        label: 'gallery', icon: Icon(Icons.image)),
                   ]),
             ),
           ],

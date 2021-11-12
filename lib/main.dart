@@ -6,7 +6,7 @@ import 'src/app.dart';
 void main() {
   runApp(MultiProvider(
     providers: [
-      ChangeNotifierProvider( create: (_) => Keys()),
+      ChangeNotifierProvider(create: (_) => Keys()),
     ],
     child: MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -15,18 +15,18 @@ void main() {
 
         brightness: Brightness.dark, //changing the theme to dark
         primaryColor: Colors.deepPurple,
-        accentColor: Colors.deepPurple[300],
+        // accentColor: Colors.deepPurple[300],
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          secondary: Colors.deepPurple[300],
+        ),
 
         fontFamily: 'NotoSansArabic',
         tabBarTheme: TabBarTheme(),
         iconTheme: IconThemeData(),
       ),
-
       home: HawalnirHome(),
       initialRoute: '/',
-      routes: <String, WidgetBuilder>{
-
-      },
+      routes: <String, WidgetBuilder>{},
     ),
   ));
 }

@@ -42,11 +42,13 @@ class WordpressClient {
     _endpoint += queryString;
 
     // Retrieve the data
-    List<Map> categoryMaps = await (_get(_endpoint) as FutureOr<List<Map<dynamic, dynamic>>>);
+    List<Map> categoryMaps =
+        await (_get(_endpoint) as FutureOr<List<Map<dynamic, dynamic>>>);
 
     List<Category> categories = [];
     categories = categoryMaps
-        .map((categoryMap) =>  Category.fromMap(categoryMap as Map<String, dynamic>))
+        .map((categoryMap) =>
+            Category.fromMap(categoryMap as Map<String, dynamic>))
         .toList();
 
     return categories;
@@ -87,11 +89,14 @@ class WordpressClient {
     _endpoint += queryString;
     //_endpoint =
     // Retrieve the data
-    List<Map> postMaps = await (_get(_endpoint) as FutureOr<List<Map<dynamic, dynamic>>>);
+    List<Map> postMaps =
+        await (_get(_endpoint) as FutureOr<List<Map<dynamic, dynamic>>>);
     print(_endpoint);
 
     List<Post> posts = [];
-    posts = postMaps.map((postMap) => new Post.fromMap(postMap as Map<String, dynamic>)).toList();
+    posts = postMaps
+        .map((postMap) => new Post.fromMap(postMap as Map<String, dynamic>))
+        .toList();
     //print(posts.toString()) ;
     // Inject objects if requested
 //    if (injectObjects) {
@@ -129,10 +134,13 @@ class WordpressClient {
     _endpoint += queryString;
 
     // Retrieve the data
-    List<Map> mediaMaps = await (_get(_endpoint) as FutureOr<List<Map<dynamic, dynamic>>>);
+    List<Map> mediaMaps =
+        await (_get(_endpoint) as FutureOr<List<Map<dynamic, dynamic>>>);
 
     List<Media> media = [];
-    media = mediaMaps.map((mediaMap) => new Media.fromMap(mediaMap as Map<String, dynamic>)).toList();
+    media = mediaMaps
+        .map((mediaMap) => new Media.fromMap(mediaMap as Map<String, dynamic>))
+        .toList();
 
     return media;
   }
@@ -175,7 +183,8 @@ class WordpressClient {
     // Retrieve the data
     List<Map> userMaps = await (_get(_endpoint).then((onValue) {
       debugPrint('the userMpas' + onValue.toString());
-    }).catchError((e) => debugPrint(e)) as FutureOr<List<Map<dynamic, dynamic>>>);
+    }).catchError((e) => debugPrint(e))
+        as FutureOr<List<Map<dynamic, dynamic>>>);
 
     var users = [];
 
@@ -187,7 +196,7 @@ class WordpressClient {
   }
 
   /// Get post
-  Future<Post?> getPost(int postID, {bool injectObjects: true}) async {
+  Future<Post?> getPost(int? postID, {bool injectObjects: true}) async {
     if (postID == null) {
       return null;
     }
@@ -213,7 +222,7 @@ class WordpressClient {
   }
 
   /// Get media item
-  Future<Media?> getMedia(int mediaID) async {
+  Future<Media?> getMedia(int? mediaID) async {
     if (mediaID == null) {
       return null;
     }
@@ -230,7 +239,7 @@ class WordpressClient {
   }
 
   /// Get media item
-  Future<Media?> getAttMedia(int mediaID) async {
+  Future<Media?> getAttMedia(int? mediaID) async {
     if (mediaID == null) {
       return null;
     }
@@ -247,7 +256,7 @@ class WordpressClient {
   }
 
   /// Get User item
-  Future<User?> getUser(int userID) async {
+  Future<User?> getUser(int? userID) async {
     if (userID == null) {
       return null;
     }
@@ -280,8 +289,8 @@ class WordpressClient {
     String endpoint = '$_baseURL$url';
     print("END POINT is " + endpoint);
     try {
-      Response response =
-          await _client.get(Uri.parse(endpoint), headers: {"Accept": "application/json"});
+      Response response = await _client
+          .get(Uri.parse(endpoint), headers: {"Accept": "application/json"});
 
       // Error handling
       if (response.statusCode != 200) {
@@ -302,7 +311,7 @@ class WordpressClient {
     return jsonObj;
   }
 
-  String _addParamToQueryString(String queryString, String key, String value) {
+  String _addParamToQueryString(String? queryString, String key, String value) {
     if (queryString == null) {
       queryString = '';
     }
