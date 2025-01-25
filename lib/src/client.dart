@@ -1,326 +1,784 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show HttpException;
 
-import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
+import 'package:dio/dio.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:logger/logger.dart' hide Logger;
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:flutter/foundation.dart';
 
-import 'models/category.dart';
+import 'models/category.dart' as wp_category;
 import 'models/media.dart';
 import 'models/post.dart';
 import 'models/users.dart';
+import 'config.dart';
 
-typedef void APIErrorHandler(String endpoint, int statusCode, String response);
+/// Custom exception for WordPress API errors
+class WordPressException implements Exception {
+  final String message;
+  final int? statusCode;
 
-class WordpressClient {
-  final Logger _logger = new Logger('API');
-  String _baseURL;
-  Client _client;
-  APIErrorHandler? _errorHandler;
+  WordPressException(this.message, [this.statusCode]);
 
-  WordpressClient(this._baseURL, this._client, [this._errorHandler]);
+  @override
+  String toString() => 'WordPressException: $message ${statusCode ?? ""}';
+}
 
-  /// Get all available categories.
-  ///
-  /// If [hideEmpty] is false then ALL categories will be returned, and
-  /// [excludeIDs] can be used to ignore specific category IDs
-  Future<List<Category>> listCategories(
-      {bool hideEmpty: true, List<int>? excludeIDs}) async {
-    String _endpoint = '/wp/v2/categories';
+/// Response metadata from WordPress API
+class WPResponse<T> {
+  final List<T> items;
+  final int totalItems;
+  final int totalPages;
+  final int currentPage;
 
-    // Build query string
-    String queryString = '';
-    if (hideEmpty) {
-      queryString = _addParamToQueryString(queryString, 'hide_empty', 'true');
+  WPResponse({
+    required this.items,
+    required this.totalItems,
+    required this.totalPages,
+    required this.currentPage,
+  });
+}
+
+/// Post ordering options
+class PostOrdering {
+  static const String date = 'date';
+  static const String relevance = 'relevance';
+  static const String id = 'id';
+  static const String include = 'include';
+  static const String title = 'title';
+  static const String slug = 'slug';
+  static const String modifiedDate = 'modified';
+  static const String menuOrder = 'menu_order';
+  static const String commentCount = 'comment_count';
+}
+
+/// Order direction options
+class OrderDirection {
+  static const String asc = 'asc';
+  static const String desc = 'desc';
+}
+
+/// Date filtering options for posts
+class DateQuery {
+  final DateTime? after;
+  final DateTime? before;
+  final bool inclusive;
+
+  DateQuery({
+    this.after,
+    this.before,
+    this.inclusive = false,
+  });
+
+  Map<String, String> toQueryParams() {
+    return {
+      if (after != null) 'after': after!.toIso8601String(),
+      if (before != null) 'before': before!.toIso8601String(),
+      if (inclusive) 'inclusive': 'true',
+    };
+  }
+}
+
+/// Advanced filtering options for posts
+class PostFilters {
+  final List<int>? categoryIds;
+  final List<int>? tagIds;
+  final List<int>? authorIds;
+  final List<int>? excludeIds;
+  final List<int>? includeIds;
+  final List<String>? slugs;
+  final DateQuery? dateQuery;
+  final bool? sticky;
+  final String? search;
+  final String orderBy;
+  final String order;
+  final bool embed;
+
+  PostFilters({
+    this.categoryIds,
+    this.tagIds,
+    this.authorIds,
+    this.excludeIds,
+    this.includeIds,
+    this.slugs,
+    this.dateQuery,
+    this.sticky,
+    this.search,
+    this.orderBy = PostOrdering.date,
+    this.order = OrderDirection.desc,
+    this.embed = true,
+  });
+
+  Map<String, String> toQueryParams() {
+    return {
+      if (orderBy.isNotEmpty) 'orderby': orderBy,
+      if (order.isNotEmpty) 'order': order,
+      if (embed) '_embed': 'true',
+      if (search != null) 'search': search!,
+      if (categoryIds?.isNotEmpty ?? false)
+        'categories': categoryIds!.join(','),
+      if (tagIds?.isNotEmpty ?? false) 'tags': tagIds!.join(','),
+      if (authorIds?.isNotEmpty ?? false) 'author': authorIds!.join(','),
+      if (excludeIds?.isNotEmpty ?? false) 'exclude': excludeIds!.join(','),
+      if (includeIds?.isNotEmpty ?? false) 'include': includeIds!.join(','),
+      if (slugs?.isNotEmpty ?? false) 'slug': slugs!.join(','),
+      if (sticky != null) 'sticky': sticky.toString(),
+      ...?dateQuery?.toQueryParams(),
+    };
+  }
+}
+
+/// Media filtering options
+class MediaFilters {
+  final List<int>? ids;
+  final List<int>? excludeIds;
+  final List<int>? parentIds;
+  final List<String>? mimeTypes;
+  final MediaType? mediaType;
+  final String orderBy;
+  final String order;
+
+  MediaFilters({
+    this.ids,
+    this.excludeIds,
+    this.parentIds,
+    this.mimeTypes,
+    this.mediaType,
+    this.orderBy = PostOrdering.date,
+    this.order = OrderDirection.desc,
+  });
+
+  Map<String, String> toQueryParams() {
+    return {
+      'orderby': orderBy,
+      'order': order,
+      if (ids?.isNotEmpty ?? false) 'include': ids!.join(','),
+      if (excludeIds?.isNotEmpty ?? false) 'exclude': excludeIds!.join(','),
+      if (parentIds?.isNotEmpty ?? false) 'parent': parentIds!.join(','),
+      if (mimeTypes?.isNotEmpty ?? false) 'mime_type': mimeTypes!.join(','),
+      if (mediaType != null) 'media_type': mediaType!.name,
+    };
+  }
+}
+
+/// Media types supported by WordPress
+enum MediaType {
+  image,
+  video,
+  audio,
+  application;
+
+  String get name => toString().split('.').last;
+}
+
+/// WordPress API Client with caching and offline support
+class WordPressClient {
+  final Dio _dio;
+  final Logger _logger;
+  final SharedPreferences? _prefs;
+  final Duration _cacheValidDuration;
+
+  WordPressClient({
+    required String baseUrl,
+    SharedPreferences? prefs,
+    Duration? cacheValidDuration,
+  })  : _dio = Dio(BaseOptions(
+          baseUrl: baseUrl.endsWith('/')
+              ? '${baseUrl}wp-json/wp/v2'
+              : '$baseUrl/wp-json/wp/v2',
+          connectTimeout: const Duration(seconds: 30),
+          receiveTimeout: const Duration(seconds: 30),
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+        )),
+        _logger = Logger('WordPressClient'),
+        _prefs = prefs,
+        _cacheValidDuration = cacheValidDuration ?? const Duration(hours: 1) {
+    // Only add logger in debug mode
+    if (kDebugMode) {
+      _dio.interceptors.add(PrettyDioLogger(
+        requestHeader: false,
+        requestBody: false,
+        responseHeader: false,
+        responseBody: true,
+        error: true,
+        compact: true,
+        maxWidth: 90,
+      ));
     }
-    if (excludeIDs != null && excludeIDs.length > 0) {
-      queryString =
-          _addParamToQueryString(queryString, 'exclude', excludeIDs.join(','));
-    }
-
-    // Append the query string
-    _endpoint += queryString;
-
-    // Retrieve the data
-    List<Map> categoryMaps = await (_get(_endpoint));
-
-    List<Category> categories = [];
-    categories = categoryMaps
-        .map((categoryMap) =>
-            Category.fromMap(categoryMap as Map<String, dynamic>))
-        .toList();
-
-    return categories;
   }
 
-  /// Get all available posts.
-  ///
-  /// If [categoryIDs] list is provided then only posts within those categories
-  /// will be returned. Use [injectObjects] to have full objects injected
-  /// rather than just the object ID (i.e. a posts's featured media). The [page]
-  /// and [perPage] parameters allow for pagination.
-  Future<List<Post>> listPosts(
-      {List<int>? categoryIDs,
-      bool injectObjects: false,
-      List<int>? excludeIDs,
-      int page: 1,
-      int perPage: 10}) async {
-    String _endpoint = '/wp/v2/posts?_embed';
-    print(_endpoint);
-
-    // Build query string starting with pagination
-    String queryString = '&per_page=$perPage';
-    queryString = _addParamToQueryString(queryString, 'page', page.toString());
-
-    // If category IDs were sent, limit to those
-    if (categoryIDs != null && categoryIDs.length > 0) {
-      queryString = _addParamToQueryString(
-          queryString, 'categories', categoryIDs.join(','));
-    }
-
-    // Exclude posts?
-    if (excludeIDs != null && excludeIDs.length > 0) {
-      queryString =
-          _addParamToQueryString(queryString, 'exclude', excludeIDs.join(','));
-    }
-
-    // Append the query string
-    _endpoint += queryString;
-    //_endpoint =
-    // Retrieve the data
-    List<Map>? postMaps = await (_get(_endpoint));
-    print(_endpoint);
-
-    List<Post>? posts = [];
-    posts = postMaps!
-        .map((postMap) => new Post.fromMap(postMap as Map<String, dynamic>))
-        .toList();
-    //print(posts.toString()) ;
-    // Inject objects if requested
-//    if (injectObjects) {
-//      for (Post p in posts) {
-//        if (p.featuredMediaID != null && p.featuredMediaID > 0) {
-//          p.featuredMedia = await getMedia(p.featuredMediaID);
-//        }5
-//      }
-//    }
-
-    return posts;
+  /// Check if device is online
+  Future<bool> _isOnline() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    return connectivityResult != ConnectivityResult.none;
   }
 
-  /// Get all available media.
-  ///
-  /// If [mediaIDs] list is provided then only these specific media items
-  /// will be returned. The [page] and [perPage] parameters allow for pagination.
-  Future<List<Media>> listMedia(
-      {List<int>? includeIDs, int page: 1, perPage: 10}) async {
-    String _endpoint = '/wp/v2/media';
-
-    // Build query string starting with pagination
-    String queryString = '';
-    queryString = _addParamToQueryString(queryString, 'page', page.toString());
-    queryString =
-        _addParamToQueryString(queryString, 'per_page', perPage.toString());
-
-    // Requesting specific items
-    if (includeIDs != null && includeIDs.length > 0) {
-      queryString =
-          _addParamToQueryString(queryString, 'include', includeIDs.join(','));
-    }
-
-    // Append the query string
-    _endpoint += queryString;
-
-    // Retrieve the data
-    List<Map> mediaMaps = await (_get(_endpoint));
-
-    List<Media> media = [];
-    media = mediaMaps
-        .map((mediaMap) => new Media.fromMap(mediaMap as Map<String, dynamic>))
-        .toList();
-
-    return media;
-  }
-
-  //****** */
-  /// Get all available user.
-  ///
-  /// If [userIDs] list is provided then only these specific user items
-  /// will be returned. The [page] and [perPage] parameters allow for pagination.
-  /* Future<List<User>> listUser() async {
-    String _endpoint = '/wp/v2/users';
-
-    List<Map> userMaps = await _get(_endpoint);
-
-    List<User> user = new List();
-    user = userMaps.map((userMap) => new User.fromMap(userMap)).toList();
-
-    return user;
-  }
-  */
-  Future<List<User>> listUser(
-      {List<int>? includeIDs, int page: 1, int perPage: 10}) async {
-    String _endpoint = '/wp/v2/users';
-
-    // // Build query string starting with pagination
-    // String queryString = '';
-    // queryString = _addParamToQueryString(queryString, 'page', page.toString());
-    // queryString =
-    //     _addParamToQueryString(queryString, 'per_page', perPage.toString());
-
-    // // Requesting specific items
-    // if (includeIDs != null && includeIDs.length > 0) {
-    //   queryString =
-    //       _addParamToQueryString(queryString, 'include', includeIDs.join(','));
-    // }
-
-    // Append the query string
-    // _endpoint += queryString;
-
-    // Retrieve the data
-    List<Map> userMaps = await (_get(_endpoint).then((onValue) {
-      debugPrint('the userMpas' + onValue.toString());
-    }).catchError((e) => debugPrint(e))
-        as FutureOr<List<Map<dynamic, dynamic>>>);
-
-    var users = [];
-
-    for (int i = 0; i < userMaps.length; i++) {
-      users.add(User.fromMap(userMaps[i]));
-    }
-
-    return users as FutureOr<List<User>>;
-  }
-
-  /// Get post
-  Future<Post?> getPost(int? postID, {bool injectObjects: true}) async {
-    if (postID == null) {
-      return null;
-    }
-
-    String _endpoint = '/wp/v2/posts/$postID?_embed';
-
-    // Retrieve the data
-    Map? postMap = await (_get(_endpoint) as FutureOr<Map<dynamic, dynamic>?>);
-    if (postMap == null) {
-      return null;
-    }
-
-    Post p = new Post.fromMap(postMap as Map<String, dynamic>);
-
-    // Inject objects if requested
-//    if (injectObjects) {
-//      if (p.featuredMediaID != null && p.featuredMediaID > 0) {
-//        p.featuredMedia = await getMedia(p.featuredMediaID);
-//      }
-//    }
-
-    return p;
-  }
-
-  /// Get media item
-  Future<Media?> getMedia(int? mediaID) async {
-    if (mediaID == null) {
-      return null;
-    }
-
-    String _endpoint = '/wp/v2/media/$mediaID';
-
-    // Retrieve the data
-    Map? mediaMap = await (_get(_endpoint) as FutureOr<Map<dynamic, dynamic>?>);
-    if (mediaMap == null) {
-      return null;
-    }
-
-    return new Media.fromMap(mediaMap as Map<String, dynamic>);
-  }
-
-  /// Get media item
-  Future<Media?> getAttMedia(int? mediaID) async {
-    if (mediaID == null) {
-      return null;
-    }
-
-    String _endpoint = '/wp/v2/media/$mediaID';
-
-    // Retrieve the data
-    Map? mediaMap = await (_get(_endpoint) as FutureOr<Map<dynamic, dynamic>?>);
-    if (mediaMap == null) {
-      return null;
-    }
-
-    return new Media.fromMap(mediaMap as Map<String, dynamic>);
-  }
-
-  /// Get User item
-  Future<User?> getUser(int? userID) async {
-    if (userID == null) {
-      return null;
-    }
-
-    String _endpoint = '/wp/v2/users/$userID';
-
-    // Retrieve the user data
-    Map? userMap = await (_get(_endpoint) as FutureOr<Map<dynamic, dynamic>?>);
-    if (userMap == null) {
-      return null;
-    }
-
-    return new User.fromMap(userMap);
-  }
-
-  _handleError(String endpoint, int statusCode, String response) {
-    // If an error handler has been provided use that, otherwise log
-    if (_errorHandler != null) {
-      debugPrint(statusCode.toString());
-      _errorHandler!(endpoint, statusCode, response);
-      return;
-    }
-
-    _logger.log(
-        Level.SEVERE, "Received $statusCode from '$endpoint' => $response");
-  }
-
-  Future _get(String url) async {
-    dynamic jsonObj;
-    String endpoint = '$_baseURL$url';
-    print("END POINT is " + endpoint);
+  /// Generic API request with optional caching
+  Future<T> _request<T>({
+    required String path,
+    required T Function(dynamic data) parser,
+    Map<String, dynamic>? queryParameters,
+    String? cacheKey,
+  }) async {
     try {
-      Response response = await _client
-          .get(Uri.parse(endpoint), headers: {"Accept": "application/json"});
-
-      // Error handling
-      if (response.statusCode != 200) {
-        _handleError(url, response.statusCode, response.body);
-        print("status code != 200");
-        return null;
+      // Check cache if prefs is available
+      if (_prefs != null && cacheKey != null) {
+        final cachedData = _prefs!.getString(cacheKey);
+        if (cachedData != null) {
+          final cacheTime = _prefs!.getInt('${cacheKey}_time');
+          if (cacheTime != null &&
+              DateTime.now().millisecondsSinceEpoch - cacheTime <
+                  _cacheValidDuration.inMilliseconds) {
+            return parser(json.decode(cachedData));
+          }
+        }
       }
-      jsonObj = json.decode(response.body);
-    } catch (e) {
-      _logger.log(Level.SEVERE, 'Error in GET call to $endpoint', e);
-    }
 
-    if (jsonObj is List) {
-      // This is needed for Dart 2 type constraints
-      return jsonObj.map((item) => item as Map).toList();
-    }
+      // Check connectivity
+      if (!await _isOnline()) {
+        throw WordPressException('No internet connection');
+      }
 
-    return jsonObj;
+      final response = await _dio.get<dynamic>(
+        path,
+        queryParameters: queryParameters,
+      );
+
+      // Cache the response if prefs is available
+      if (_prefs != null && cacheKey != null) {
+        await _prefs!.setString(cacheKey, json.encode(response.data));
+        await _prefs!
+            .setInt('${cacheKey}_time', DateTime.now().millisecondsSinceEpoch);
+      }
+
+      return parser(response.data);
+    } on DioException catch (e) {
+      _logger.severe('API Error: ${e.message}', e, e.stackTrace);
+      throw WordPressException(
+        e.message ?? 'Unknown error occurred',
+        e.response?.statusCode,
+      );
+    }
   }
 
-  String _addParamToQueryString(String? queryString, String key, String value) {
-    if (queryString == null) {
-      queryString = '';
+  /// Handles API response and error cases
+  Future<T> _handleResponse<T>(
+    String endpoint,
+    Future<Response<dynamic>> Function() request,
+    T Function(dynamic json) parser,
+  ) async {
+    try {
+      final response = await request();
+      final statusCode = response.statusCode ?? 0;
+
+      if (statusCode >= 200 && statusCode < 300) {
+        return parser(response.data);
+      }
+
+      throw DioException(
+        requestOptions: RequestOptions(path: endpoint),
+        response: response,
+        message: 'API request failed: $statusCode',
+      );
+    } catch (e) {
+      _logger.severe('Error accessing $endpoint: $e');
+      rethrow;
     }
+  }
 
-    if (queryString.length == 0) {
-      queryString += '?';
-    } else {
-      queryString += '&';
+  /// Handles API response and error cases with pagination metadata
+  Future<WPResponse<T>> _handlePaginatedResponse<T>(
+    String endpoint,
+    Future<Response<dynamic>> Function() request,
+    T Function(dynamic json) parser,
+  ) async {
+    try {
+      final response = await request();
+      final statusCode = response.statusCode ?? 0;
+
+      if (statusCode >= 200 && statusCode < 300) {
+        final items =
+            (response.data as List).map((item) => parser(item)).toList();
+
+        final headers = response.headers.map;
+        return WPResponse(
+          items: items,
+          totalItems: int.parse(headers['x-wp-total']?.first ?? '0'),
+          totalPages: int.parse(headers['x-wp-totalpages']?.first ?? '0'),
+          currentPage: int.parse(headers['x-wp-page']?.first ?? '1'),
+        );
+      }
+
+      throw DioException(
+        requestOptions: RequestOptions(path: endpoint),
+        response: response,
+        message: 'API request failed: $statusCode',
+      );
+    } catch (e) {
+      _logger.severe('Error accessing $endpoint: $e');
+      rethrow;
     }
+  }
 
-    queryString += '$key=$value';
+  /// Get public posts with advanced filtering
+  Future<WPResponse<Post>> getPosts({
+    PostFilters? filters,
+    int page = 1,
+    int perPage = 10,
+  }) async {
+    final queryParams = <String, String>{
+      'per_page': perPage.toString(),
+      'page': page.toString(),
+      'status': 'publish',
+      ...(filters ?? PostFilters()).toQueryParams(),
+    };
 
-    return queryString;
+    final endpoint = '/$postsEndpoint${_buildQueryString(queryParams)}';
+
+    return _handlePaginatedResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => Post.fromMap(json as Map<String, dynamic>),
+    );
+  }
+
+  /// Get a single published post by ID
+  Future<Post?> getPostById(int postId, {bool embed = true}) async {
+    final queryParams = <String, String>{
+      'status': 'publish',
+      if (embed) '_embed': 'true',
+    };
+
+    final endpoint = '/wp/v2/posts/$postId${_buildQueryString(queryParams)}';
+
+    return _handleResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => Post.fromMap(json as Map<String, dynamic>),
+    );
+  }
+
+  /// Get published posts by slug
+  Future<List<Post>> getPostsBySlug(String slug, {bool embed = true}) async {
+    final queryParams = <String, String>{
+      'slug': slug,
+      'status': 'publish',
+      if (embed) '_embed': 'true',
+    };
+
+    final endpoint = '/wp/v2/posts${_buildQueryString(queryParams)}';
+
+    return _handleResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => (json as List)
+          .map((map) => Post.fromMap(map as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
+  /// Get published posts by category, tag, or custom taxonomy
+  Future<List<Post>> getPostsByTaxonomy({
+    required String taxonomyType,
+    required List<int> termIds,
+    String orderBy = 'date',
+    String order = 'desc',
+    bool embed = true,
+    int page = 1,
+    int perPage = 10,
+  }) async {
+    final String taxQuery = taxonomyType == 'category'
+        ? 'categories'
+        : taxonomyType == 'post_tag'
+            ? 'tags'
+            : taxonomyType;
+
+    final queryParams = <String, String>{
+      taxQuery: termIds.join(','),
+      'status': 'publish',
+      'per_page': perPage.toString(),
+      'page': page.toString(),
+      if (embed) '_embed': 'true',
+      if (orderBy.isNotEmpty) 'orderby': orderBy,
+      if (order.isNotEmpty) 'order': order,
+    };
+
+    final endpoint = '/wp/v2/posts${_buildQueryString(queryParams)}';
+
+    return _handleResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => (json as List)
+          .map((map) => Post.fromMap(map as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
+  /// Get sticky (featured) posts
+  Future<List<Post>> getStickyPosts({bool embed = true}) async {
+    final queryParams = <String, String>{
+      'sticky': 'true',
+      'status': 'publish',
+      if (embed) '_embed': 'true',
+    };
+
+    final endpoint = '/wp/v2/posts${_buildQueryString(queryParams)}';
+
+    return _handleResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => (json as List)
+          .map((map) => Post.fromMap(map as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
+  /// Get all public categories
+  Future<List<wp_category.Category>> getCategories({
+    bool hideEmpty = true,
+    List<int>? excludeIds,
+    String? search,
+    int? parent,
+    int page = 1,
+    int perPage = 10,
+  }) async {
+    final queryParams = <String, String>{
+      'per_page': perPage.toString(),
+      'page': page.toString(),
+      if (hideEmpty) 'hide_empty': 'true',
+      if (excludeIds?.isNotEmpty ?? false) 'exclude': excludeIds!.join(','),
+      if (search != null) 'search': search,
+      if (parent != null) 'parent': parent.toString(),
+    };
+
+    final endpoint = '/categories${_buildQueryString(queryParams)}';
+
+    return _handleResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => (json as List)
+          .map((map) =>
+              wp_category.Category.fromMap(map as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
+  /// Get all public tags
+  Future<List<dynamic>> getTags({
+    bool hideEmpty = true,
+    List<int>? excludeIds,
+    String? search,
+    int page = 1,
+    int perPage = 10,
+  }) async {
+    final queryParams = <String, String>{
+      'per_page': perPage.toString(),
+      'page': page.toString(),
+      if (hideEmpty) 'hide_empty': 'true',
+      if (excludeIds?.isNotEmpty ?? false) 'exclude': excludeIds!.join(','),
+      if (search != null) 'search': search,
+    };
+
+    final endpoint = '/wp/v2/tags${_buildQueryString(queryParams)}';
+
+    return _handleResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => json as List,
+    );
+  }
+
+  /// Get public media items
+  Future<List<Media>> getMedia({
+    MediaFilters? filters,
+    int page = 1,
+    int perPage = 10,
+  }) async {
+    final queryParams = <String, String>{
+      'per_page': perPage.toString(),
+      'page': page.toString(),
+      ...(filters ?? MediaFilters()).toQueryParams(),
+    };
+
+    final endpoint = '/wp/v2/media${_buildQueryString(queryParams)}';
+
+    return _handleResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => (json as List)
+          .map((map) => Media.fromMap(map as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
+  /// Get public author information
+  Future<User?> getAuthor(int authorId) async {
+    final endpoint = '/wp/v2/users/$authorId';
+
+    return _handleResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => User.fromMap(json as Map<String, dynamic>),
+    );
+  }
+
+  /// Helper method to build query strings
+  String _buildQueryString(Map<String, String> params) {
+    if (params.isEmpty) return '';
+
+    return '?' +
+        params.entries
+            .map((e) =>
+                '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+            .join('&');
+  }
+
+  /// Get public pages
+  Future<WPResponse<Post>> getPages({
+    List<int>? parentIds,
+    String? search,
+    String orderBy = 'menu_order',
+    String order = 'asc',
+    bool embed = true,
+    int page = 1,
+    int perPage = 10,
+  }) async {
+    final queryParams = <String, String>{
+      'per_page': perPage.toString(),
+      'page': page.toString(),
+      'status': 'publish',
+      if (embed) '_embed': 'true',
+      if (orderBy.isNotEmpty) 'orderby': orderBy,
+      if (order.isNotEmpty) 'order': order,
+      if (search != null) 'search': search,
+      if (parentIds?.isNotEmpty ?? false) 'parent': parentIds!.join(','),
+    };
+
+    final endpoint = '/wp/v2/pages${_buildQueryString(queryParams)}';
+
+    return _handlePaginatedResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => Post.fromMap(json as Map<String, dynamic>),
+    );
+  }
+
+  /// Get public custom post types
+  Future<List<dynamic>> getPostTypes({bool embed = true}) async {
+    final queryParams = embed ? {'_embed': 'true'} : null;
+    final endpoint = '/wp/v2/types${_buildQueryString(queryParams ?? {})}';
+
+    return _handleResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => json is Map ? json.values.toList() : json as List,
+    );
+  }
+
+  /// Get posts from a specific custom post type
+  Future<WPResponse<Post>> getCustomPosts(
+    String postType, {
+    String? search,
+    String orderBy = 'date',
+    String order = 'desc',
+    bool embed = true,
+    int page = 1,
+    int perPage = 10,
+  }) async {
+    final queryParams = <String, String>{
+      'per_page': perPage.toString(),
+      'page': page.toString(),
+      'status': 'publish',
+      if (embed) '_embed': 'true',
+      if (orderBy.isNotEmpty) 'orderby': orderBy,
+      if (order.isNotEmpty) 'order': order,
+      if (search != null) 'search': search,
+    };
+
+    final endpoint = '/wp/v2/$postType${_buildQueryString(queryParams)}';
+
+    return _handlePaginatedResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => Post.fromMap(json as Map<String, dynamic>),
+    );
+  }
+
+  /// Get site settings and information
+  Future<Map<String, dynamic>> getSiteInfo() async {
+    const endpoint = '/wp/v2/settings';
+
+    return _handleResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => json as Map<String, dynamic>,
+    );
+  }
+
+  /// Search across all content types
+  Future<Map<String, dynamic>> search(
+    String query, {
+    String? type,
+    String? subtype,
+    bool embed = true,
+    int page = 1,
+    int perPage = 10,
+  }) async {
+    final queryParams = <String, String>{
+      'search': query,
+      'per_page': perPage.toString(),
+      'page': page.toString(),
+      if (embed) '_embed': 'true',
+      if (type != null) 'type': type,
+      if (subtype != null) 'subtype': subtype,
+    };
+
+    final endpoint = '/wp/v2/search${_buildQueryString(queryParams)}';
+
+    return _handleResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => json as Map<String, dynamic>,
+    );
+  }
+
+  /// Get public comments for a post
+  Future<WPResponse<dynamic>> getComments(
+    int postId, {
+    String orderBy = 'date',
+    String order = 'desc',
+    int page = 1,
+    int perPage = 10,
+  }) async {
+    final queryParams = <String, String>{
+      'post': postId.toString(),
+      'per_page': perPage.toString(),
+      'page': page.toString(),
+      'status': 'approve',
+      if (orderBy.isNotEmpty) 'orderby': orderBy,
+      if (order.isNotEmpty) 'order': order,
+    };
+
+    final endpoint = '/wp/v2/comments${_buildQueryString(queryParams)}';
+
+    return _handlePaginatedResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => json,
+    );
+  }
+
+  /// Get menu locations
+  Future<Map<String, dynamic>> getMenuLocations() async {
+    const endpoint = '/wp-api-menus/v2/menu-locations';
+
+    return _handleResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => json as Map<String, dynamic>,
+    );
+  }
+
+  /// Get menu by location
+  Future<dynamic> getMenuByLocation(String location) async {
+    final endpoint = '/wp-api-menus/v2/menu-locations/$location';
+
+    return _handleResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => json,
+    );
+  }
+
+  /// Get block patterns
+  Future<List<dynamic>> getBlockPatterns() async {
+    const endpoint = '/wp/v2/block-patterns/patterns';
+
+    return _handleResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => json as List,
+    );
+  }
+
+  /// Get block pattern categories
+  Future<List<dynamic>> getBlockPatternCategories() async {
+    const endpoint = '/wp/v2/block-patterns/categories';
+
+    return _handleResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => json as List,
+    );
+  }
+
+  /// Cleanup resources
+  void dispose() {
+    _dio.close();
+  }
+
+  /// Add method to get posts by date range
+  Future<WPResponse<Post>> getPostsByDate({
+    required DateTime after,
+    required DateTime before,
+    bool inclusive = false,
+    String orderBy = PostOrdering.date,
+    String order = OrderDirection.desc,
+    bool embed = true,
+    int page = 1,
+    int perPage = 10,
+  }) async {
+    final filters = PostFilters(
+      dateQuery: DateQuery(
+        after: after,
+        before: before,
+        inclusive: inclusive,
+      ),
+      orderBy: orderBy,
+      order: order,
+      embed: embed,
+    );
+
+    return getPosts(
+      filters: filters,
+      page: page,
+      perPage: perPage,
+    );
+  }
+
+  /// Add method to get posts by multiple taxonomies
+  Future<WPResponse<Post>> getPostsByTaxonomies({
+    Map<String, List<int>>? taxonomies,
+    String orderBy = PostOrdering.date,
+    String order = OrderDirection.desc,
+    bool embed = true,
+    int page = 1,
+    int perPage = 10,
+  }) async {
+    final queryParams = <String, String>{
+      'per_page': perPage.toString(),
+      'page': page.toString(),
+      'status': 'publish',
+      if (embed) '_embed': 'true',
+      if (orderBy.isNotEmpty) 'orderby': orderBy,
+      if (order.isNotEmpty) 'order': order,
+      if (taxonomies != null)
+        ...taxonomies.map((key, value) => MapEntry(key, value.join(','))),
+    };
+
+    final endpoint = '/wp/v2/posts${_buildQueryString(queryParams)}';
+
+    return _handlePaginatedResponse(
+      endpoint,
+      () => _dio.get(endpoint),
+      (json) => Post.fromMap(json as Map<String, dynamic>),
+    );
   }
 }

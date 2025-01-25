@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hawalnir1/src/app.dart';
 import 'package:hawalnir1/src/models/category.dart';
-
 import '../../wordpress_client.dart';
+import '../config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerMain extends StatefulWidget {
-  DrawerMain({Key? key}) : super(key: key);
+  final WordPressClient client;
+
+  const DrawerMain({Key? key, required this.client}) : super(key: key);
 
   @override
   _DrawerMainState createState() => _DrawerMainState();
@@ -40,7 +43,7 @@ class _DrawerMainState extends State<DrawerMain> {
                         ),
                         Expanded(
                           child: FutureBuilder<List<Category>>(
-                            future: client.listCategories(),
+                            future: widget.client.getCategories(),
                             builder: (context, snapshot) {
                               if (!snapshot.hasData) {
                                 return LinearProgressIndicator();
@@ -102,7 +105,7 @@ class _DrawerMainState extends State<DrawerMain> {
                           padding: EdgeInsets.all(5),
                           color: Colors.transparent,
                           child: FutureBuilder<List<Media>>(
-                            future: client.listMedia(),
+                            future: widget.client.getMedia(),
                             builder: (context, snapshot) {
                               if (!snapshot.hasData) {
                                 return LinearProgressIndicator();
@@ -172,22 +175,9 @@ Widget drawerBtn(String text, Function function) {
   return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        RaisedButton(
-          elevation: 2.0,
-          //textTheme: ButtonTextTheme.primary,
-          splashColor: Colors.cyan,
-          textColor: Colors.black,
-          colorBrightness: Brightness.dark,
-
-          child: Text(text),
-
-          padding: EdgeInsets.all(20.0),
-          animationDuration: Duration(microseconds: 200),
-          shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.only(bottomLeft: Radius.circular(10.0))),
-          color: Colors.amber,
+        ElevatedButton(
           onPressed: function as void Function()?,
+          child: Text(text),
         ),
       ]);
 }
@@ -200,7 +190,8 @@ Widget socialBtn(String text, IconData iconData, Color color) {
         // Padding(
         // padding: EdgeInsets.all(20.0),
         //),
-        RaisedButton(
+        ElevatedButton(
+          onPressed: () {},
           child: Row(
             children: <Widget>[
               Icon(
@@ -214,19 +205,6 @@ Widget socialBtn(String text, IconData iconData, Color color) {
               )
             ],
           ),
-          elevation: 2.0,
-          //textTheme: ButtonTextTheme.primary,
-          splashColor: Colors.cyan,
-          textColor: Colors.black,
-          colorBrightness: Brightness.dark,
-          padding: EdgeInsets.all(20.0),
-
-          animationDuration: Duration(microseconds: 200),
-          shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.only(bottomLeft: Radius.circular(10.0))),
-          color: color,
-          onPressed: () {},
         ),
       ]);
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart'; // pub to load html tags from json api
-import 'package:flutter_html/style.dart';
+import 'package:flutter_html/flutter_html.dart';
+import '../models/post.dart';
 import 'package:hawalnir1/wordpress_client.dart';
 
 import 'catWidgets.dart';
@@ -17,7 +17,10 @@ class HawalnirPost extends StatelessWidget {
     return new Scaffold(
       appBar: new AppBar(
         elevation: 0,
-        title: FittedBox(child: hawalTitle(post!)),
+        title: Container(
+          width: double.infinity,
+          child: hawalTitle(post!),
+        ),
         backgroundColor: Colors.transparent,
       ),
       body: new Padding(
@@ -59,29 +62,29 @@ class HawalnirPost extends StatelessWidget {
   Widget mainImage(Post post) {
     return FadeInImage.assetNetwork(
       placeholder: 'https://via.placeholder.com/300.png/09f/fff',
-      image: post.featuredMediaUrl == 0
-          ? 'src/images/placeholder.png'
-          : post.featuredMediaUrl,
+      image: post.featuredMediaUrl?.toString() ?? 'src/images/placeholder.png',
     );
   }
 
   Widget titleRendered(Post post) {
     return Html(
-      data: post.title,
+      data: post.title.rendered,
       style: {
-        "div": Style(fontSize: FontSize(20)),
+        "div": Style(
+          fontSize: FontSize(20),
+        ),
       },
-      shrinkWrap: true,
     );
   }
 
   Widget contentRendered(Post post) {
     return Html(
-      data: (post.content).toString(),
+      data: post.content.rendered,
       style: {
-        "div": Style(fontSize: FontSize(20)),
+        "div": Style(
+          fontSize: FontSize(20),
+        ),
       },
-      shrinkWrap: true,
     );
   }
 

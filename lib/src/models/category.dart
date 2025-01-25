@@ -29,10 +29,6 @@ class Category {
   Category();
 
   Category.fromMap(Map<String, dynamic> map) {
-    if (map == null) {
-      return;
-    }
-
     id = map['id'];
     count = map['count'];
     description = map['description'];
@@ -53,9 +49,8 @@ class Category {
     'slug': slug,
     'taxonomy': taxonomy,
     'parent': parent,
-    'meta': meta
+    'meta': meta,
   };
 
-  toString() =>
-      "Category => " + toMap().toString();
+  toString() => "Category => " + toMap().toString();
 }

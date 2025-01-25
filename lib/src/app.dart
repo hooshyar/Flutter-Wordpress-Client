@@ -1,74 +1,54 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart' as provider;
-
-import '../wordpress_client.dart';
+import 'client.dart';
 import 'config.dart';
-import 'pages/listView.dart';
-import 'view_models/app_key.dart';
-import 'widgets/drawerMain.dart';
+import 'providers/posts_provider.dart';
+import 'providers/categories_provider.dart';
+import 'providers/settings_provider.dart';
+import 'screens/home_screen.dart';
+import 'theme/app_theme.dart';
 
-WordpressClient client = new WordpressClient(_baseUrl, http.Client());
-final String _baseUrl = mainApiUrl;
+class App extends StatelessWidget {
+  final SharedPreferences? prefs;
+  late final WordPressClient wordPressClient;
 
-class HawalnirHome extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => HawalnirHomeState();
-}
-
-class HawalnirHomeState extends State<HawalnirHome>
-    with TickerProviderStateMixin {
-  var scrollCont =
-      ScrollController(initialScrollOffset: 0.0, keepScrollOffset: true);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: provider.Provider.of<Keys>(context, listen: false).appScaffoldKey,
-      drawer: DrawerMain(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      resizeToAvoidBottomInset: true,
-      body: Stack(fit: StackFit.expand, children: [
-        Container(
-          child: FutureBuilder<List<Post>>(
-            future: client.listPosts(page: 3, perPage: 4),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) print(snapshot.error);
-
-              return snapshot.hasData
-                  ? ListViewPosts(posts: snapshot.data)
-                  : Center(child: CircularProgressIndicator());
-            },
-          ),
-        ),
-      ]),
+  App({Key? key, this.prefs}) : super(key: key) {
+    wordPressClient = WordPressClient(
+      baseUrl: baseUrl,
+      prefs: prefs,
+      cacheValidDuration: defaultCacheDuration,
     );
   }
 
-  bottomNavAppBar() {
-    return ClipRect(
-      child: Container(
-        height: 80,
-        child: Stack(
-          children: <Widget>[
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-              child: BottomNavigationBar(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  items: [
-                    BottomNavigationBarItem(
-                        label: 'Home', icon: Icon(Icons.home)),
-                    BottomNavigationBarItem(
-                        label: 'Favorites', icon: Icon(Icons.favorite)),
-                    BottomNavigationBarItem(
-                        label: 'gallery', icon: Icon(Icons.image)),
-                  ]),
-            ),
-          ],
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => SettingsProvider(prefs),
+        ),
+        Provider<WordPressClient>.value(value: wordPressClient),
+        ChangeNotifierProvider(
+          create: (context) => PostsProvider(
+            client: context.read<WordPressClient>(),
+            settings: context.read<SettingsProvider>(),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CategoriesProvider(
+            client: context.read<WordPressClient>(),
+          ),
+        ),
+      ],
+      child: Consumer<SettingsProvider>(
+        builder: (context, settings, _) => MaterialApp(
+          title: 'WordPress Blog',
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: settings.themeMode,
+          home: const HomeScreen(),
         ),
       ),
     );

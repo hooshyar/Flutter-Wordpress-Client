@@ -39,10 +39,6 @@ class Settings {
   String? defaultCommentStatus;
 
   Settings.fromMap(Map<String, dynamic> map) {
-    if (map == null) {
-      return;
-    }
-
     title = map['title'];
     description = map['description'];
     timezone = map['timezone'];
@@ -71,9 +67,8 @@ class Settings {
     'default_post_format': defaultPostFormat,
     'posts_per_page': postsPerPage,
     'default_ping_status': defaultPingStatus,
-    'default_comment_status': defaultCommentStatus
+    'default_comment_status': defaultCommentStatus,
   };
 
-  toString() =>
-      "Settings => " + toMap().toString();
+  toString() => "Settings => " + toMap().toString();
 }

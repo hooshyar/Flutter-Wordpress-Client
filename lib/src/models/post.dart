@@ -1,6 +1,20 @@
+class RenderedText {
+  final String rendered;
+  final String? raw;
+
+  RenderedText({required this.rendered, this.raw});
+
+  factory RenderedText.fromMap(Map<String, dynamic> map) {
+    return RenderedText(
+      rendered: map['rendered'] as String? ?? '',
+      raw: map['raw'] as String?,
+    );
+  }
+}
+
 class Post {
   /// The date the object was published, in the site's timezone.
-  DateTime? date;
+  final DateTime? date;
 
   /// The date the object was published, as GMT.
   //DateTime dateGMT;
@@ -9,10 +23,10 @@ class Post {
   //Map guid;
 
   /// Unique identifier for the object.
-  int? id;
+  final int id;
 
   /// URL to the object.
-  //String link;
+  final String? link;
 
   /// The date the object was last modified, in the site's timezone.
   // DateTime modified;
@@ -21,12 +35,12 @@ class Post {
   //DateTime modifiedGMT;
 
   /// An alphanumeric identifier for the object unique to its type.
-  //String slug;
+  final String? slug;
 
   /// A named status for the object.
   ///
   /// One of: publish, future, draft, pending, private
-  // String status;
+  final String? status;
 
   /// Type of Post for the object.
   //String type;
@@ -35,26 +49,25 @@ class Post {
   //String password;
 
   /// The title for the object.
-  String? title;
+  final RenderedText title;
 
   /// The content for the object.
-  String? content;
+  final RenderedText content;
 
   /// The ID for the author of the object
   //int author;
 
   /// The ID for the author of the object
-  String? author;
+  final String? author;
 
   /// The excerpt for the object.
-//  Map excerpt;
+  final RenderedText excerpt;
 
   /// The ID of the featured media for the object.
-  int? featuredMediaID;
+  final int? featuredMediaId;
 
   /// The URL of the featured media for the object.
-  dynamic featuredMediaUrl;
-  bool? featuredMediaThumb;
+  final String? featuredMediaUrl;
 
   /// Whether or not comments are open on the object
   ///
@@ -76,120 +89,93 @@ class Post {
   //bool sticky;
 
   /// The theme file to use to display the object.
-//  /String template;
+  //  /String template;
 
   /// The terms assigned to the object in the category taxonomy.
-//  List<int> categories;
+  final List<String>? categories;
 
   /// The terms assigned to the object in the post_tag taxonomy.
-//  List tags;
+  final List<String>? tags;
 
   // Injected objects
-//  Media featuredMedia;
+  //  Media featuredMedia;
   //User user;
-  Post();
+  final int? authorId;
 
-  Post.fromMap(Map<String, dynamic> map) {
-    if (map == null) {
-      return;
-    }
+  Post({
+    required this.id,
+    this.date,
+    required this.title,
+    required this.content,
+    required this.excerpt,
+    this.featuredMediaUrl,
+    this.categories,
+    this.tags,
+    this.author,
+    this.authorId,
+    this.link,
+    this.slug,
+    this.status,
+    this.featuredMediaId,
+  });
 
-    date = map["date"] != null ? DateTime.parse(map["date"]) : null;
-    //dateGMT = map["date_gmt"] != null
-    //  ? DateTime.parse(map["date_gmt"])
-    // : null;
-    //guid = map['guid'];
-    id = map['id'];
-    //link = map['link'];
-    //modified = map["modified"] != null
-    //   ? DateTime.parse(map["modified"])
-    //  : null;
-    //modifiedGMT = map["modified_gmt"] != null
-    //   ? DateTime.parse(map["modified_gmt"])
-    //  : null;
-    //slug = map['slug'];
-    //status = map['status'];
-    //type = map['type'];
-    //password = map['password'];
-    title = map['title']['rendered'];
-    content = map['content']['rendered'];
-//    author = map['author'];
-    author = map["_embedded"]["author"][0]["name"];
-    //excerpt = map['excerpt'];
-    //featuredMediaID = map['featured_media'];
-    //featuredMediaUrl = map ['_links']["self"][0]['href'] ;
-    featuredMediaUrl = map["_embedded"]["wp:featuredmedia"] == null
-        ? 'https://via.placeholder.com/300x150.png'
-        : map["_embedded"]["wp:featuredmedia"][0]["source_url"];
+  factory Post.fromMap(Map<String, dynamic> map) {
+    return Post(
+      id: map['id'] as int,
+      date: map['date'] != null ? DateTime.parse(map['date'] as String) : null,
+      title: RenderedText.fromMap(map['title'] as Map<String, dynamic>),
+      content: RenderedText.fromMap(map['content'] as Map<String, dynamic>),
+      excerpt: RenderedText.fromMap(map['excerpt'] as Map<String, dynamic>),
+      featuredMediaUrl:
+          map['_embedded']?['wp:featuredmedia']?[0]?['source_url'] as String?,
+      categories: (map['_embedded']?['wp:term']?[0] as List<dynamic>?)
+          ?.map((e) => e['name'] as String)
+          .toList(),
+      tags: (map['_embedded']?['wp:term']?[1] as List<dynamic>?)
+          ?.map((e) => e['name'] as String)
+          .toList(),
+      author: map['_embedded']?['author']?[0]?['name'] as String?,
+      authorId: map['author'] as int?,
+      link: map['link'] as String?,
+      slug: map['slug'] as String?,
+      status: map['status'] as String?,
+      featuredMediaId: map['featured_media'] as int?,
+    );
+  }
 
-    //  post.featuredMediaUrl == null
-    //           ? 'assets/images/placeholder.png'
-    //           : post.featuredMediaUrl,
-    print(featuredMediaUrl);
-    // getFeaturedMedia(){
-    //   if(featuredMediaThumb = true){
-    //     return map["_embedded"]["wp:featuredmedia"][0]["source_url"] ;
-    //   }else{
-    //      return 'assets/images/placeholder.png' ;
-    //   }
-    // }
-    // featuredMediaUrl = getFeaturedMedia();
-    // print(featuredMediaUrl);
-
-    //commentStatus = map['comment_status'];
-    //pingStatus = map['ping_status'];
-    //format = map['format'];
-    //meta = map['meta'];
-    //sticky = map['sticky'];
-    //template = map['template'];
-    //tags = map['tags'];
-
-    // Avoiding (odd) cast warnings
-//    categories = new List();
-//    for (dynamic item in map['categories']) {
-//      if (item is int) {
-//        categories.add(item);
-//      }
-//    }
+  factory Post.fromMapObject(Map<String, dynamic> map) {
+    return Post(
+      id: map['id'] as int,
+      date: map['date'] != null ? DateTime.parse(map['date'] as String) : null,
+      title: RenderedText(rendered: map['title'] as String),
+      content: RenderedText(rendered: map['content'] as String),
+      excerpt: RenderedText(rendered: map['excerpt'] as String),
+      featuredMediaUrl: map['featured_media'] as String?,
+      categories: null,
+      tags: null,
+      author: map['author'] as String?,
+      authorId: null,
+      link: map['link'] as String?,
+      slug: map['slug'] as String?,
+      status: map['status'] as String?,
+      featuredMediaId: null,
+    );
   }
 
   Map<String, dynamic> toMap() => {
-        'date': date?.toIso8601String(),
-//        'date_gmt': dateGMT?.toIso8601String(),
-//        'guid': guid,
         'id': id,
-//        'link': link,
-//        'modified': modified?.toIso8601String(),
-//        'modified_gmt': modifiedGMT?.toIso8601String(),
-//        'slug': slug,
-//        'status': status,
-//        'type': type,
-//        'password': password,
-        'title': title,
-        'content': content,
+        'date': date?.toIso8601String(),
+        'title': title.rendered,
+        'content': content.rendered,
+        'excerpt': excerpt.rendered,
         'author': author,
-        //'authorName':authorName,
-//        'excerpt': excerpt,
+        'author_id': authorId,
         'featured_media': featuredMediaUrl,
-
-//        'comment_status': commentStatus,
-//        'ping_status': pingStatus,
-//        'format': format,
-//        'meta': meta,
-//        'sticky': sticky,
-//        'template': template,
-//        'categories': categories,
-//        'tags': tags
+        'link': link,
+        'slug': slug,
+        'status': status,
       };
 
-  toString() => "Post => " + toMap().toString();
-
-  Post.fromMapObject(Map<String, dynamic> map) {
-    this.id = map['id'];
-    this.title = map['title'];
-    this.content = map['content'];
-    this.author = map['author'];
-    this.date = map["date"] != null ? DateTime.parse(map["date"]) : null;
-    this.featuredMediaUrl = map['featured_media'];
-  }
+  @override
+  String toString() => 'Post{id: $id, title: ${title.rendered}}';
 }

@@ -91,19 +91,16 @@ class Media {
   Media();
 
   Media.fromMap(Map<String, dynamic> map) {
-    if (map == null) {
-      return;
-    }
-
     date = map["date"] != null ? DateTime.parse(map["date"]) : null;
     dateGMT = map["date_gmt"] != null ? DateTime.parse(map["date_gmt"]) : null;
     guid = map['guid'];
     id = map['id'];
     link = map['link'];
     modified = map["modified"] != null ? DateTime.parse(map["modified"]) : null;
-    modifiedGMT = map["modified_gmt"] != null
-        ? DateTime.parse(map["modified_gmt"])
-        : null;
+    modifiedGMT =
+        map["modified_gmt"] != null
+            ? DateTime.parse(map["modified_gmt"])
+            : null;
     slug = map['slug'];
     status = map['status'];
     type = map['type'];
@@ -124,31 +121,31 @@ class Media {
   }
 
   Map<String, dynamic> toMap() => {
-        'date': date?.toIso8601String(),
-        'date_gmt': dateGMT?.toIso8601String(),
-        'guid': guid,
-        'id': id,
-        'link': link,
-        'modified': modified?.toIso8601String(),
-        'modified_gmt': modifiedGMT?.toIso8601String(),
-        'slug': slug,
-        'status': status,
-        'type': type,
-        'title': title,
-        'author': author,
-        'comment_status': commentStatus,
-        'ping_status': pingStatus,
-        'meta': meta,
-        'template': template,
-        'alt_text': altText,
-        'caption': caption,
-        'description': description,
-        'media_type': mediaType,
-        'mime_type': mimeType,
-        'media_details': mediaDetails,
-        'post': post,
-        'source_url': sourceURL
-      };
+    'date': date?.toIso8601String(),
+    'date_gmt': dateGMT?.toIso8601String(),
+    'guid': guid,
+    'id': id,
+    'link': link,
+    'modified': modified?.toIso8601String(),
+    'modified_gmt': modifiedGMT?.toIso8601String(),
+    'slug': slug,
+    'status': status,
+    'type': type,
+    'title': title,
+    'author': author,
+    'comment_status': commentStatus,
+    'ping_status': pingStatus,
+    'meta': meta,
+    'template': template,
+    'alt_text': altText,
+    'caption': caption,
+    'description': description,
+    'media_type': mediaType,
+    'mime_type': mimeType,
+    'media_details': mediaDetails,
+    'post': post,
+    'source_url': sourceURL,
+  };
 
   toString() => "Media => " + toMap().toString();
 

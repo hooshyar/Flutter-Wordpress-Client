@@ -1,6 +1,66 @@
-# A Wordpress client for Flutter 
+# Flutter WordPress Client
 
-### This project uses a simple WordPress website as a backend, without any additional plugin.
+A modern, lightweight Flutter client for WordPress sites that doesn't require authentication. Perfect for building mobile apps for WordPress-based blogs and news sites.
+
+## Features
+
+- 📱 Clean, Material Design UI
+- 🚀 Fast and responsive
+- 📄 View posts and categories
+- 🖼️ Media support
+- 🔍 Search functionality
+- 🌐 No authentication required
+
+## Getting Started
+
+### Prerequisites
+
+- Flutter SDK (>=3.2.0)
+- Dart SDK (>=3.2.0)
+- A WordPress site with REST API enabled
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/Flutter-Wordpress-Client.git
+```
+
+2. Install dependencies:
+```bash
+flutter pub get
+```
+
+3. Update the WordPress site URL in `lib/src/config.dart`
+
+4. Run the app:
+```bash
+flutter run
+```
+
+## Configuration
+
+Edit `lib/src/config.dart` to set your WordPress site URL and other configurations:
+
+```dart
+final String wordPressUrl = 'https://your-wordpress-site.com';
+```
+
+## Architecture
+
+The app follows a clean architecture pattern:
+- `/models` - Data models
+- `/widgets` - Reusable UI components
+- `/db` - Local database handling
+- `/view_models` - Business logic
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 <p>
 <img src="https://www.datacode.app/flutter-wp/wp-content/uploads/2020/01/wordpress_flutter1.gif" alt="gif 1 title="Wordpress-client" />

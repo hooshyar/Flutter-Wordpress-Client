@@ -1,131 +1,94 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http; // http requ
 import 'dart:async';
-import '../config.dart';
-import '../db/database_helper.dart';
 import 'dart:io';
-import 'package:hawalnir1/wordpress_client.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-WordpressClient client = new WordpressClient(_baseUrl, http.Client());
-final String _baseUrl = mainApiUrl;
+import '../config.dart';
+import '../client.dart';
+import '../models/post.dart';
+import 'database_helper.dart';
 
-var dbHelper = DatabaseHelper();
-int perPageInt = int.parse(perPage);
+class DatabaseFunctions {
+  final WordPressClient client;
+  final DatabaseHelper dbHelper;
+  final SharedPreferences prefs;
 
-List<Post>? cachedPosts;
-List<Post>? posts;
-int? dbCount;
-bool netConnection = false;
+  DatabaseFunctions({
+    required this.client,
+    required this.dbHelper,
+    required this.prefs,
+  });
 
-List<int?> postsIDs = [];
-List<int?> cachedPostsIDs = [];
+  List<Post>? _cachedPosts;
+  List<Post>? _posts;
+  bool _hasNetworkConnection = false;
 
-getCachedPostsIDs() {
-  for (int i = 0; i < cachedPosts!.length; i++) {
-    cachedPostsIDs.add(cachedPosts![i].id);
-  }
-}
-
-getPostsIDs() {
-  for (int i = 0; i < posts!.length; i++) {
-    postsIDs.add(posts![i].id);
-  }
-}
-
-clearDB() async {
-  int count = await (dbHelper.getCount() as FutureOr<int>);
-
-  debugPrint("count is :  " + count.toString());
-  for (int i = 0; i < count; i++) {
-    dbHelper.deletePost(cachedPosts![i].id);
-    debugPrint("this post has been deleted" + (posts![i].id).toString());
-    debugPrint("${cachedPosts![i].id} has been Deleted from  DB");
-  }
-}
-
-fillDB() {
-  for (int i = 0; i < posts!.length; i++) {
-    dbHelper.insertPost(posts![i]);
-    debugPrint("${posts![i].id} has been inserted to DB");
-  }
-}
-
-doWeHaveNet() async {
-  int? count = await dbHelper.getCount();
-  try {
-    final result = await InternetAddress.lookup('google.com');
-    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-      print('connected');
-      netConnection = true;
-    }
-  } on SocketException catch (_) {
-    print('not connected');
-    if (count! < 1) {
-      debugPrint('we need intenet');
-      netConnection = false;
+  Future<bool> checkNetworkConnection() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      _hasNetworkConnection =
+          result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+      return _hasNetworkConnection;
+    } on SocketException catch (_) {
+      _hasNetworkConnection = false;
+      return false;
     }
   }
-}
 
-Future<List<Post>?> getPosts() async {
-  posts = await client.listPosts(perPage: perPageInt, injectObjects: true);
-  return posts ;
-}
+  Future<void> clearDatabase() async {
+    final count = await dbHelper.getCount();
+    debugPrint('Clearing database with $count items');
 
-
-Future<List<Post>?> isExitst() async {
-  doWeHaveNet();
-  cachedPosts = await dbHelper.getPostList();
-
-  if (netConnection != true) {
-    debugPrint("doWeHaveNet() is != true ");
-    posts = cachedPosts;
-    posts!.sort((a, b) => b.id!.compareTo(a.id!));
-  } else {
-    debugPrint("doWeHaveNet() is == true ");
-    posts = await client.listPosts(perPage: perPageInt, injectObjects: true);
-  }
-
-  bool foundPost = true;
-  getPostsIDs();
-  getCachedPostsIDs();
-  debugPrint('Posts Ids are: ' + postsIDs.toString());
-  debugPrint('Cached pOsts ids are : ' + cachedPostsIDs.toString());
-
-  if (cachedPosts!.length < 1) {
-    debugPrint('No Cached Posts Has Been FOUND');
-    posts = await client.listPosts(perPage: perPageInt, injectObjects: true);
-    fillDB();
-    return posts ;
-
-  } else {
-    for (int i = 0; i < cachedPostsIDs.length; i++) {
-      for (int j = 0; j < postsIDs.length; j++) {
-        if (cachedPostsIDs.contains(postsIDs[j])) {
-          debugPrint("FOUND ${postsIDs[j]} post in the database");
-          foundPost = true;
-        } else {
-          foundPost = false;
-          debugPrint("COULDNT FFIND ${postsIDs[j]} in cachedPostsIDs");
-          break;
-        }
-      }
-
-      if (foundPost == true) {
-        for (int i = 0; i < posts!.length; i++) {
-          posts![i] = cachedPosts![i];
-        }
-
-        debugPrint('found post is TRUE ');
-      } else {
-        debugPrint('found post is NOT TRUE');
-        posts = posts;
-        await dbHelper.deleteDB();
-        fillDB();
-        debugPrint('DATABASE HAS BEEN DELETED');
+    if (_cachedPosts != null) {
+      for (final post in _cachedPosts!) {
+        await dbHelper.deletePost(post.id);
+        debugPrint('Deleted post ${post.id} from database');
       }
     }
   }
-  posts!.sort((a, b) => b.id!.compareTo(a.id!));
-  return posts;
+
+  Future<void> fillDatabase(List<Post> posts) async {
+    for (final post in posts) {
+      await dbHelper.insertPost(post);
+      debugPrint('Inserted post ${post.id} to database');
+    }
+  }
+
+  Future<List<Post>> getPosts() async {
+    final hasNetwork = await checkNetworkConnection();
+    _cachedPosts = await dbHelper.getPostList();
+
+    if (!hasNetwork) {
+      debugPrint('No network connection, using cached posts');
+      if (_cachedPosts?.isEmpty ?? true) {
+        throw Exception('No cached posts available and no network connection');
+      }
+      _posts = _cachedPosts;
+    } else {
+      debugPrint('Network available, fetching fresh posts');
+      final response = await client.getPosts(perPage: defaultPerPage);
+      _posts = response.items;
+
+      // Update cache if new posts are available
+      if (!_arePostsEqual(_posts!, _cachedPosts ?? [])) {
+        await clearDatabase();
+        await fillDatabase(_posts!);
+        debugPrint('Updated cache with new posts');
+      }
+    }
+
+    // Sort posts by ID in descending order
+    _posts?.sort((a, b) => b.id.compareTo(a.id));
+    return _posts ?? [];
+  }
+
+  bool _arePostsEqual(List<Post> newPosts, List<Post> cachedPosts) {
+    if (newPosts.length != cachedPosts.length) return false;
+
+    for (var i = 0; i < newPosts.length; i++) {
+      if (newPosts[i].id != cachedPosts[i].id) return false;
+    }
+
+    return true;
+  }
 }
