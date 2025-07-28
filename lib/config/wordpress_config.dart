@@ -6,7 +6,7 @@ class WordPressConfig {
   // WordPress Site Configuration
   static const String baseUrl = String.fromEnvironment(
     'WORDPRESS_URL',
-    defaultValue: 'https://www.ferbon.com', // Kurdish news site
+    defaultValue: 'https://shrunken.men', // Kurdish news site
   );
   
   // API Configuration
