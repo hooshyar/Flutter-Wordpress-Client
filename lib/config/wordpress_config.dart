@@ -16,10 +16,10 @@ class WordPressConfig {
   // App Configuration
   static const String appName = String.fromEnvironment(
     'APP_NAME',
-    defaultValue: 'Flutter WordPress',
+    defaultValue: 'diMENsion',
   );
   
-  static const String appVersion = '2.0.0';
+  static const String appVersion = '0.9.0';
   
   // Content Configuration
   static const int postsPerPage = 10;
